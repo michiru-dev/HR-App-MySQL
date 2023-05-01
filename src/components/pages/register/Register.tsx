@@ -40,11 +40,11 @@ function Register() {
       <label htmlFor="rank">等級</label>
       <select name="rank" id="rank">
         <option value=""></option>
-        <option value="">一級</option>
-        <option value="">二級</option>
-        <option value="">三級</option>
-        <option value="">四級</option>
-        <option value="">五級</option>
+        <option value="">1級</option>
+        <option value="">2級</option>
+        <option value="">3級</option>
+        <option value="">4級</option>
+        <option value="">5級</option>
       </select>
       <label htmlFor="position">役職</label>
       <select name="position" id="position">

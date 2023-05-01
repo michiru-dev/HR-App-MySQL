@@ -2,10 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.scss'
 import App from './App'
+import { Provider } from 'react-redux'
+import store from '../src/redux/store'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      {/* storeとアプリ自体を繋ぐ役目。囲ったやつでstoreにアクセスできるようになる */}
+      <App />
+    </Provider>
   </React.StrictMode>
 )

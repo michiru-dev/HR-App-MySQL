@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function Button({ text }: { text: string }) {
+type ButtonProps = { text: string }
+
+function Button({ text }: ButtonProps) {
   return (
     <div>
       <button>{text}</button>
