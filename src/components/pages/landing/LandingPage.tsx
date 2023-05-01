@@ -11,7 +11,7 @@ function LandingPage() {
         <Button text={'新規登録'} />
       </Link>
       <Link to={'setting'}>
-        <Button text={'設定'} />
+        <Button text={'各種設定'} />
       </Link>
     </div>
   )
