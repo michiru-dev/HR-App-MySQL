@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
-type ButtonProps = { text: string }
+type ButtonProps = { text: string; onClick?: () => void }
 
-function Button({ text }: ButtonProps) {
+function Button({ text, onClick }: ButtonProps) {
   return (
     <div>
-      <button>{text}</button>
+      <button onClick={onClick}>{text}</button>
     </div>
   )
 }
