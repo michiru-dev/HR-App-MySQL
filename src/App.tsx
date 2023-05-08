@@ -16,7 +16,6 @@ function App() {
   //これはstoreからデータを取得！
   const dispatch = useAppDispatch()
   //storeのreducersの計算式を実行させるのがusedispatch
-  console.log(counterObj)
 
   // dispatch(setName('test'))
   //        ⇩

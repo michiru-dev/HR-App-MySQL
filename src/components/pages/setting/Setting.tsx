@@ -2,6 +2,18 @@ import React from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 
+import ContractSetting from './ContractSetting'
+import RankSetting from './RankSetting'
+import PositionsSetting from './PositionsSetting'
+import DepartmentSetting from './DepartmentSetting'
+
+// const useContractTypeInputs = () => {
+//   const {contractInput, setContractInput, editIndex, setEditIndex,editedName, setEditedName} = useSettingInputs()
+//   const [saralyType, setSaralyType] = useState<string>('')
+
+//   return {}
+// }
+
 function Setting() {
   return (
     <Tabs>
@@ -13,16 +25,16 @@ function Setting() {
       </TabList>
 
       <TabPanel>
-        <h2>Any content 1</h2>
+        <ContractSetting />
       </TabPanel>
       <TabPanel>
-        <h2>Any content 2</h2>
+        <DepartmentSetting />
       </TabPanel>
       <TabPanel>
-        <h2>Any content 2</h2>
+        <RankSetting />
       </TabPanel>
       <TabPanel>
-        <h2>Any content 2</h2>
+        <PositionsSetting />
       </TabPanel>
     </Tabs>
   )
