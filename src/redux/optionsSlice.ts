@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { v4 as uuidv4 } from 'uuid'
 
 export type OptionBase = {
   id: string
@@ -14,10 +15,34 @@ type OptionsState = {
 
 //そのデータの初期値を定義（スライスを作る準備）
 const initialState: OptionsState = {
-  contractType: [],
-  department: [],
-  rank: [],
-  position: [],
+  contractType: [
+    { id: uuidv4(), name: '正社員' },
+    { id: uuidv4(), name: '再雇用' },
+    { id: uuidv4(), name: '嘱託' },
+    { id: uuidv4(), name: '派遣' },
+  ],
+  department: [
+    { id: uuidv4(), name: '人事部' },
+    { id: uuidv4(), name: '経理部' },
+    { id: uuidv4(), name: '情報システム部' },
+    { id: uuidv4(), name: '第一営業部' },
+    { id: uuidv4(), name: '第二営業部' },
+    { id: uuidv4(), name: '第三営業部' },
+  ],
+  rank: [
+    { id: uuidv4(), name: '1級' },
+    { id: uuidv4(), name: '2級' },
+    { id: uuidv4(), name: '3級' },
+    { id: uuidv4(), name: '4級' },
+    { id: uuidv4(), name: '5級' },
+  ],
+  position: [
+    { id: uuidv4(), name: '社長' },
+    { id: uuidv4(), name: '専務' },
+    { id: uuidv4(), name: '統括部長' },
+    { id: uuidv4(), name: '部長' },
+    { id: uuidv4(), name: '課長' },
+  ],
 }
 
 export const optionsSlice = createSlice({
