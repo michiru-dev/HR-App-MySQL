@@ -1,5 +1,9 @@
 import React from 'react'
 import Button from '../../common/Button'
+import ContractOptions from './ContractOptions'
+import RankOptions from './RankOptions'
+import PositionOptions from './PositionOptions'
+import DepartmentOptions from './DepartmentOptions'
 
 function Register() {
   return (
@@ -19,7 +23,7 @@ function Register() {
       <input id="finalEducation" type="text" />
       <label htmlFor="enterDate">入社日</label>
       <input id="enterDate" type="date" />
-      <label htmlFor="contract-type">契約形態</label>
+      {/* <label htmlFor="contract-type">契約形態</label>
       <select name="contract-type" id="contract-type">
         <option value=""></option>
         <option value="">正社員</option>
@@ -54,7 +58,12 @@ function Register() {
         <option value="">課長代理</option>
         <option value="">部長</option>
         <option value="">統括部長</option>
-      </select>
+      </select> */}
+
+      <ContractOptions />
+      <DepartmentOptions />
+      <RankOptions />
+      <PositionOptions />
 
       <Button text={'登録'} />
     </div>
