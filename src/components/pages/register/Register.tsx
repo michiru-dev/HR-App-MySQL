@@ -1,71 +1,174 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '../../common/Button'
 import ContractOptions from './ContractOptions'
 import RankOptions from './RankOptions'
 import PositionOptions from './PositionOptions'
 import DepartmentOptions from './DepartmentOptions'
+import { useDispatch } from 'react-redux'
+import { addEmployee } from '../../../redux/employeeDataSlice'
+import type { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
+import RegisterInput from './RegisterInput'
+import RegisterNameInput from './RegisterNameInput'
+import SearchResult from '../../common/SearchResult'
 
 function Register() {
+  const dispatch = useDispatch()
+  const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutId>({
+    firstName: '',
+    lastName: '',
+    firstFurigana: '',
+    lastFurigana: '',
+    birthday: '',
+    postalCode: '',
+    education: '',
+    hireDate: '',
+    contractType: '',
+    department: '',
+    rank: '',
+    position: '',
+  })
+
+  const {
+    firstName,
+    lastName,
+    firstFurigana,
+    lastFurigana,
+    birthday,
+    postalCode,
+    education,
+    hireDate,
+    contractType,
+    department,
+    rank,
+    position,
+  } = registerInfo
+
+  const handleRegister = () => {
+    dispatch(
+      addEmployee({
+        firstName,
+        lastName,
+        firstFurigana,
+        lastFurigana,
+        birthday,
+        postalCode,
+        education,
+        hireDate,
+        contractType,
+        department,
+        rank,
+        position,
+      })
+    )
+  }
+
   return (
     <div>
-      <label htmlFor="nameKanji">名前</label>
-      <input id="nameKanji" type="text" placeholder="性" />
-      <input type="text" placeholder="名" />
-      <label htmlFor="nameKatakata">フリガナ</label>
-      <input id="nameKataka" type="text" placeholder="セイ" />
-      <input type="text" placeholder="メイ" />
-      <label htmlFor="birthday">生年月日</label>
-      <input id="birthday" type="date" />
+      <RegisterNameInput
+        label="名前"
+        idFirst="KanjiSei"
+        idLast="KanjiMei"
+        type="string"
+        valueFirst={firstName}
+        valueLast={lastName}
+        placeholderFirst="性"
+        placeholderLast="名"
+        onChangeFirst={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev, //今の値を展開してfirstName以外に更新をかけないようにする
+            firstName: e.target.value,
+          }))
+        }
+        onChangeLast={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            lastName: e.target.value,
+          }))
+        }
+      />
+
+      <RegisterNameInput
+        label="フリガナ"
+        idFirst="KatakanaSei"
+        idLast="KatakanaMei"
+        type="string"
+        valueFirst={firstFurigana}
+        valueLast={lastFurigana}
+        placeholderFirst="セイ"
+        placeholderLast="メイ"
+        onChangeFirst={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            firstFurigana: e.target.value,
+          }))
+        }
+        onChangeLast={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            lastFurigana: e.target.value,
+          }))
+        }
+      />
+
+      <RegisterInput
+        label="生年月日"
+        id="birthday"
+        type="date"
+        value={birthday}
+        onChange={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            birthday: e.target.value,
+          }))
+        }
+      />
+
       <label htmlFor="address">住所</label>
-      <label htmlFor="postalCode">郵便番号</label>
-      <input id="postalCode" type="number" />
-      <label htmlFor="finalEducation">最終学歴</label>
-      <input id="finalEducation" type="text" />
-      <label htmlFor="enterDate">入社日</label>
-      <input id="enterDate" type="date" />
-      {/* <label htmlFor="contract-type">契約形態</label>
-      <select name="contract-type" id="contract-type">
-        <option value=""></option>
-        <option value="">正社員</option>
-        <option value="">嘱託</option>
-        <option value="">派遣</option>
-        <option value="">パート</option>
-      </select>
-      <label htmlFor="department">部署</label>
-      <select name="department" id="department">
-        <option value=""></option>
-        <option value="">人事部</option>
-        <option value="">経理部</option>
-        <option value="">情報システム部</option>
-        <option value="">第一営業部</option>
-        <option value="">第二営業部</option>
-        <option value="">第三営業部</option>
-      </select>
-      <label htmlFor="rank">等級</label>
-      <select name="rank" id="rank">
-        <option value=""></option>
-        <option value="">1級</option>
-        <option value="">2級</option>
-        <option value="">3級</option>
-        <option value="">4級</option>
-        <option value="">5級</option>
-      </select>
-      <label htmlFor="position">役職</label>
-      <select name="position" id="position">
-        <option value=""></option>
-        <option value="">主査</option>
-        <option value="">課長</option>
-        <option value="">課長代理</option>
-        <option value="">部長</option>
-        <option value="">統括部長</option>
-      </select> */}
+      <RegisterInput
+        label="郵便番号"
+        id="postalCode"
+        type="number"
+        value={postalCode}
+        onChange={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            postalCode: e.target.value,
+          }))
+        }
+      />
+      <RegisterInput
+        label="最終学歴"
+        id="finalEducation"
+        type="text"
+        value={education}
+        onChange={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            education: e.target.value,
+          }))
+        }
+      />
 
-      <ContractOptions />
-      <DepartmentOptions />
-      <RankOptions />
-      <PositionOptions />
+      <RegisterInput
+        label="入社日"
+        id="enterDate"
+        type="date"
+        value={hireDate}
+        onChange={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            hireDate: e.target.value,
+          }))
+        }
+      />
+      <ContractOptions onChange={setRegisterInfo} value={contractType} />
+      <DepartmentOptions onChange={setRegisterInfo} value={department} />
+      <RankOptions onChange={setRegisterInfo} value={rank} />
+      <PositionOptions onChange={setRegisterInfo} value={position} />
 
-      <Button text={'登録'} />
+      <Button text={'登録'} onClick={handleRegister} />
+
+      <SearchResult />
     </div>
   )
 }
