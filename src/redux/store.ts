@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import counterSlicer from './counterSlice'
+// import counterSlicer from './counterSlice'
 import optionsSlicer from './optionsSlice'
 import employeeDataSlicer from './employeeDataSlice'
 
@@ -9,7 +9,7 @@ import employeeDataSlicer from './employeeDataSlice'
 const store = configureStore({
   reducer: {
     //ここは名前決まってる
-    counter: counterSlicer, //counterは自分でつけた
+    // counter: counterSlicer, //counterは自分でつけた
     option: optionsSlicer,
     employee: employeeDataSlicer,
   },

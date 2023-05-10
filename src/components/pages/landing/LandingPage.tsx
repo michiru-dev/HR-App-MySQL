@@ -1,18 +1,13 @@
 import React from 'react'
-import Search from '../../common/Search'
-import Button from '../../common/Button'
-import { Link } from 'react-router-dom'
+import { Search } from '../../common/Search'
+import LinkButton from '../../common/LinkButton'
 
 function LandingPage() {
   return (
     <div>
       <Search />
-      <Link to={'register'}>
-        <Button text={'新規登録'} />
-      </Link>
-      <Link to={'setting'}>
-        <Button text={'各種設定'} />
-      </Link>
+      <LinkButton link={'register'} text={'新規登録'} />
+      <LinkButton link={'setting'} text={'各種設定'} />
     </div>
   )
 }
