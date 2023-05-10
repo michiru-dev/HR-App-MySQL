@@ -2,24 +2,29 @@ import React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 
 function SearchResult() {
-  const employeeData = useAppSelector((state) => state.employee.employeeData)
-  console.log(employeeData)
+  const foundEmployee = useAppSelector(
+    (state) => state.employee.searchedEmployeeData
+  )
+
+  if (foundEmployee.length === 0) {
+    return null // データがない場合は何も表示しない
+  }
 
   return (
     <div>
       <ul>
-        {employeeData.map((data: any) => {
-          return (
-            <li key={data.id}>
+        {foundEmployee.map((data) => (
+          <li key={data.id}>
+            <ul>
               <li>{data.firstName}</li>
               <li>{data.lastName}</li>
               <li>{data.contractType}</li>
-            </li>
-          )
-        })}
+            </ul>
+          </li>
+        ))}
       </ul>
     </div>
   )
 }
 
-export default SearchResult
+export { SearchResult }

@@ -9,7 +9,7 @@ import { addEmployee } from '../../../redux/employeeDataSlice'
 import type { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
 import RegisterInput from './RegisterInput'
 import RegisterNameInput from './RegisterNameInput'
-import SearchResult from '../../common/SearchResult'
+import { SearchResult } from '../../common/SearchResult'
 
 function Register() {
   const dispatch = useDispatch()
@@ -44,6 +44,7 @@ function Register() {
   } = registerInfo
 
   const handleRegister = () => {
+    alert('登録されました')
     dispatch(
       addEmployee({
         firstName,
@@ -59,7 +60,21 @@ function Register() {
         rank,
         position,
       })
-    )
+    ) //inputを空にする
+    setRegisterInfo({
+      firstName: '',
+      lastName: '',
+      firstFurigana: '',
+      lastFurigana: '',
+      birthday: '',
+      postalCode: '',
+      education: '',
+      hireDate: '',
+      contractType: '',
+      department: '',
+      rank: '',
+      position: '',
+    })
   }
 
   return (
@@ -168,7 +183,7 @@ function Register() {
 
       <Button text={'登録'} onClick={handleRegister} />
 
-      <SearchResult />
+      {/* <SearchResult /> */}
     </div>
   )
 }

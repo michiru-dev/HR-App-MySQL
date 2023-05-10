@@ -21,10 +21,12 @@ export type EmployeeWithoutId = Omit<EmployeeBase, 'id'>
 
 type InitialBase = {
   employeeData: Array<EmployeeBase>
+  searchedEmployeeData: Array<EmployeeBase>
 }
 
 const initialState: InitialBase = {
   employeeData: [],
+  searchedEmployeeData: [],
 }
 
 export const employeeDataSlice = createSlice({
@@ -35,8 +37,18 @@ export const employeeDataSlice = createSlice({
       const id = (state.employeeData.length + 1).toString()
       state.employeeData.push({ ...action.payload, id }) //展開してidを追加して新しいobjectを作成している
     },
+    searchEmployee: (state, action: PayloadAction<string>) => {
+      state.searchedEmployeeData = state.employeeData.filter((data) => {
+        return (
+          data.firstName.includes(action.payload) ||
+          data.lastName.includes(action.payload) ||
+          data.firstFurigana.includes(action.payload) ||
+          data.lastFurigana.includes(action.payload)
+        )
+      })
+    },
   },
 })
 
-export const { addEmployee } = employeeDataSlice.actions
+export const { addEmployee, searchEmployee } = employeeDataSlice.actions
 export default employeeDataSlice.reducer
