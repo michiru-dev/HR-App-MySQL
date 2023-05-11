@@ -1,5 +1,35 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
+import { collection, addDoc, getDocs } from 'firebase/firestore'
+import db from '../fireStore/fireStoreConfig'
+
+//firebaseに保存
+const addOpionData = async (optionData: OptionBase, collectionName: string) => {
+  try {
+    const docRef = await addDoc(collection(db, collectionName), optionData)
+
+    console.log('Document written with ID: ', docRef.id)
+  } catch (e) {
+    console.error('Error adding document: ', e)
+  }
+}
+
+//reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う
+const fetchContractType = createAsyncThunk<{
+  contractTypes: Array<OptionBase>
+}>('options/fetchContractType', async () => {
+  //名前をつける
+  const getData = collection(db, 'contractType')
+  //contractTypeのデータを見る
+  const snapShot = await getDocs(getData)
+  //データを取得
+  const arr = snapShot.docs.map((doc) => ({
+    //docsはもともとあるやつ
+    ...(doc.data() as OptionBase),
+  }))
+  return { contractTypes: arr }
+  //必ずobjectでreturn、リターンするものに名前をつける
+})
 
 export type OptionBase = {
   id: string
@@ -11,15 +41,16 @@ type OptionsState = {
   department: Array<OptionBase>
   rank: Array<OptionBase>
   position: Array<OptionBase>
+  isLoading: boolean
 }
 
 //そのデータの初期値を定義（スライスを作る準備）
 const initialState: OptionsState = {
   contractType: [
-    { id: uuidv4(), name: '正社員' },
-    { id: uuidv4(), name: '再雇用' },
-    { id: uuidv4(), name: '嘱託' },
-    { id: uuidv4(), name: '派遣' },
+    // { id: uuidv4(), name: '正社員' },
+    // { id: uuidv4(), name: '再雇用' },
+    // { id: uuidv4(), name: '嘱託' },
+    // { id: uuidv4(), name: '派遣' },
   ],
   department: [
     { id: uuidv4(), name: '人事部' },
@@ -43,6 +74,7 @@ const initialState: OptionsState = {
     { id: uuidv4(), name: '部長' },
     { id: uuidv4(), name: '課長' },
   ],
+  isLoading: false,
 }
 
 export const optionsSlice = createSlice({
@@ -52,6 +84,7 @@ export const optionsSlice = createSlice({
     //契約形態
     addContractType: (state, action: PayloadAction<OptionBase>) => {
       state.contractType.push(action.payload)
+      addOpionData(action.payload, 'contractType') //firebase
     },
     deleteContractType: (state, action: PayloadAction<string>) => {
       const newContractArray = state.contractType.filter((contract) => {
@@ -70,6 +103,7 @@ export const optionsSlice = createSlice({
     //部署
     addDepartmentType: (state, action: PayloadAction<OptionBase>) => {
       state.department.push(action.payload)
+      addOpionData(action.payload, 'departmentType')
     },
     deleteDepartmentType: (state, action: PayloadAction<string>) => {
       const newDepartmentArray = state.department.filter((department) => {
@@ -87,6 +121,7 @@ export const optionsSlice = createSlice({
     //等級
     addRankType: (state, action: PayloadAction<OptionBase>) => {
       state.rank.push(action.payload)
+      addOpionData(action.payload, 'rankType')
     },
     deleteRankType: (state, action: PayloadAction<string>) => {
       const newRankArray = state.rank.filter((rank) => {
@@ -104,6 +139,7 @@ export const optionsSlice = createSlice({
     //役職
     addPositionType: (state, action: PayloadAction<OptionBase>) => {
       state.position.push(action.payload)
+      addOpionData(action.payload, 'positionType')
     },
     deletePositionType: (state, action: PayloadAction<string>) => {
       const newPositionArray = state.contractType.filter((position) => {
@@ -118,6 +154,21 @@ export const optionsSlice = createSlice({
         }
       })
     },
+  },
+  //createAsyncThunkとセット。上でセットしたreturnが使える
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchContractType.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(fetchContractType.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.contractType = action.payload.contractTypes
+      })
+      .addCase(fetchContractType.rejected, (state) => {
+        state.isLoading = false
+        // state.error = action.error
+      })
   },
 })
 
@@ -135,4 +186,7 @@ export const {
   deletePositionType,
   editPositionType,
 } = optionsSlice.actions
+
+export { fetchContractType }
+
 export default optionsSlice.reducer

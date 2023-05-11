@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './App.scss'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Setting from './components/pages/setting/Setting'
 import LandingPage from './components/pages/landing/LandingPage'
 import Register from './components/pages/register/Register'
 // import { increment, decrement, setName } from '../src/redux/counterSlice'
-import { useAppDispatch, useAppSelector } from './redux/hooks'
+import db from './fireStore/fireStoreConfig'
+import { useState } from 'react'
+import { collection, getDocs } from 'firebase/firestore'
+import { useAppDispatch } from './redux/hooks'
+import { fetchContractType } from './redux/optionsSlice'
 
 function App() {
   // const counter = useAppSelector((state) => state.counter.value)
@@ -23,6 +27,22 @@ function App() {
   // //        ⇩
   // // setName('test') => setName(state, action)
 
+  const [posts, setPosts] = useState<any>([])
+  useEffect(() => {
+    //データ取得
+    const postData = collection(db, 'posts') //collectionでpostの中のデータを見る
+    getDocs(postData).then((snapShot) => {
+      //getDocsでデータを取得
+      // console.log(snapShot.docs.map((doc) => ({ ...doc.data() })))
+      setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })))
+    })
+  }, [])
+
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchContractType())
+  }, [])
+
   return (
     <div>
       {/* <div>
@@ -32,6 +52,9 @@ function App() {
         <button onClick={() => dispatch(decrement())}>-</button>
         <button onClick={() => dispatch(setName('test'))}>NAME</button>
       </div> */}
+      {posts.map((post: any) => (
+        <h1 key={1}>{post.title}</h1>
+      ))}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />

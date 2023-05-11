@@ -1,4 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { collection, addDoc } from 'firebase/firestore'
+import db from '../fireStore/fireStoreConfig'
+
+//firebaseに保存
+const addEmployeeData = async (employeeData: EmployeeBase) => {
+  try {
+    const docRef = await addDoc(collection(db, 'employeeData'), employeeData)
+    //'employeeData'というコレクションに引数employeeDataを格納、たぶん、、
+    console.log('Document written with ID: ', docRef.id)
+  } catch (e) {
+    console.error('Error adding document: ', e)
+  }
+}
 
 export type EmployeeBase = {
   id: string
@@ -35,7 +48,9 @@ export const employeeDataSlice = createSlice({
   reducers: {
     addEmployee: (state, action: PayloadAction<EmployeeWithoutId>) => {
       const id = (state.employeeData.length + 1).toString()
-      state.employeeData.push({ ...action.payload, id }) //展開してidを追加して新しいobjectを作成している
+      const newEmployee = { ...action.payload, id } //展開してidを追加して新しいobjectを作成している
+      state.employeeData.push(newEmployee)
+      addEmployeeData(newEmployee)
     },
     searchEmployee: (state, action: PayloadAction<string>) => {
       state.searchedEmployeeData = state.employeeData.filter((data) => {
