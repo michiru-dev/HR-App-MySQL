@@ -9,7 +9,7 @@ import db from './fireStore/fireStoreConfig'
 import { useState } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { useAppDispatch } from './redux/hooks'
-import { fetchContractType } from './redux/optionsSlice'
+import { fetchHrOptionType } from './redux/optionsSlice'
 
 function App() {
   // const counter = useAppSelector((state) => state.counter.value)
@@ -27,20 +27,21 @@ function App() {
   // //        ⇩
   // // setName('test') => setName(state, action)
 
-  const [posts, setPosts] = useState<any>([])
-  useEffect(() => {
-    //データ取得
-    const postData = collection(db, 'posts') //collectionでpostの中のデータを見る
-    getDocs(postData).then((snapShot) => {
-      //getDocsでデータを取得
-      // console.log(snapShot.docs.map((doc) => ({ ...doc.data() })))
-      setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })))
-    })
-  }, [])
+  // const [posts, setPosts] = useState<any>([])
+  // useEffect(() => {
+  //   //データ取得
+  //   const postData = collection(db, 'posts') //collectionでpostの中のデータを見る
+  //   getDocs(postData).then((snapShot) => {
+  //     //getDocsでデータを取得
+  //     // console.log(snapShot.docs.map((doc) => ({ ...doc.data() })))
+  //     //doc.data()はjson.stringfy的な感じ。データを読めるようにする
+  //     setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })))
+  //   })
+  // }, [])
 
   const dispatch = useAppDispatch()
   useEffect(() => {
-    dispatch(fetchContractType())
+    dispatch(fetchHrOptionType())
   }, [])
 
   return (
@@ -52,9 +53,9 @@ function App() {
         <button onClick={() => dispatch(decrement())}>-</button>
         <button onClick={() => dispatch(setName('test'))}>NAME</button>
       </div> */}
-      {posts.map((post: any) => (
+      {/* {posts.map((post: any) => (
         <h1 key={1}>{post.title}</h1>
-      ))}
+      ))} */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />

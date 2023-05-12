@@ -1,39 +1,101 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { v4 as uuidv4 } from 'uuid'
-import { collection, addDoc, getDocs } from 'firebase/firestore'
+import { collection, addDoc, deleteDoc, getDocs, doc } from 'firebase/firestore'
+import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types'
 import db from '../fireStore/fireStoreConfig'
 
 //firebaseに保存
 const addOpionData = async (optionData: OptionBase, collectionName: string) => {
   try {
-    const docRef = await addDoc(collection(db, collectionName), optionData)
-
-    console.log('Document written with ID: ', docRef.id)
+    await addDoc(collection(db, collectionName), optionData)
   } catch (e) {
     console.error('Error adding document: ', e)
   }
 }
 
+//firebaseから削除
+const deleteOptionData = async (docId: string, collectionName: string) => {
+  try {
+    await deleteDoc(doc(db, collectionName, docId))
+  } catch (e) {
+    console.error('Error adding document: ', e)
+  }
+}
+
+// const querySnapshot = getDocs(collection(db, 'contractType'))
+// querySnapshot.forEach((doc) => {
+//   if (doc.id === action.payload) {
+//     deleteOptionData(doc.id, 'contractType')
+//   }
+// })
+
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う
-const fetchContractType = createAsyncThunk<{
+//下の方のextrareducersとセット
+const fetchHrOptionType = createAsyncThunk<{
   contractTypes: Array<OptionBase>
-}>('options/fetchContractType', async () => {
+  departmentTypes: Array<OptionBase>
+  positionTypes: Array<OptionBase>
+  rankTypes: Array<OptionBase>
   //名前をつける
-  const getData = collection(db, 'contractType')
+}>('options/fetchHrOptionType', async () => {
   //contractTypeのデータを見る
-  const snapShot = await getDocs(getData)
+  const getContractType = collection(db, 'contractType')
+  const getDepartmentType = collection(db, 'departmentType')
+  const getPositionType = collection(db, 'positionType')
+  const getRankType = collection(db, 'rankType')
+
   //データを取得
-  const arr = snapShot.docs.map((doc) => ({
+  const snapShotContract = await getDocs(getContractType)
+  const snapShotDepartment = await getDocs(getDepartmentType)
+  const snapShotPosition = await getDocs(getPositionType)
+  const snapShotRank = await getDocs(getRankType)
+
+  //doc.data()はjson.stringfy的な感じ。データを読めるようにする
+  //↓こんな感じのが返ってくる
+  // const obj = {
+  //   id: 'sadds',
+  //   name: 'sdffd',
+  // }
+
+  // const convertFbData = (doc: QueryDocumentSnapshot<DocumentData>) => ({
+  //   ...(doc.data() as OptionBase),
+  //   docId: doc.id,
+  // })
+
+  const contractArr = snapShotContract.docs.map((doc) => ({
     //docsはもともとあるやつ
     ...(doc.data() as OptionBase),
+    docId: doc.id, //objectにdocIdを追加。これはfirebase上のID
+    //スプレッドは以下をしてるのと同じ。.idと.nameが勝手にプロパティ名になる
+    //  id: doc.data().id,
+    // name: doc.data().name,
   }))
-  return { contractTypes: arr }
+
+  const departmentArr = snapShotDepartment.docs.map((doc) => ({
+    ...(doc.data() as OptionBase),
+    docId: doc.id,
+  }))
+  const positionArr = snapShotPosition.docs.map((doc) => ({
+    ...(doc.data() as OptionBase),
+    docId: doc.id,
+  }))
+  const rankArr = snapShotRank.docs.map((doc) => ({
+    ...(doc.data() as OptionBase),
+    docId: doc.id,
+  }))
+
   //必ずobjectでreturn、リターンするものに名前をつける
+  return {
+    contractTypes: contractArr,
+    departmentTypes: departmentArr,
+    positionTypes: positionArr,
+    rankTypes: rankArr,
+  }
 })
 
 export type OptionBase = {
   id: string
   name: string
+  docId?: string
 }
 
 type OptionsState = {
@@ -46,34 +108,10 @@ type OptionsState = {
 
 //そのデータの初期値を定義（スライスを作る準備）
 const initialState: OptionsState = {
-  contractType: [
-    // { id: uuidv4(), name: '正社員' },
-    // { id: uuidv4(), name: '再雇用' },
-    // { id: uuidv4(), name: '嘱託' },
-    // { id: uuidv4(), name: '派遣' },
-  ],
-  department: [
-    { id: uuidv4(), name: '人事部' },
-    { id: uuidv4(), name: '経理部' },
-    { id: uuidv4(), name: '情報システム部' },
-    { id: uuidv4(), name: '第一営業部' },
-    { id: uuidv4(), name: '第二営業部' },
-    { id: uuidv4(), name: '第三営業部' },
-  ],
-  rank: [
-    { id: uuidv4(), name: '1級' },
-    { id: uuidv4(), name: '2級' },
-    { id: uuidv4(), name: '3級' },
-    { id: uuidv4(), name: '4級' },
-    { id: uuidv4(), name: '5級' },
-  ],
-  position: [
-    { id: uuidv4(), name: '社長' },
-    { id: uuidv4(), name: '専務' },
-    { id: uuidv4(), name: '統括部長' },
-    { id: uuidv4(), name: '部長' },
-    { id: uuidv4(), name: '課長' },
-  ],
+  contractType: [],
+  department: [],
+  rank: [],
+  position: [],
   isLoading: false,
 }
 
@@ -87,6 +125,16 @@ export const optionsSlice = createSlice({
       addOpionData(action.payload, 'contractType') //firebase
     },
     deleteContractType: (state, action: PayloadAction<string>) => {
+      //firebaseから削除
+      const target = state.contractType.find(
+        //一致した最初の要素を返す（ここではオブジェクト）
+        (contract) => contract.id === action.payload
+      )
+      if (typeof target === 'undefined' || typeof target.docId === 'undefined')
+        return
+      deleteOptionData(target.docId, 'contractType')
+
+      //見た目から削除
       const newContractArray = state.contractType.filter((contract) => {
         return contract.id !== action.payload
       })
@@ -106,6 +154,13 @@ export const optionsSlice = createSlice({
       addOpionData(action.payload, 'departmentType')
     },
     deleteDepartmentType: (state, action: PayloadAction<string>) => {
+      const target = state.contractType.find(
+        (contract) => contract.id === action.payload
+      )
+      if (typeof target === 'undefined' || typeof target.docId === 'undefined')
+        return
+      deleteOptionData(target.docId, 'contractType')
+
       const newDepartmentArray = state.department.filter((department) => {
         return department.id !== action.payload
       })
@@ -124,6 +179,13 @@ export const optionsSlice = createSlice({
       addOpionData(action.payload, 'rankType')
     },
     deleteRankType: (state, action: PayloadAction<string>) => {
+      const target = state.contractType.find(
+        (contract) => contract.id === action.payload
+      )
+      if (typeof target === 'undefined' || typeof target.docId === 'undefined')
+        return
+      deleteOptionData(target.docId, 'contractType')
+
       const newRankArray = state.rank.filter((rank) => {
         return rank.id !== action.payload
       })
@@ -142,6 +204,13 @@ export const optionsSlice = createSlice({
       addOpionData(action.payload, 'positionType')
     },
     deletePositionType: (state, action: PayloadAction<string>) => {
+      const target = state.contractType.find(
+        (contract) => contract.id === action.payload
+      )
+      if (typeof target === 'undefined' || typeof target.docId === 'undefined')
+        return
+      deleteOptionData(target.docId, 'contractType')
+
       const newPositionArray = state.contractType.filter((position) => {
         return position.id !== action.payload
       })
@@ -158,14 +227,17 @@ export const optionsSlice = createSlice({
   //createAsyncThunkとセット。上でセットしたreturnが使える
   extraReducers: (builder) => {
     builder
-      .addCase(fetchContractType.pending, (state) => {
+      .addCase(fetchHrOptionType.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(fetchContractType.fulfilled, (state, action) => {
+      .addCase(fetchHrOptionType.fulfilled, (state, action) => {
         state.isLoading = false
         state.contractType = action.payload.contractTypes
+        state.department = action.payload.departmentTypes
+        state.position = action.payload.positionTypes
+        state.rank = action.payload.rankTypes
       })
-      .addCase(fetchContractType.rejected, (state) => {
+      .addCase(fetchHrOptionType.rejected, (state) => {
         state.isLoading = false
         // state.error = action.error
       })
@@ -187,6 +259,6 @@ export const {
   editPositionType,
 } = optionsSlice.actions
 
-export { fetchContractType }
+export { fetchHrOptionType }
 
 export default optionsSlice.reducer
