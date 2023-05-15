@@ -1,12 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { collection, addDoc, deleteDoc, getDocs, doc } from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  getDocs,
+  doc,
+  query,
+  orderBy,
+} from 'firebase/firestore'
 import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types'
 import db from '../fireStore/fireStoreConfig'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore'
 
-//firebaseに保存
+//firebaseに保存（追加）
 const addOpionData = async (optionData: OptionBase, collectionName: string) => {
   try {
-    await addDoc(collection(db, collectionName), optionData)
+    await addDoc(collection(db, collectionName), {
+      ...optionData,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(), //firebaseの時間を追加
+    })
   } catch (e) {
     console.error('Error adding document: ', e)
   }
@@ -37,11 +50,20 @@ const fetchHrOptionType = createAsyncThunk<{
   rankTypes: Array<OptionBase>
   //名前をつける
 }>('options/fetchHrOptionType', async () => {
-  //contractTypeのデータを見る
-  const getContractType = collection(db, 'contractType')
-  const getDepartmentType = collection(db, 'departmentType')
-  const getPositionType = collection(db, 'positionType')
-  const getRankType = collection(db, 'rankType')
+  //Typeのデータを見てqueryとorderByで並び替え
+  const getContractType = query(
+    collection(db, 'contractType'),
+    orderBy('createdAt')
+  )
+  const getDepartmentType = query(
+    collection(db, 'departmentType'),
+    orderBy('createdAt')
+  )
+  const getPositionType = query(
+    collection(db, 'positionType'),
+    orderBy('createdAt')
+  )
+  const getRankType = query(collection(db, 'rankType'), orderBy('createdAt'))
 
   //データを取得
   const snapShotContract = await getDocs(getContractType)
@@ -61,10 +83,13 @@ const fetchHrOptionType = createAsyncThunk<{
   //   docId: doc.id,
   // })
 
+  //docIdの追加とcreatedIdの値の変換を行う
   const contractArr = snapShotContract.docs.map((doc) => ({
     //docsはもともとあるやつ
     ...(doc.data() as OptionBase),
     docId: doc.id, //objectにdocIdを追加。これはfirebase上のID
+    createdAt: doc.data().createdAt.seconds, //reduxがsecondsじゃないと理解してくれないため
+    //createdAtの値を上書き
     //スプレッドは以下をしてるのと同じ。.idと.nameが勝手にプロパティ名になる
     //  id: doc.data().id,
     // name: doc.data().name,
@@ -73,15 +98,20 @@ const fetchHrOptionType = createAsyncThunk<{
   const departmentArr = snapShotDepartment.docs.map((doc) => ({
     ...(doc.data() as OptionBase),
     docId: doc.id,
+    createdAt: doc.data().createdAt.seconds,
   }))
   const positionArr = snapShotPosition.docs.map((doc) => ({
     ...(doc.data() as OptionBase),
     docId: doc.id,
+    createdAt: doc.data().createdAt.seconds,
   }))
   const rankArr = snapShotRank.docs.map((doc) => ({
     ...(doc.data() as OptionBase),
     docId: doc.id,
+    createdAt: doc.data().createdAt.seconds,
   }))
+
+  console.log(contractArr)
 
   //必ずobjectでreturn、リターンするものに名前をつける
   return {
@@ -96,6 +126,7 @@ export type OptionBase = {
   id: string
   name: string
   docId?: string
+  createdAt?: firebase.firestore.FieldValue
 }
 
 type OptionsState = {
