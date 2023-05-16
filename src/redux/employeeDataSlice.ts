@@ -20,6 +20,18 @@ const addEmployeeData = async (employeeData: EmployeeBase) => {
   }
 }
 
+//firebaseからデータを取得
+const fetchEmployeeData = createAsyncThunk(
+  'employee/fetchEmployeeData',
+  async () => {
+    const querySnapshot = await getDocs(collection(db, 'employeeData'))
+    const employeeArr = querySnapshot.docs.map(
+      (doc) => doc.data() as EmployeeBase
+    )
+    return { employeeArr: employeeArr }
+  }
+)
+
 //firebaseから検索値を探す
 const fetchSearchedEmployee = createAsyncThunk(
   'employee/fetchSearchedEmployee',
@@ -84,18 +96,21 @@ export const employeeDataSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSearchedEmployee.pending, (state) => {
-        state
-      })
+      //   .addCase(fetchSearchedEmployee.pending, (state) => {
+      //     state
+      //   })
       .addCase(fetchSearchedEmployee.fulfilled, (state, action) => {
         state.searchedEmployeeData = action.payload.searchedEmployeeArr
       })
-      .addCase(fetchSearchedEmployee.rejected, (state) => {
-        state
+      //   .addCase(fetchSearchedEmployee.rejected, (state) => {
+      //     state
+      //   })
+      .addCase(fetchEmployeeData.fulfilled, (state, action) => {
+        state.employeeData = action.payload.employeeArr
       })
   },
 })
 
 export const { addEmployee } = employeeDataSlice.actions
-export { fetchSearchedEmployee }
+export { fetchSearchedEmployee, fetchEmployeeData }
 export default employeeDataSlice.reducer
