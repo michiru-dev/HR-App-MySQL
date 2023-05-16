@@ -3,6 +3,7 @@ import { useAppDispatch } from '../redux/hooks'
 import { v4 as uuidv4 } from 'uuid'
 import { OptionBase } from '../redux/optionsSlice'
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
+import firebase from 'firebase/compat/app'
 
 export type SettingActions = {
   settingType: OptionBase[]
@@ -30,7 +31,12 @@ export const useSettingInputs = ({
 
   //追加を押した時
   const handleAddClick = () => {
-    dispatch(onAdd({ id: uuidv4(), name: addInput }))
+    dispatch(
+      onAdd({
+        id: uuidv4(),
+        name: addInput,
+      })
+    )
     setAddInput('')
   }
 
@@ -53,7 +59,12 @@ export const useSettingInputs = ({
 
   //保存を押した時
   const handleEditSubmit = (index: number) => {
-    dispatch(onSave({ id: settingType[index].id, name: editedName }))
+    dispatch(
+      onSave({
+        id: settingType[index].id,
+        name: editedName,
+      })
+    )
     setEditIndex(null)
   }
 

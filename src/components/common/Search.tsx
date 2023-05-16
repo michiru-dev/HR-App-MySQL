@@ -8,7 +8,7 @@ function Search() {
   const [searchInput, setSearchInput] = useState('')
   const dispatch = useAppDispatch()
 
-  const handleSearchInput = (e: any) => {
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value)
   }
 
