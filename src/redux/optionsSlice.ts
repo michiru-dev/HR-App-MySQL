@@ -7,14 +7,18 @@ import {
   doc,
   query,
   orderBy,
+  updateDoc,
 } from 'firebase/firestore'
-import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types'
+// import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types'
 import db from '../fireStore/fireStoreConfig'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
 
 //firebaseに保存（追加）
-const addOpionData = async (optionData: OptionBase, collectionName: string) => {
+const addOptionData = async (
+  optionData: OptionBase,
+  collectionName: string
+) => {
   try {
     await addDoc(collection(db, collectionName), {
       ...optionData,
@@ -31,6 +35,20 @@ const deleteOptionData = async (docId: string, collectionName: string) => {
     await deleteDoc(doc(db, collectionName, docId))
   } catch (e) {
     console.error('Error adding document: ', e)
+  }
+}
+
+//firebaseの値を編集
+const editOption = async (
+  docId: string,
+  collectionName: string,
+  newName: string
+) => {
+  try {
+    const ref = doc(db, collectionName, docId)
+    await updateDoc(ref, { name: newName }) //これの第二引数はオブジェクト！
+  } catch (e) {
+    console.error('Error editting document: ', e)
   }
 }
 
@@ -153,7 +171,7 @@ export const optionsSlice = createSlice({
     //契約形態
     addContractType: (state, action: PayloadAction<OptionBase>) => {
       state.contractType.push(action.payload)
-      addOpionData(action.payload, 'contractType') //firebase
+      addOptionData(action.payload, 'contractType') //firebase
     },
     deleteContractType: (state, action: PayloadAction<string>) => {
       //firebaseから削除
@@ -176,21 +194,26 @@ export const optionsSlice = createSlice({
       state.contractType.map((contract) => {
         if (contract.id === action.payload.id) {
           contract.name = action.payload.name
+          if (contract.docId) {
+            //このif文はtsのため。
+            //contract.idの型をstring or undefinedにしてるためundefinedだとeditoptionに渡せないからundefinedでないことをチェックしている
+            editOption(contract.docId, 'contractType', action.payload.name)
+          }
         }
       })
     },
     //部署
     addDepartmentType: (state, action: PayloadAction<OptionBase>) => {
       state.department.push(action.payload)
-      addOpionData(action.payload, 'departmentType')
+      addOptionData(action.payload, 'departmentType')
     },
     deleteDepartmentType: (state, action: PayloadAction<string>) => {
-      const target = state.contractType.find(
+      const target = state.department.find(
         (contract) => contract.id === action.payload
       )
       if (typeof target === 'undefined' || typeof target.docId === 'undefined')
         return
-      deleteOptionData(target.docId, 'contractType')
+      deleteOptionData(target.docId, 'departmentType')
 
       const newDepartmentArray = state.department.filter((department) => {
         return department.id !== action.payload
@@ -201,21 +224,24 @@ export const optionsSlice = createSlice({
       state.department.map((department) => {
         if (department.id === action.payload.id) {
           department.name = action.payload.name
+          if (department.docId) {
+            editOption(department.docId, 'departmentType', action.payload.name)
+          }
         }
       })
     },
     //等級
     addRankType: (state, action: PayloadAction<OptionBase>) => {
       state.rank.push(action.payload)
-      addOpionData(action.payload, 'rankType')
+      addOptionData(action.payload, 'rankType')
     },
     deleteRankType: (state, action: PayloadAction<string>) => {
-      const target = state.contractType.find(
+      const target = state.rank.find(
         (contract) => contract.id === action.payload
       )
       if (typeof target === 'undefined' || typeof target.docId === 'undefined')
         return
-      deleteOptionData(target.docId, 'contractType')
+      deleteOptionData(target.docId, 'rankType')
 
       const newRankArray = state.rank.filter((rank) => {
         return rank.id !== action.payload
@@ -226,23 +252,26 @@ export const optionsSlice = createSlice({
       state.rank.map((rank) => {
         if (rank.id === action.payload.id) {
           rank.name = action.payload.name
+          if (rank.docId) {
+            editOption(rank.docId, 'rankType', action.payload.name)
+          }
         }
       })
     },
     //役職
     addPositionType: (state, action: PayloadAction<OptionBase>) => {
       state.position.push(action.payload)
-      addOpionData(action.payload, 'positionType')
+      addOptionData(action.payload, 'positionType')
     },
     deletePositionType: (state, action: PayloadAction<string>) => {
-      const target = state.contractType.find(
+      const target = state.position.find(
         (contract) => contract.id === action.payload
       )
       if (typeof target === 'undefined' || typeof target.docId === 'undefined')
         return
-      deleteOptionData(target.docId, 'contractType')
+      deleteOptionData(target.docId, 'positionType')
 
-      const newPositionArray = state.contractType.filter((position) => {
+      const newPositionArray = state.position.filter((position) => {
         return position.id !== action.payload
       })
       state.position = newPositionArray
@@ -251,6 +280,9 @@ export const optionsSlice = createSlice({
       state.position.map((position) => {
         if (position.id === action.payload.id) {
           position.name = action.payload.name
+          if (position.docId) {
+            editOption(position.docId, 'positionType', action.payload.name)
+          }
         }
       })
     },
