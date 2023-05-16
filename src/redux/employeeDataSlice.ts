@@ -1,5 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { collection, addDoc } from 'firebase/firestore'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  or,
+} from 'firebase/firestore'
 import db from '../fireStore/fireStoreConfig'
 
 //firebaseに保存
@@ -12,6 +19,28 @@ const addEmployeeData = async (employeeData: EmployeeBase) => {
     console.error('Error adding document: ', e)
   }
 }
+
+//firebaseから検索値を探す
+const fetchSearchedEmployee = createAsyncThunk(
+  'employee/fetchSearchedEmployee',
+  async (searchKeyword: string) => {
+    const q = query(
+      collection(db, 'employeeData'),
+      or(
+        where('firstName', '==', searchKeyword),
+        where('lastName', '==', searchKeyword),
+        where('firstFurigana', '==', searchKeyword),
+        where('lastFurigana', '==', searchKeyword)
+      )
+    )
+
+    const querySnapshot = await getDocs(q)
+    const searchedEmployeeArr = querySnapshot.docs.map((doc) => {
+      return doc.data() as EmployeeBase
+    })
+    return { searchedEmployeeArr: searchedEmployeeArr }
+  }
+)
 
 export type EmployeeBase = {
   id: string
@@ -52,18 +81,21 @@ export const employeeDataSlice = createSlice({
       state.employeeData.push(newEmployee)
       addEmployeeData(newEmployee)
     },
-    searchEmployee: (state, action: PayloadAction<string>) => {
-      state.searchedEmployeeData = state.employeeData.filter((data) => {
-        return (
-          data.firstName.includes(action.payload) ||
-          data.lastName.includes(action.payload) ||
-          data.firstFurigana.includes(action.payload) ||
-          data.lastFurigana.includes(action.payload)
-        )
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSearchedEmployee.pending, (state) => {
+        state
       })
-    },
+      .addCase(fetchSearchedEmployee.fulfilled, (state, action) => {
+        state.searchedEmployeeData = action.payload.searchedEmployeeArr
+      })
+      .addCase(fetchSearchedEmployee.rejected, (state) => {
+        state
+      })
   },
 })
 
-export const { addEmployee, searchEmployee } = employeeDataSlice.actions
+export const { addEmployee } = employeeDataSlice.actions
+export { fetchSearchedEmployee }
 export default employeeDataSlice.reducer

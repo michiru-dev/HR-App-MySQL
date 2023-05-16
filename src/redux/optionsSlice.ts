@@ -9,7 +9,6 @@ import {
   orderBy,
   updateDoc,
 } from 'firebase/firestore'
-// import { QueryDocumentSnapshot, DocumentData } from '@firebase/firestore-types'
 import db from '../fireStore/fireStoreConfig'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
@@ -128,8 +127,6 @@ const fetchHrOptionType = createAsyncThunk<{
     docId: doc.id,
     createdAt: doc.data().createdAt.seconds,
   }))
-
-  console.log(contractArr)
 
   //必ずobjectでreturn、リターンするものに名前をつける
   return {
