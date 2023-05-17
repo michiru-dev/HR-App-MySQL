@@ -6,6 +6,8 @@ import {
   where,
   getDocs,
   or,
+  updateDoc,
+  doc,
 } from 'firebase/firestore'
 import db from '../fireStore/fireStoreConfig'
 
@@ -25,9 +27,10 @@ const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
   async () => {
     const querySnapshot = await getDocs(collection(db, 'employeeData'))
-    const employeeArr = querySnapshot.docs.map(
-      (doc) => doc.data() as EmployeeBase
-    )
+    const employeeArr = querySnapshot.docs.map((doc) => ({
+      ...(doc.data() as EmployeeBase),
+      docId: doc.id,
+    }))
     return { employeeArr: employeeArr }
   }
 )
@@ -54,6 +57,34 @@ const fetchSearchedEmployee = createAsyncThunk(
   }
 )
 
+// type Sample<T> = {
+//   name: string
+//   moreInfoObj: T
+// }
+
+// const user: Sample<{
+//   age: number
+//   lastname: string
+// }> = {
+//   name: 'sss',
+//   moreInfoObj: {
+//     age: 1,
+//     lastname: 'test'
+//   },
+// }
+
+//firebaseの値を上書き（編集）
+//createAsyncThunkの型定義は二つの引数形式
+//一つ目の引数は返り値の型、二つ目はasyncの後にくる引数の型
+const editEmployeeData = createAsyncThunk<
+  void, //returnがなにもないからvoid
+  { newData: EmployeeBase }
+>('employee/editEmployeeData', async ({ newData }) => {
+  if (typeof newData.docId === 'undefined') return
+  const ref = doc(db, 'employeeData', newData.docId)
+  await updateDoc(ref, newData)
+})
+
 export type EmployeeBase = {
   id: string
   firstName: string
@@ -68,6 +99,7 @@ export type EmployeeBase = {
   department: string
   rank: string
   position: string
+  docId?: string
 }
 
 //omitでid以外のtypeを作成
@@ -112,5 +144,6 @@ export const employeeDataSlice = createSlice({
 })
 
 export const { addEmployee } = employeeDataSlice.actions
-export { fetchSearchedEmployee, fetchEmployeeData }
+export { fetchSearchedEmployee, fetchEmployeeData, editEmployeeData }
+
 export default employeeDataSlice.reducer

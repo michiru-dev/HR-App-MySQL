@@ -3,7 +3,6 @@ import { useAppDispatch } from '../redux/hooks'
 import { v4 as uuidv4 } from 'uuid'
 import { OptionBase } from '../redux/optionsSlice'
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
-import firebase from 'firebase/compat/app'
 
 export type SettingActions = {
   settingType: OptionBase[]

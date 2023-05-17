@@ -1,26 +1,67 @@
-import React, { useEffect } from 'react'
-import { fetchEmployeeData } from '../../../redux/employeeDataSlice'
+import React, { useEffect, useState } from 'react'
+import {
+  EmployeeBase,
+  editEmployeeData,
+  fetchEmployeeData,
+} from '../../../redux/employeeDataSlice'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
+import Button from '../../common/Button'
+import EmployeeInfoRegister from '../../common/EmployeeInfoRegister'
 
 function EmployeeList() {
   const dispatch = useAppDispatch()
+  const [editEmployeeIndex, setEditEmployeeIndex] = useState<number | null>(
+    null
+  )
+  const employeeData = useAppSelector((state) => state.employee.employeeData)
 
   useEffect(() => {
     dispatch(fetchEmployeeData())
   }, [])
 
-  const employeeData = useAppSelector((state) => state.employee.employeeData)
+  const handleEditClick = (index: number) => {
+    setEditEmployeeIndex(index)
+  }
+
+  const handleButtonClick = async (
+    employee: EmployeeBase,
+    docId: string | undefined
+  ) => {
+    if (typeof docId === 'undefined') return
+    await dispatch(editEmployeeData({ newData: { ...employee, docId } }))
+    await dispatch(fetchEmployeeData()) //編集して上書きしてきたデータを取得
+    setEditEmployeeIndex(null)
+  }
+
+  // const handleButtonClick2 = (registerInfo: EmployeeBase) =>
+  // handleButtonClick(registerInfo, employee.docId)
 
   return (
     <div>
-      {employeeData.map((employee) => (
-        <li key={employee.id}>
-          <div>{employee.firstName}</div>
-          <div>{employee.lastName}</div>
-          <div>{employee.position}</div>
-          <div>{employee.rank}</div>
-        </li>
-      ))}
+      {employeeData.map((employee, index) => {
+        return (
+          <li key={employee.id}>
+            {editEmployeeIndex === index ? (
+              //編集中のindexとmapのindexが一緒だったら編集画面
+              <EmployeeInfoRegister
+                buttonText={'保存'}
+                handleButtonClick={(registerInfo: EmployeeBase) =>
+                  handleButtonClick(registerInfo, employee.docId)
+                } //この無名関数は上のhandleButtonClick2と同じ
+                employee={employee}
+              />
+            ) : (
+              <>
+                <div>{employee.firstName}</div>
+                <div>{employee.lastName}</div>
+                <div>{employee.position}</div>
+                <div>{employee.rank}</div>
+                <Button text={'編集'} onClick={() => handleEditClick(index)} />
+              </>
+            )}
+          </li>
+        )
+      })}
     </div>
   )
 }

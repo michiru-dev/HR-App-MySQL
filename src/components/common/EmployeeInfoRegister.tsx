@@ -1,31 +1,37 @@
 import React, { useState } from 'react'
-import Button from '../../common/Button'
-import ContractOptions from './ContractOptions'
-import RankOptions from './RankOptions'
-import PositionOptions from './PositionOptions'
-import DepartmentOptions from './DepartmentOptions'
-import { useAppDispatch } from '../../../redux/hooks'
-import { addEmployee } from '../../../redux/employeeDataSlice'
-import type { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
-import RegisterInput from './RegisterInput'
-import RegisterNameInput from './RegisterNameInput'
-import { SearchResult } from '../../common/SearchResult'
+import RegisterNameInput from '../pages/register/RegisterNameInput'
+import RegisterInput from '../pages/register/RegisterInput'
+import ContractOptions from '../pages/register/ContractOptions'
+import DepartmentOptions from '../pages/register/DepartmentOptions'
+import RankOptions from '../pages/register/RankOptions'
+import PositionOptions from '../pages/register/PositionOptions'
+import { EmployeeBase, EmployeeWithoutId } from '../../redux/employeeDataSlice'
+import Button from './Button'
 
-function Register() {
-  const dispatch = useAppDispatch()
+type employeeInfoBase = {
+  buttonText: string
+  employee: EmployeeBase
+  handleButtonClick: any
+}
+
+function EmployeeInfoRegister({
+  buttonText,
+  employee,
+  handleButtonClick,
+}: employeeInfoBase) {
   const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutId>({
-    firstName: '',
-    lastName: '',
-    firstFurigana: '',
-    lastFurigana: '',
-    birthday: '',
-    postalCode: '',
-    education: '',
-    hireDate: '',
-    contractType: '',
-    department: '',
-    rank: '',
-    position: '',
+    firstName: employee.firstName,
+    lastName: employee.lastName,
+    firstFurigana: employee.firstFurigana,
+    lastFurigana: employee.lastFurigana,
+    birthday: employee.birthday,
+    postalCode: employee.postalCode,
+    education: employee.education,
+    hireDate: employee.hireDate,
+    contractType: employee.contractType,
+    department: employee.department,
+    rank: employee.rank,
+    position: employee.position,
   })
 
   const {
@@ -42,40 +48,6 @@ function Register() {
     rank,
     position,
   } = registerInfo
-
-  const handleRegister = () => {
-    alert('登録されました')
-    dispatch(
-      addEmployee({
-        firstName,
-        lastName,
-        firstFurigana,
-        lastFurigana,
-        birthday,
-        postalCode,
-        education,
-        hireDate,
-        contractType,
-        department,
-        rank,
-        position,
-      })
-    ) //inputを空にする
-    setRegisterInfo({
-      firstName: '',
-      lastName: '',
-      firstFurigana: '',
-      lastFurigana: '',
-      birthday: '',
-      postalCode: '',
-      education: '',
-      hireDate: '',
-      contractType: '',
-      department: '',
-      rank: '',
-      position: '',
-    })
-  }
 
   return (
     <div>
@@ -181,11 +153,12 @@ function Register() {
       <RankOptions onChange={setRegisterInfo} value={rank} />
       <PositionOptions onChange={setRegisterInfo} value={position} />
 
-      <Button text={'登録'} onClick={handleRegister} />
-
-      {/* <SearchResult /> */}
+      <Button
+        text={buttonText}
+        onClick={() => handleButtonClick(registerInfo)}
+      />
     </div>
   )
 }
 
-export default Register
+export default EmployeeInfoRegister

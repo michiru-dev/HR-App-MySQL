@@ -21,7 +21,6 @@ function ShowInputs({ settingType, ...rest }: SettingActions) {
     <div>
       {settingType.map((setting: OptionBase, index: number) => {
         return (
-          //このreturnいる？
           <li key={setting.id}>
             {editIndex === index ? (
               //編集中のindexとmapのindexが一緒だったら編集画面
