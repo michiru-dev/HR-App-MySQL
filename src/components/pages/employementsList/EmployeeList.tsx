@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   EmployeeBase,
+  deleteEmployeeData,
   editEmployeeData,
   fetchEmployeeData,
 } from '../../../redux/employeeDataSlice'
@@ -23,6 +24,7 @@ function EmployeeList() {
     setEditEmployeeIndex(index)
   }
 
+  //保存ボタンが押された時
   const handleButtonClick = async (
     employee: EmployeeBase,
     docId: string | undefined
@@ -30,6 +32,19 @@ function EmployeeList() {
     if (typeof docId === 'undefined') return
     await dispatch(editEmployeeData({ newData: { ...employee, docId } }))
     await dispatch(fetchEmployeeData()) //編集して上書きしてきたデータを取得
+    setEditEmployeeIndex(null)
+  }
+
+  //閉じるボタンが押された時
+  const handleCloseButton = () => {
+    setEditEmployeeIndex(null)
+  }
+
+  //削除ボタンが押された時
+  const handleDeletButton = async (docId: string | undefined) => {
+    if (typeof docId === 'undefined') return
+    await dispatch(deleteEmployeeData(docId))
+    await dispatch(fetchEmployeeData()) //古いデータを見た目からもなくす
     setEditEmployeeIndex(null)
   }
 
@@ -44,16 +59,18 @@ function EmployeeList() {
             {editEmployeeIndex === index ? (
               //編集中のindexとmapのindexが一緒だったら編集画面
               <EmployeeInfoRegister
-                buttonText={'保存'}
+                buttonText="保存"
                 handleButtonClick={(registerInfo: EmployeeBase) =>
                   handleButtonClick(registerInfo, employee.docId)
                 } //この無名関数は上のhandleButtonClick2と同じ
+                handleCloseButton={handleCloseButton}
+                handleDeletButton={() => handleDeletButton(employee.docId)}
                 employee={employee}
               />
             ) : (
               <>
-                <div>{employee.firstName}</div>
                 <div>{employee.lastName}</div>
+                <div>{employee.firstName}</div>
                 <div>{employee.position}</div>
                 <div>{employee.rank}</div>
                 <Button text={'編集'} onClick={() => handleEditClick(index)} />

@@ -10,28 +10,34 @@ import Button from './Button'
 
 type employeeInfoBase = {
   buttonText: string
-  employee: EmployeeBase
-  handleButtonClick: any
+  handleButtonClick: (registerInfo: any) => void //???質問
+  employee?: EmployeeBase
+  isClearInput?: boolean
+  handleCloseButton?: any
+  handleDeletButton?: any
 }
 
 function EmployeeInfoRegister({
   buttonText,
   employee,
   handleButtonClick,
+  isClearInput,
+  handleCloseButton,
+  handleDeletButton,
 }: employeeInfoBase) {
   const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutId>({
-    firstName: employee.firstName,
-    lastName: employee.lastName,
-    firstFurigana: employee.firstFurigana,
-    lastFurigana: employee.lastFurigana,
-    birthday: employee.birthday,
-    postalCode: employee.postalCode,
-    education: employee.education,
-    hireDate: employee.hireDate,
-    contractType: employee.contractType,
-    department: employee.department,
-    rank: employee.rank,
-    position: employee.position,
+    firstName: employee?.firstName ?? '', //employeeがあれば.firstNameなければ空
+    lastName: employee?.lastName ?? '',
+    firstFurigana: employee?.firstFurigana ?? '',
+    lastFurigana: employee?.lastFurigana ?? '',
+    birthday: employee?.birthday ?? '',
+    postalCode: employee?.postalCode ?? '',
+    education: employee?.education ?? '',
+    hireDate: employee?.hireDate ?? '',
+    contractType: employee?.contractType ?? '',
+    department: employee?.department ?? '',
+    rank: employee?.rank ?? '',
+    position: employee?.position ?? '',
   })
 
   const {
@@ -53,46 +59,46 @@ function EmployeeInfoRegister({
     <div>
       <RegisterNameInput
         label="名前"
-        idFirst="KanjiSei"
-        idLast="KanjiMei"
+        idLast="KanjiSei"
+        idFirst="KanjiMei"
         type="string"
-        valueFirst={firstName}
         valueLast={lastName}
-        placeholderFirst="性"
-        placeholderLast="名"
-        onChangeFirst={(e) =>
-          setRegisterInfo((prev) => ({
-            ...prev, //今の値を展開してfirstName以外に更新をかけないようにする
-            firstName: e.target.value,
-          }))
-        }
+        valueFirst={firstName}
+        placeholderLast="姓"
+        placeholderFirst="名"
         onChangeLast={(e) =>
           setRegisterInfo((prev) => ({
-            ...prev,
+            ...prev, //今の値を展開してlastName以外に更新をかけないようにする
             lastName: e.target.value,
+          }))
+        }
+        onChangeFirst={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            firstName: e.target.value,
           }))
         }
       />
 
       <RegisterNameInput
         label="フリガナ"
-        idFirst="KatakanaSei"
         idLast="KatakanaMei"
+        idFirst="KatakanaSei"
         type="string"
-        valueFirst={firstFurigana}
         valueLast={lastFurigana}
-        placeholderFirst="セイ"
-        placeholderLast="メイ"
-        onChangeFirst={(e) =>
-          setRegisterInfo((prev) => ({
-            ...prev,
-            firstFurigana: e.target.value,
-          }))
-        }
+        valueFirst={firstFurigana}
+        placeholderLast="セイ"
+        placeholderFirst="メイ"
         onChangeLast={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
             lastFurigana: e.target.value,
+          }))
+        }
+        onChangeFirst={(e) =>
+          setRegisterInfo((prev) => ({
+            ...prev,
+            firstFurigana: e.target.value,
           }))
         }
       />
@@ -155,8 +161,33 @@ function EmployeeInfoRegister({
 
       <Button
         text={buttonText}
-        onClick={() => handleButtonClick(registerInfo)}
+        onClick={() => {
+          handleButtonClick(registerInfo)
+          if (isClearInput) {
+            //inputを空にする
+            setRegisterInfo({
+              lastName: '',
+              firstName: '',
+              lastFurigana: '',
+              firstFurigana: '',
+              birthday: '',
+              postalCode: '',
+              education: '',
+              hireDate: '',
+              contractType: '',
+              department: '',
+              rank: '',
+              position: '',
+            })
+          }
+        }}
       />
+      {!isClearInput && ( //社員一覧にのみ表示のボタン
+        <>
+          <Button text={'閉じる'} onClick={handleCloseButton} />
+          <Button text={'データを削除'} onClick={handleDeletButton} />
+        </>
+      )}
     </div>
   )
 }

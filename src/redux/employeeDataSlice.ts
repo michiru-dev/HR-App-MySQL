@@ -8,10 +8,11 @@ import {
   or,
   updateDoc,
   doc,
+  deleteDoc,
 } from 'firebase/firestore'
 import db from '../fireStore/fireStoreConfig'
 
-//firebaseに保存
+//💡firebaseに保存
 const addEmployeeData = async (employeeData: EmployeeBase) => {
   try {
     const docRef = await addDoc(collection(db, 'employeeData'), employeeData)
@@ -22,7 +23,7 @@ const addEmployeeData = async (employeeData: EmployeeBase) => {
   }
 }
 
-//firebaseからデータを取得
+//💡firebaseからデータを取得
 const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
   async () => {
@@ -35,10 +36,11 @@ const fetchEmployeeData = createAsyncThunk(
   }
 )
 
-//firebaseから検索値を探す
+//💡firebaseから検索値を探す
 const fetchSearchedEmployee = createAsyncThunk(
   'employee/fetchSearchedEmployee',
   async (searchKeyword: string) => {
+    //これはおそらく型を自動解決
     const q = query(
       collection(db, 'employeeData'),
       or(
@@ -48,12 +50,19 @@ const fetchSearchedEmployee = createAsyncThunk(
         where('lastFurigana', '==', searchKeyword)
       )
     )
-
     const querySnapshot = await getDocs(q)
     const searchedEmployeeArr = querySnapshot.docs.map((doc) => {
       return doc.data() as EmployeeBase
     })
     return { searchedEmployeeArr: searchedEmployeeArr }
+  }
+)
+
+//💡firebaseから削除
+const deleteEmployeeData = createAsyncThunk(
+  'employee/deleteEmployeeData',
+  async (docId: string) => {
+    await deleteDoc(doc(db, 'employeeData', docId))
   }
 )
 
@@ -73,7 +82,7 @@ const fetchSearchedEmployee = createAsyncThunk(
 //   },
 // }
 
-//firebaseの値を上書き（編集）
+//💡firebaseの値を上書き（編集）
 //createAsyncThunkの型定義は二つの引数形式
 //一つ目の引数は返り値の型、二つ目はasyncの後にくる引数の型
 const editEmployeeData = createAsyncThunk<
@@ -144,6 +153,11 @@ export const employeeDataSlice = createSlice({
 })
 
 export const { addEmployee } = employeeDataSlice.actions
-export { fetchSearchedEmployee, fetchEmployeeData, editEmployeeData }
+export {
+  fetchSearchedEmployee,
+  fetchEmployeeData,
+  editEmployeeData,
+  deleteEmployeeData,
+}
 
 export default employeeDataSlice.reducer
