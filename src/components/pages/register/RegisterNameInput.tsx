@@ -2,38 +2,30 @@ import React, { ChangeEventHandler, HTMLInputTypeAttribute } from 'react'
 
 function RegisterNameInput({
   label,
-  idFirst,
   idLast,
+  idFirst,
   type = 'text',
   valueFirst,
   valueLast,
   onChangeFirst,
   onChangeLast,
-  placeholderFirst,
   placeholderLast,
+  placeholderFirst,
 }: {
   label: string
-  idFirst: string
   idLast: string
+  idFirst: string
   type: HTMLInputTypeAttribute
   valueFirst: string | number | readonly string[] | undefined
   valueLast: string | number | readonly string[] | undefined
   onChangeFirst: ChangeEventHandler<HTMLInputElement>
   onChangeLast: ChangeEventHandler<HTMLInputElement>
-  placeholderFirst: string
   placeholderLast: string
+  placeholderFirst: string
 }) {
   return (
     <>
-      <label htmlFor={idFirst}>{label}</label>
-      <input
-        id={idFirst}
-        name={idFirst}
-        type={type}
-        value={valueFirst}
-        onChange={onChangeFirst}
-        placeholder={placeholderFirst}
-      />
+      <label htmlFor={idLast}>{label}</label>
       <input
         id={idLast}
         name={idLast}
@@ -41,6 +33,14 @@ function RegisterNameInput({
         value={valueLast}
         onChange={onChangeLast}
         placeholder={placeholderLast}
+      />
+      <input
+        id={idFirst}
+        name={idFirst}
+        type={type}
+        value={valueFirst}
+        onChange={onChangeFirst}
+        placeholder={placeholderFirst}
       />
     </>
   )
