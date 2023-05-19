@@ -10,7 +10,7 @@ function DepartmentOptions({
   onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
   value: string
 }) {
-  const department = useAppSelector((state) => state.option.department)
+  const department = useAppSelector((state) => state.option.departmentType)
   return (
     <ShowOptions
       labelName={'部署'}

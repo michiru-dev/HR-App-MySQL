@@ -10,7 +10,7 @@ function PositionOptions({
   onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
   value: string
 }) {
-  const position = useAppSelector((state) => state.option.position)
+  const position = useAppSelector((state) => state.option.positionType)
   return (
     <ShowOptions
       labelName={'役職'}
