@@ -1,23 +1,11 @@
 import React from 'react'
 import ShowInputs from './ShowInputs'
 import { useAppSelector } from '../../../redux/hooks'
-import {
-  addRankType,
-  deleteRankType,
-  editRankType,
-} from '../../../redux/optionsSlice'
 
 function RankSetting() {
-  const rank = useAppSelector((state) => state.option.rank)
+  const rank = useAppSelector((state) => state.option.rankType)
 
-  return (
-    <ShowInputs
-      settingType={rank}
-      onSave={editRankType}
-      onDelete={deleteRankType}
-      onAdd={addRankType}
-    />
-  )
+  return <ShowInputs settingType={rank} collectionName={'rankType'} />
 }
 
 export default RankSetting

@@ -30,7 +30,10 @@ function ShowInputs({ settingType, ...rest }: SettingActions) {
                   value={editedName}
                   onChange={handleEditInputChange}
                 />
-                <Button text={'保存'} onClick={() => handleEditSubmit(index)} />
+                <Button
+                  text={'保存'}
+                  onClick={() => handleEditSubmit(setting.docId)}
+                />
               </>
             ) : (
               //編集中のindexとmapのindexが異なれば編集不可能な画面
@@ -39,7 +42,7 @@ function ShowInputs({ settingType, ...rest }: SettingActions) {
                 <Button text={'編集'} onClick={() => handleEditClick(index)} />
                 <Button
                   text={'削除'}
-                  onClick={() => handleDeleteClick(setting.id)}
+                  onClick={() => handleDeleteClick(setting.docId)}
                 />
               </>
             )}

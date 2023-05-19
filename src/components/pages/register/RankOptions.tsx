@@ -10,7 +10,7 @@ function RankOptions({
   onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
   value: string
 }) {
-  const rank = useAppSelector((state) => state.option.rank)
+  const rank = useAppSelector((state) => state.option.rankType)
   return (
     <ShowOptions
       labelName={'等級'}

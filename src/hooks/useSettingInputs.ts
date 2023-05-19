@@ -1,22 +1,29 @@
 import { useState } from 'react'
 import { useAppDispatch } from '../redux/hooks'
 import { v4 as uuidv4 } from 'uuid'
-import { OptionBase } from '../redux/optionsSlice'
+import {
+  OptionBase,
+  addHrOptionData,
+  deleteOptionData,
+  editOption,
+} from '../redux/optionsSlice'
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
+
+export type collectionNameBase =
+  | 'contractType'
+  | 'departmentType'
+  | 'positionType'
+  | 'rankType'
 
 export type SettingActions = {
   settingType: OptionBase[]
-  onSave: ActionCreatorWithPayload<OptionBase>
-  onDelete: ActionCreatorWithPayload<string>
-  onAdd: ActionCreatorWithPayload<OptionBase>
+  collectionName: collectionNameBase
 }
 
 //showinputsに繋がるhooks
 export const useSettingInputs = ({
   settingType,
-  onSave,
-  onDelete,
-  onAdd,
+  collectionName,
 }: SettingActions) => {
   const dispatch = useAppDispatch()
   const [addInput, setAddInput] = useState<string>('')
@@ -31,17 +38,21 @@ export const useSettingInputs = ({
   //追加を押した時
   const handleAddClick = () => {
     dispatch(
-      onAdd({
-        id: uuidv4(),
-        name: addInput,
+      addHrOptionData({
+        optionData: {
+          id: uuidv4(),
+          name: addInput,
+        },
+        collectionName: collectionName,
       })
     )
     setAddInput('')
   }
 
   //削除を押した時
-  const handleDeleteClick = (id: string) => {
-    dispatch(onDelete(id))
+  const handleDeleteClick = (docId: string | undefined) => {
+    if (typeof docId !== 'undefined')
+      dispatch(deleteOptionData({ docId, collectionName }))
   }
 
   //編集クリックされた時
@@ -57,13 +68,15 @@ export const useSettingInputs = ({
   }
 
   //保存を押した時
-  const handleEditSubmit = (index: number) => {
-    dispatch(
-      onSave({
-        id: settingType[index].id,
-        name: editedName,
-      })
-    )
+  const handleEditSubmit = (docId: string | undefined) => {
+    if (typeof docId !== 'undefined')
+      dispatch(
+        editOption({
+          docId,
+          collectionName,
+          newName: editedName,
+        })
+      )
     setEditIndex(null)
   }
 

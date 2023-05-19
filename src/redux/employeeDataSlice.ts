@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
   collection,
   addDoc,
@@ -13,15 +13,16 @@ import {
 import db from '../fireStore/fireStoreConfig'
 
 //💡firebaseに保存
-const addEmployeeData = async (employeeData: EmployeeBase) => {
-  try {
-    const docRef = await addDoc(collection(db, 'employeeData'), employeeData)
-    //'employeeData'というコレクションに引数employeeDataを格納、たぶん、、
-    console.log('Document written with ID: ', docRef.id)
-  } catch (e) {
-    console.error('Error adding document: ', e)
+const addEmployeeData = createAsyncThunk(
+  'employee/addEmployeeData',
+  async (registerInfo: EmployeeWithoutId, { getState }) => {
+    const state: any = getState()
+    const id = (state.employee.employeeData.length + 1).toString()
+    const newEmployee = { ...registerInfo, id }
+    await addDoc(collection(db, 'employeeData'), newEmployee)
+    //'employeeData'というコレクションに引数newEmployeeを格納
   }
-}
+)
 
 //💡firebaseからデータを取得
 const fetchEmployeeData = createAsyncThunk(
@@ -66,6 +67,7 @@ const deleteEmployeeData = createAsyncThunk(
   }
 )
 
+//ジェネリック
 // type Sample<T> = {
 //   name: string
 //   moreInfoObj: T
@@ -85,14 +87,15 @@ const deleteEmployeeData = createAsyncThunk(
 //💡firebaseの値を上書き（編集）
 //createAsyncThunkの型定義は二つの引数形式
 //一つ目の引数は返り値の型、二つ目はasyncの後にくる引数の型
-const editEmployeeData = createAsyncThunk<
-  void, //returnがなにもないからvoid
-  { newData: EmployeeBase }
->('employee/editEmployeeData', async ({ newData }) => {
-  if (typeof newData.docId === 'undefined') return
-  const ref = doc(db, 'employeeData', newData.docId)
-  await updateDoc(ref, newData)
-})
+//今回はその型の定義の仕方はしていない
+const editEmployeeData = createAsyncThunk(
+  'employee/editEmployeeData',
+  async ({ newData }: { newData: EmployeeBase }) => {
+    if (typeof newData.docId === 'undefined') return
+    const ref = doc(db, 'employeeData', newData.docId)
+    await updateDoc(ref, newData)
+  }
+)
 
 export type EmployeeBase = {
   id: string
@@ -117,47 +120,72 @@ export type EmployeeWithoutId = Omit<EmployeeBase, 'id'>
 type InitialBase = {
   employeeData: Array<EmployeeBase>
   searchedEmployeeData: Array<EmployeeBase>
+  isLoading: boolean
 }
 
 const initialState: InitialBase = {
   employeeData: [],
   searchedEmployeeData: [],
+  isLoading: false,
 }
 
 export const employeeDataSlice = createSlice({
   name: 'employee',
   initialState,
-  reducers: {
-    addEmployee: (state, action: PayloadAction<EmployeeWithoutId>) => {
-      const id = (state.employeeData.length + 1).toString()
-      const newEmployee = { ...action.payload, id } //展開してidを追加して新しいobjectを作成している
-      state.employeeData.push(newEmployee)
-      addEmployeeData(newEmployee)
-    },
-  },
+  reducers: {}, //asyncを含むapi通信はreducersの中でやるべきではない
   extraReducers: (builder) => {
     builder
-      //   .addCase(fetchSearchedEmployee.pending, (state) => {
-      //     state
-      //   })
-      .addCase(fetchSearchedEmployee.fulfilled, (state, action) => {
-        state.searchedEmployeeData = action.payload.searchedEmployeeArr
+      //firebaseに保存
+      .addCase(addEmployeeData.pending, (state) => {
+        state.isLoading = true
       })
-      //   .addCase(fetchSearchedEmployee.rejected, (state) => {
-      //     state
-      //   })
+      .addCase(addEmployeeData.fulfilled, (state) => {
+        state.isLoading = false
+      })
+      .addCase(addEmployeeData.rejected, (state) => {
+        state.isLoading = false
+      })
+      //💡firebaseからデータを取得
+      .addCase(fetchEmployeeData.pending, (state) => {
+        state.isLoading = true
+      })
       .addCase(fetchEmployeeData.fulfilled, (state, action) => {
         state.employeeData = action.payload.employeeArr
+      })
+      .addCase(fetchEmployeeData.rejected, (state) => {
+        state.isLoading = false
+      })
+      //firebaseから検索値を探す
+      .addCase(fetchSearchedEmployee.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(fetchSearchedEmployee.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.searchedEmployeeData = action.payload.searchedEmployeeArr
+      })
+      .addCase(fetchSearchedEmployee.rejected, (state) => {
+        state.isLoading = false
+      })
+      //💡firebaseから削除
+      .addCase(deleteEmployeeData.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteEmployeeData.fulfilled, (state) => {
+        state.isLoading = false
+      })
+      .addCase(deleteEmployeeData.rejected, (state) => {
+        state.isLoading = false
       })
   },
 })
 
-export const { addEmployee } = employeeDataSlice.actions
+// export const { addEmployee } = employeeDataSlice.actions
 export {
   fetchSearchedEmployee,
   fetchEmployeeData,
   editEmployeeData,
   deleteEmployeeData,
+  addEmployeeData,
 }
 
 export default employeeDataSlice.reducer

@@ -1,7 +1,9 @@
 import React from 'react'
 import { useAppDispatch } from '../../../redux/hooks'
-import { addEmployee } from '../../../redux/employeeDataSlice'
-import type { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
+import {
+  EmployeeWithoutId,
+  addEmployeeData,
+} from '../../../redux/employeeDataSlice'
 import EmployeeInfoRegister from '../../common/EmployeeInfoRegister'
 
 function Register() {
@@ -9,7 +11,7 @@ function Register() {
 
   const handleRegister = (registerInfo: EmployeeWithoutId) => {
     alert('登録されました')
-    dispatch(addEmployee(registerInfo))
+    dispatch(addEmployeeData(registerInfo))
   }
 
   return (
