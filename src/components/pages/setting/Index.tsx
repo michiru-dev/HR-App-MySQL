@@ -1,10 +1,10 @@
 import React from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
-import ContractSetting from './ContractSetting'
-import RankSetting from './RankSetting'
-import PositionsSetting from './PositionsSetting'
-import DepartmentSetting from './DepartmentSetting'
+import { ContractSetting } from './ContractSetting'
+import { DepartmentSetting } from './DepartmentSetting'
+import { PositionsSetting } from './PositionSetting'
+import { RankSetting } from './RankSetting'
 
 function Setting() {
   return (

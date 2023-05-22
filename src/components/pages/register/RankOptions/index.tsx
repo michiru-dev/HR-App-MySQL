@@ -1,9 +1,9 @@
 import React from 'react'
-import ShowOptions from './ShowOptions'
-import { useAppSelector } from '../../../redux/hooks'
-import { EmployeeWithoutDocId } from '../../../redux/employeeDataSlice'
+import { useAppSelector } from '../../../../redux/hooks'
+import { EmployeeWithoutDocId } from '../../../../redux/slicers/employeeDataSlice'
+import { ShowOptions } from '../ShowOptions'
 
-function RankOptions({
+export function RankOptions({
   onChange,
   value,
 }: {
@@ -21,5 +21,3 @@ function RankOptions({
     />
   )
 }
-
-export default RankOptions

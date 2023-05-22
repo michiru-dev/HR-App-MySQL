@@ -10,8 +10,8 @@ import {
   doc,
   deleteDoc,
 } from 'firebase/firestore'
-import db from '../fireStore/fireStoreConfig'
-import { RootState } from '../redux/store'
+import db from '../../fireStore/fireStoreConfig'
+import { RootState } from '../store'
 
 //💡firebaseに保存
 const addEmployeeData = createAsyncThunk<

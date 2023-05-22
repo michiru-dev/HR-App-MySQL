@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import './App.scss'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Setting from './components/pages/setting/Setting'
-import LandingPage from './components/pages/landing/LandingPage'
-import Register from './components/pages/register/Register'
+import Setting from './components/pages/setting/Index'
+import Register from './components/pages/register'
 import { useAppDispatch } from './redux/hooks'
-import { fetchHrOptionType } from './redux/optionsSlice'
-import EmployeeList from './components/pages/employementsList/EmployeeList'
+import { fetchHrOptionType } from './redux/slicers/optionsSlice'
+import EmployeeList from './components/pages/employementsList'
+import LandingPage from './components/pages/landing'
 
 function App() {
   // const counter = useAppSelector((state) => state.counter.value)

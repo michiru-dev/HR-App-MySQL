@@ -1,9 +1,9 @@
 import React from 'react'
-import ShowOptions from './ShowOptions'
-import { useAppSelector } from '../../../redux/hooks'
-import { EmployeeWithoutDocId } from '../../../redux/employeeDataSlice'
+import { useAppSelector } from '../../../../redux/hooks'
+import { EmployeeWithoutDocId } from '../../../../redux/slicers/employeeDataSlice'
+import { ShowOptions } from '../ShowOptions'
 
-function ContractOptions({
+export function ContractOptions({
   onChange,
   value,
 }: {
@@ -21,5 +21,3 @@ function ContractOptions({
     />
   )
 }
-
-export default ContractOptions

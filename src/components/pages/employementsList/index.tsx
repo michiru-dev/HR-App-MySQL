@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {
-  EmployeeBase,
   EmployeeWithoutDocId,
   deleteEmployeeData,
   editEmployeeData,
   fetchEmployeeData,
-} from '../../../redux/employeeDataSlice'
+} from '../../../redux/slicers/employeeDataSlice'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import Button from '../../common/Button'
-import EmployeeInfoRegister from '../../common/EmployeeInfoRegister'
+import { EmployeeInfoRegister } from '../../common/EmployeeInforRegister'
+import { Button } from '../../common/UI/Button'
 
 function EmployeeList() {
   const dispatch = useAppDispatch()

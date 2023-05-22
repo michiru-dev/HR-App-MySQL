@@ -6,7 +6,7 @@ import {
   addHrOptionData,
   deleteOptionData,
   editOption,
-} from '../redux/optionsSlice'
+} from '../redux/slicers/optionsSlice'
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 
 export type collectionNameBase =

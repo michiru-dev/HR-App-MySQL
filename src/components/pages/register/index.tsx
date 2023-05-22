@@ -3,8 +3,8 @@ import { useAppDispatch } from '../../../redux/hooks'
 import {
   EmployeeWithoutDocId,
   addEmployeeData,
-} from '../../../redux/employeeDataSlice'
-import EmployeeInfoRegister from '../../common/EmployeeInfoRegister'
+} from '../../../redux/slicers/employeeDataSlice'
+import { EmployeeInfoRegister } from '../../common/EmployeeInforRegister'
 
 function Register() {
   const dispatch = useAppDispatch()

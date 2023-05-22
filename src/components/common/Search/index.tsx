@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import Button from './Button'
 import { SearchResult } from './SearchResult'
-import { useAppDispatch } from '../../redux/hooks'
-import { fetchSearchedEmployee } from '../../redux/employeeDataSlice'
+import { useAppDispatch } from '../../../redux/hooks'
+import { fetchSearchedEmployee } from '../../../redux/slicers/employeeDataSlice'
+import { Button } from '../UI/Button'
 
 function Search() {
   const [searchInput, setSearchInput] = useState('')

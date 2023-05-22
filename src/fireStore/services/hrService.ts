@@ -1,6 +1,6 @@
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import db from '../../fireStore/fireStoreConfig'
-import { OptionBase } from '../../redux/optionsSlice'
+import { OptionBase } from '../../redux/slicers/optionsSlice'
 
 //contractTypeのデータを取得
 export const fetchContractType = async () => {

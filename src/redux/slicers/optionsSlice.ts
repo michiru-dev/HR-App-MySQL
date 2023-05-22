@@ -6,7 +6,7 @@ import {
   doc,
   updateDoc,
 } from 'firebase/firestore'
-import db from '../fireStore/fireStoreConfig'
+import db from '../../fireStore/fireStoreConfig'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
 import {
@@ -14,9 +14,9 @@ import {
   fetchDepartmentType,
   fetchPositionType,
   fetchRankType,
-} from '../fireStore/services/hrService'
-import { collectionNameBase } from '../hooks/useSettingInputs'
-import { RootState } from '../redux/store'
+} from '../../fireStore/services/hrService'
+import { collectionNameBase } from '../../hooks/useSettingInputs'
+import { RootState } from '../store'
 
 //💡firebaseから値を取得
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う・下の方のextrareducersとセット

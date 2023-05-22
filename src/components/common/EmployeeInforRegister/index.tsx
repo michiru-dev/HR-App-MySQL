@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import RegisterNameInput from '../pages/register/RegisterNameInput'
-import RegisterInput from '../pages/register/RegisterInput'
-import ContractOptions from '../pages/register/ContractOptions'
-import DepartmentOptions from '../pages/register/DepartmentOptions'
-import RankOptions from '../pages/register/RankOptions'
-import PositionOptions from '../pages/register/PositionOptions'
+import RegisterNameInput from './RegisterNameInput'
 import {
   EmployeeBase,
   EmployeeWithoutDocId,
-} from '../../redux/employeeDataSlice'
-import Button from './Button'
+} from '../../../redux/slicers/employeeDataSlice'
+import { ContractOptions } from '../../pages/register/ContractOptions'
+import { DepartmentOptions } from '../../pages/register/DepartmentOptions'
+import { PositionOptions } from '../../pages/register/PositionOptions'
+import { RankOptions } from '../../pages/register/RankOptions'
+import { Button } from '../UI/Button'
+import RegisterInput from './RegisterInput'
 
 type employeeInfoBase = {
   buttonText: string
@@ -20,7 +20,7 @@ type employeeInfoBase = {
   handleDeletButton?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-function EmployeeInfoRegister({
+export function EmployeeInfoRegister({
   buttonText,
   employee,
   handleButtonClick,
@@ -193,5 +193,3 @@ function EmployeeInfoRegister({
     </div>
   )
 }
-
-export default EmployeeInfoRegister
