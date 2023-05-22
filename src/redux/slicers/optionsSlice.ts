@@ -8,7 +8,6 @@ import {
 } from 'firebase/firestore'
 import db from '../../fireStore/fireStoreConfig'
 import firebase from 'firebase/compat/app'
-import 'firebase/compat/firestore'
 import {
   fetchContractType,
   fetchDepartmentType,
@@ -17,6 +16,7 @@ import {
 } from '../../fireStore/services/hrService'
 import { collectionNameBase } from '../../hooks/useSettingInputs'
 import { RootState } from '../store'
+import { OptionBase } from './type'
 
 //💡firebaseから値を取得
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う・下の方のextrareducersとセット
@@ -132,13 +132,6 @@ const editOption = createAsyncThunk(
     return { optionData: updatedList, collectionName }
   }
 )
-
-export type OptionBase = {
-  id: string
-  name: string
-  docId?: string
-  createdAt?: firebase.firestore.FieldValue
-}
 
 type OptionsState = {
   contractType: Array<OptionBase>

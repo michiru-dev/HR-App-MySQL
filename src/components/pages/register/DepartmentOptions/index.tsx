@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAppSelector } from '../../../../redux/hooks'
-import { EmployeeWithoutDocId } from '../../../../redux/slicers/employeeDataSlice'
 import { ShowOptions } from '../ShowOptions'
+import { EmployeeWithoutDocId } from '../../../../redux/slicers/type'
 
 export function DepartmentOptions({
   onChange,

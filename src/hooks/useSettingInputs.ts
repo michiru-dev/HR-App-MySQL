@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { useAppDispatch } from '../redux/hooks'
 import { v4 as uuidv4 } from 'uuid'
 import {
-  OptionBase,
   addHrOptionData,
   deleteOptionData,
   editOption,
 } from '../redux/slicers/optionsSlice'
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
+import { OptionBase } from '../redux/slicers/type'
 
 export type collectionNameBase =
   | 'contractType'

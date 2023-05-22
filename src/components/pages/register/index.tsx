@@ -1,10 +1,8 @@
 import React from 'react'
 import { useAppDispatch } from '../../../redux/hooks'
-import {
-  EmployeeWithoutDocId,
-  addEmployeeData,
-} from '../../../redux/slicers/employeeDataSlice'
+import { addEmployeeData } from '../../../redux/slicers/employeeDataSlice'
 import { EmployeeInfoRegister } from '../../common/EmployeeInforRegister'
+import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
 function Register() {
   const dispatch = useAppDispatch()

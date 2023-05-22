@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import RegisterNameInput from './RegisterNameInput'
-import {
-  EmployeeBase,
-  EmployeeWithoutDocId,
-} from '../../../redux/slicers/employeeDataSlice'
 import { ContractOptions } from '../../pages/register/ContractOptions'
 import { DepartmentOptions } from '../../pages/register/DepartmentOptions'
 import { PositionOptions } from '../../pages/register/PositionOptions'
 import { RankOptions } from '../../pages/register/RankOptions'
 import { Button } from '../UI/Button'
 import RegisterInput from './RegisterInput'
+import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
 type employeeInfoBase = {
   buttonText: string

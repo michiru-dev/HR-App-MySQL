@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSettingInputs } from '../../../../hooks/useSettingInputs'
-import { SettingActions } from '../../../../hooks/useSettingInputs' //type
-import { OptionBase } from '../../../../redux/slicers/optionsSlice' //type
+import { SettingActions } from '../../../../hooks/useSettingInputs'
 import { Button } from '../../../common/UI/Button'
+import { OptionBase } from '../../../../redux/slicers/type'
 
 //各種設定の画面
 

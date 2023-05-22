@@ -1,6 +1,8 @@
 import React from 'react'
-import { OptionBase } from '../../../../redux/slicers/optionsSlice' //type
-import { EmployeeWithoutDocId } from '../../../../redux/slicers/employeeDataSlice'
+import {
+  EmployeeWithoutDocId,
+  OptionBase,
+} from '../../../../redux/slicers/type'
 
 type ShowOptionsType = {
   labelName: string

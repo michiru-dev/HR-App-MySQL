@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAppSelector } from '../../../../redux/hooks'
-import { EmployeeWithoutDocId } from '../../../../redux/slicers/employeeDataSlice'
+import { EmployeeWithoutDocId } from '../../../../redux/slicers/type'
 import { ShowOptions } from '../ShowOptions'
 
 export function PositionOptions({

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import {
-  EmployeeWithoutDocId,
   deleteEmployeeData,
   editEmployeeData,
   fetchEmployeeData,
@@ -8,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { EmployeeInfoRegister } from '../../common/EmployeeInforRegister'
 import { Button } from '../../common/UI/Button'
+import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
 function EmployeeList() {
   const dispatch = useAppDispatch()
