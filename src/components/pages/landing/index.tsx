@@ -1,6 +1,6 @@
 import React from 'react'
 import { Search } from '../../common/Search'
-import LinkButton from '../../common/LinkButton'
+import { LinkButton } from '../../common/UI/LInkButton'
 
 function LandingPage() {
   return (

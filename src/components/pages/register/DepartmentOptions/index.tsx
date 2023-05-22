@@ -1,13 +1,13 @@
 import React from 'react'
-import ShowOptions from './ShowOptions'
-import { useAppSelector } from '../../../redux/hooks'
-import { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
+import { useAppSelector } from '../../../../redux/hooks'
+import { ShowOptions } from '../ShowOptions'
+import { EmployeeWithoutDocId } from '../../../../redux/slicers/type'
 
-function DepartmentOptions({
+export function DepartmentOptions({
   onChange,
   value,
 }: {
-  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
+  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutDocId>>
   value: string
 }) {
   const department = useAppSelector((state) => state.option.departmentType)
@@ -21,5 +21,3 @@ function DepartmentOptions({
     />
   )
 }
-
-export default DepartmentOptions

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 // import counterSlicer from './counterSlice'
-import optionsSlicer from './optionsSlice'
-import employeeDataSlicer from './employeeDataSlice'
+import optionsSlicer from './slicers/optionsSlice'
+import employeeDataSlicer from './slicers/employeeDataSlice'
 
 //いろんなスライサーを置くstore,大元
 

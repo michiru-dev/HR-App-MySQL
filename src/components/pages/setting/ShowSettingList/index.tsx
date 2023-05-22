@@ -1,10 +1,12 @@
 import React from 'react'
-import Button from '../../common/Button'
-import { useSettingInputs } from '../../../hooks/useSettingInputs'
-import { SettingActions } from '../../../hooks/useSettingInputs' //type
-import { OptionBase } from '../../../redux/optionsSlice' //type
+import { useSettingInputs } from '../../../../hooks/useSettingInputs'
+import { SettingActions } from '../../../../hooks/useSettingInputs'
+import { Button } from '../../../common/UI/Button'
+import { OptionBase } from '../../../../redux/slicers/type'
 
-function ShowInputs({ settingType, ...rest }: SettingActions) {
+//各種設定の画面
+
+export function ShowSettingList({ settingType, ...rest }: SettingActions) {
   const {
     addInput,
     editIndex,
@@ -58,5 +60,3 @@ function ShowInputs({ settingType, ...rest }: SettingActions) {
     </div>
   )
 }
-
-export default ShowInputs

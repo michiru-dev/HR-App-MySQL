@@ -1,13 +1,13 @@
 import React from 'react'
-import ShowOptions from './ShowOptions'
-import { useAppSelector } from '../../../redux/hooks'
-import { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
+import { useAppSelector } from '../../../../redux/hooks'
+import { EmployeeWithoutDocId } from '../../../../redux/slicers/type'
+import { ShowOptions } from '../ShowOptions'
 
-function PositionOptions({
+export function PositionOptions({
   onChange,
   value,
 }: {
-  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
+  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutDocId>>
   value: string
 }) {
   const position = useAppSelector((state) => state.option.positionType)
@@ -21,5 +21,3 @@ function PositionOptions({
     />
   )
 }
-
-export default PositionOptions

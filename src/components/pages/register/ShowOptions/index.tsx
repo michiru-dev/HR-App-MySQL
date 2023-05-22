@@ -1,16 +1,18 @@
-import React, { ChangeEventHandler } from 'react'
-import { OptionBase } from '../../../redux/optionsSlice' //type
-import { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
+import React from 'react'
+import {
+  EmployeeWithoutDocId,
+  OptionBase,
+} from '../../../../redux/slicers/type'
 
 type ShowOptionsType = {
   labelName: string
   id: string
   optionItem: OptionBase[]
-  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
+  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutDocId>>
   value: string
 }
 
-function ShowOptions({
+export function ShowOptions({
   labelName,
   id,
   optionItem,
@@ -40,5 +42,3 @@ function ShowOptions({
     </div>
   )
 }
-
-export default ShowOptions

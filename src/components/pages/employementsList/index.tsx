@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {
-  EmployeeBase,
   deleteEmployeeData,
   editEmployeeData,
   fetchEmployeeData,
-} from '../../../redux/employeeDataSlice'
+} from '../../../redux/slicers/employeeDataSlice'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import Button from '../../common/Button'
-import EmployeeInfoRegister from '../../common/EmployeeInfoRegister'
+import { EmployeeInfoRegister } from '../../common/EmployeeInforRegister'
+import { Button } from '../../common/UI/Button'
+import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
 function EmployeeList() {
   const dispatch = useAppDispatch()
@@ -26,7 +26,7 @@ function EmployeeList() {
 
   //保存ボタンが押された時
   const handleButtonClick = async (
-    employee: EmployeeBase,
+    employee: EmployeeWithoutDocId,
     docId: string | undefined
   ) => {
     if (typeof docId === 'undefined') return
@@ -55,12 +55,12 @@ function EmployeeList() {
     <div>
       {employeeData.map((employee, index) => {
         return (
-          <li key={employee.id}>
+          <li key={employee.docId}>
             {editEmployeeIndex === index ? (
               //編集中のindexとmapのindexが一緒だったら編集画面
               <EmployeeInfoRegister
                 buttonText="保存"
-                handleButtonClick={(registerInfo: EmployeeBase) =>
+                handleButtonClick={(registerInfo) =>
                   handleButtonClick(registerInfo, employee.docId)
                 } //この無名関数は上のhandleButtonClick2と同じ
                 handleCloseButton={handleCloseButton}

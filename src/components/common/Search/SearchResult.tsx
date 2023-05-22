@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector } from '../../redux/hooks'
+import { useAppSelector } from '../../../redux/hooks'
 
 function SearchResult() {
   const foundEmployee = useAppSelector(
@@ -14,7 +14,7 @@ function SearchResult() {
     <div>
       <ul>
         {foundEmployee.map((data) => (
-          <li key={data.id}>
+          <li key={data.docId}>
             <ul>
               <li>{data.lastName}</li>
               <li>{data.firstName}</li>
