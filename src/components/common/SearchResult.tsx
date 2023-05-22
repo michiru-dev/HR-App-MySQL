@@ -14,7 +14,7 @@ function SearchResult() {
     <div>
       <ul>
         {foundEmployee.map((data) => (
-          <li key={data.id}>
+          <li key={data.docId}>
             <ul>
               <li>{data.lastName}</li>
               <li>{data.firstName}</li>

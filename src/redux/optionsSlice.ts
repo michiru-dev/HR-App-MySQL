@@ -16,6 +16,7 @@ import {
   fetchRankType,
 } from '../fireStore/services/hrService'
 import { collectionNameBase } from '../hooks/useSettingInputs'
+import { RootState } from '../redux/store'
 
 //💡firebaseから値を取得
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う・下の方のextrareducersとセット
@@ -76,23 +77,18 @@ const addHrOptionData = createAsyncThunk<
 )
 
 //💡firebaseから削除
-const deleteOptionData = createAsyncThunk(
+const deleteOptionData = createAsyncThunk<
+  { newArr: Array<OptionBase>; collectionName: collectionNameBase },
+  { docId: string; collectionName: collectionNameBase },
+  { state: RootState }
+>(
   'options/deleteOptionData',
-  async (
-    {
-      docId,
-      collectionName,
-    }: {
-      docId: string
-      collectionName: string
-    },
-    { getState }
-  ) => {
+  async ({ docId, collectionName }, { getState }) => {
     //firebaseから削除
     await deleteDoc(doc(db, collectionName, docId))
 
     //reduxに削除したやつ以外の最新の配列をいれる
-    const state: any = getState()
+    const state = getState()
     const newArr = state.option[collectionName].filter(
       (collection: OptionBase) => {
         return collection.docId !== docId

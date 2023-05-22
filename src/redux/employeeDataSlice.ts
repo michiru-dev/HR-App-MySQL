@@ -11,18 +11,22 @@ import {
   deleteDoc,
 } from 'firebase/firestore'
 import db from '../fireStore/fireStoreConfig'
+import { RootState } from '../redux/store'
 
 //💡firebaseに保存
-const addEmployeeData = createAsyncThunk(
-  'employee/addEmployeeData',
-  async (registerInfo: EmployeeWithoutId, { getState }) => {
-    const state: any = getState()
-    const id = (state.employee.employeeData.length + 1).toString()
-    const newEmployee = { ...registerInfo, id }
-    await addDoc(collection(db, 'employeeData'), newEmployee)
-    //'employeeData'というコレクションに引数newEmployeeを格納
+const addEmployeeData = createAsyncThunk<
+  void,
+  EmployeeWithoutDocId,
+  {
+    state: RootState //これはgetStateの型の書き方
   }
-)
+>('employee/addEmployeeData', async (registerInfo, { getState }) => {
+  const state = getState()
+  const id = (state.employee.employeeData.length + 1).toString()
+  const newEmployee = { ...registerInfo, id }
+  await addDoc(collection(db, 'employeeData'), newEmployee)
+  //'employeeData'というコレクションに引数newEmployeeを格納
+})
 
 //💡firebaseからデータを取得
 const fetchEmployeeData = createAsyncThunk(
@@ -98,24 +102,23 @@ const editEmployeeData = createAsyncThunk(
 )
 
 export type EmployeeBase = {
-  id: string
   firstName: string
   lastName: string
   firstFurigana: string
   lastFurigana: string
   birthday: string
-  postalCode: string
+  phoneNumber: string
   education: string
   hireDate: string
   contractType: string
   department: string
   rank: string
   position: string
-  docId?: string
+  docId: string
 }
 
 //omitでid以外のtypeを作成
-export type EmployeeWithoutId = Omit<EmployeeBase, 'id'>
+export type EmployeeWithoutDocId = Omit<EmployeeBase, 'docId'>
 
 type InitialBase = {
   employeeData: Array<EmployeeBase>
@@ -179,7 +182,6 @@ export const employeeDataSlice = createSlice({
   },
 })
 
-// export const { addEmployee } = employeeDataSlice.actions
 export {
   fetchSearchedEmployee,
   fetchEmployeeData,

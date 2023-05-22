@@ -1,12 +1,12 @@
 import React, { ChangeEventHandler } from 'react'
 import { OptionBase } from '../../../redux/optionsSlice' //type
-import { EmployeeWithoutId } from '../../../redux/employeeDataSlice'
+import { EmployeeWithoutDocId } from '../../../redux/employeeDataSlice'
 
 type ShowOptionsType = {
   labelName: string
   id: string
   optionItem: OptionBase[]
-  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutId>>
+  onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutDocId>>
   value: string
 }
 

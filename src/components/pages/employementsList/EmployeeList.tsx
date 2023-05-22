@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   EmployeeBase,
+  EmployeeWithoutDocId,
   deleteEmployeeData,
   editEmployeeData,
   fetchEmployeeData,
@@ -26,7 +27,7 @@ function EmployeeList() {
 
   //保存ボタンが押された時
   const handleButtonClick = async (
-    employee: EmployeeBase,
+    employee: EmployeeWithoutDocId,
     docId: string | undefined
   ) => {
     if (typeof docId === 'undefined') return
@@ -55,12 +56,12 @@ function EmployeeList() {
     <div>
       {employeeData.map((employee, index) => {
         return (
-          <li key={employee.id}>
+          <li key={employee.docId}>
             {editEmployeeIndex === index ? (
               //編集中のindexとmapのindexが一緒だったら編集画面
               <EmployeeInfoRegister
                 buttonText="保存"
-                handleButtonClick={(registerInfo: EmployeeBase) =>
+                handleButtonClick={(registerInfo) =>
                   handleButtonClick(registerInfo, employee.docId)
                 } //この無名関数は上のhandleButtonClick2と同じ
                 handleCloseButton={handleCloseButton}

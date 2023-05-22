@@ -5,16 +5,19 @@ import ContractOptions from '../pages/register/ContractOptions'
 import DepartmentOptions from '../pages/register/DepartmentOptions'
 import RankOptions from '../pages/register/RankOptions'
 import PositionOptions from '../pages/register/PositionOptions'
-import { EmployeeBase, EmployeeWithoutId } from '../../redux/employeeDataSlice'
+import {
+  EmployeeBase,
+  EmployeeWithoutDocId,
+} from '../../redux/employeeDataSlice'
 import Button from './Button'
 
 type employeeInfoBase = {
   buttonText: string
-  handleButtonClick: (registerInfo: any) => void //???質問
+  handleButtonClick: (registerInfo: EmployeeWithoutDocId) => void
   employee?: EmployeeBase
   isClearInput?: boolean
-  handleCloseButton?: any
-  handleDeletButton?: any
+  handleCloseButton?: React.MouseEventHandler<HTMLButtonElement>
+  handleDeletButton?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 function EmployeeInfoRegister({
@@ -25,13 +28,13 @@ function EmployeeInfoRegister({
   handleCloseButton,
   handleDeletButton,
 }: employeeInfoBase) {
-  const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutId>({
+  const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutDocId>({
     firstName: employee?.firstName ?? '', //employeeがあれば.firstNameなければ空
     lastName: employee?.lastName ?? '',
     firstFurigana: employee?.firstFurigana ?? '',
     lastFurigana: employee?.lastFurigana ?? '',
     birthday: employee?.birthday ?? '',
-    postalCode: employee?.postalCode ?? '',
+    phoneNumber: employee?.phoneNumber ?? '',
     education: employee?.education ?? '',
     hireDate: employee?.hireDate ?? '',
     contractType: employee?.contractType ?? '',
@@ -46,7 +49,7 @@ function EmployeeInfoRegister({
     firstFurigana,
     lastFurigana,
     birthday,
-    postalCode,
+    phoneNumber,
     education,
     hireDate,
     contractType,
@@ -116,16 +119,15 @@ function EmployeeInfoRegister({
         }
       />
 
-      <label htmlFor="address">住所</label>
       <RegisterInput
-        label="郵便番号"
-        id="postalCode"
+        label="電話番号"
+        id="phoneNumber"
         type="number"
-        value={postalCode}
+        value={phoneNumber}
         onChange={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
-            postalCode: e.target.value,
+            phoneNumber: e.target.value,
           }))
         }
       />
@@ -171,7 +173,7 @@ function EmployeeInfoRegister({
               lastFurigana: '',
               firstFurigana: '',
               birthday: '',
-              postalCode: '',
+              phoneNumber: '',
               education: '',
               hireDate: '',
               contractType: '',
