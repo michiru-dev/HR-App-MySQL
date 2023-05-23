@@ -1,3 +1,15 @@
-li {
-  display: flex;
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat:wght@700&family=Kiwi+Maru:wght@300;400;500&display=swap');
+
+body {
+  font-family: 'Abril Fatface', cursive;
+  font-family: 'Caveat', cursive;
+  font-family: 'Kiwi Maru', serif;
+}
+
+footer {
+  font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }

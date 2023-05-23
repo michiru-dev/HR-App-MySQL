@@ -53,32 +53,50 @@ function EmployeeList() {
 
   return (
     <div>
-      {employeeData.map((employee, index) => {
-        return (
-          <li key={employee.docId}>
-            {editEmployeeIndex === index ? (
-              //編集中のindexとmapのindexが一緒だったら編集画面
-              <EmployeeInfoRegister
-                buttonText="保存"
-                handleButtonClick={(registerInfo) =>
-                  handleButtonClick(registerInfo, employee.docId)
-                } //この無名関数は上のhandleButtonClick2と同じ
-                handleCloseButton={handleCloseButton}
-                handleDeletButton={() => handleDeletButton(employee.docId)}
-                employee={employee}
-              />
-            ) : (
-              <>
-                <div>{employee.lastName}</div>
-                <div>{employee.firstName}</div>
-                <div>{employee.position}</div>
-                <div>{employee.rank}</div>
-                <Button text={'編集'} onClick={() => handleEditClick(index)} />
-              </>
-            )}
-          </li>
-        )
-      })}
+      <table className="employeeList">
+        <thead>
+          <tr>
+            <th>姓</th>
+            <th>名</th>
+            <th>役職</th>
+            <th>等級</th>
+            <th>契約形態</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employeeData.map((employee, index) => {
+            return (
+              <tr key={employee.docId}>
+                <td>{employee.lastName}</td>
+                <td>{employee.firstName}</td>
+                <td>{employee.position}</td>
+                <td>{employee.rank}</td>
+                <td>{employee.contractType}</td>
+                <td>
+                  {editEmployeeIndex === index ? (
+                    <EmployeeInfoRegister
+                      buttonText="保存"
+                      handleButtonClick={(registerInfo) =>
+                        handleButtonClick(registerInfo, employee.docId)
+                      }
+                      handleCloseButton={handleCloseButton}
+                      handleDeletButton={() =>
+                        handleDeletButton(employee.docId)
+                      }
+                      employee={employee}
+                    />
+                  ) : (
+                    <Button
+                      text={'編集'}
+                      onClick={() => handleEditClick(index)}
+                    />
+                  )}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </div>
   )
 }

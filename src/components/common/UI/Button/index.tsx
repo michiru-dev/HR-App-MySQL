@@ -7,7 +7,9 @@ export function Button({ text, ...rest }: ButtonProps) {
   //buttonprops何が入っても大丈夫
   return (
     <div>
-      <button {...rest}>{text}</button>
+      <button {...rest} className="basicButton">
+        {text}
+      </button>
     </div>
   )
 }

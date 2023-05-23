@@ -23,10 +23,10 @@ export function ShowSettingList({ settingType, ...rest }: SettingActions) {
     <div>
       {settingType.map((setting: OptionBase, index: number) => {
         return (
-          <li key={setting.id}>
+          <li key={setting.id} className="settingItem">
             {editIndex === index ? (
               //編集中のindexとmapのindexが一緒だったら編集画面
-              <>
+              <div className="editSetting">
                 <input
                   type="text"
                   value={editedName}
@@ -36,27 +36,29 @@ export function ShowSettingList({ settingType, ...rest }: SettingActions) {
                   text={'保存'}
                   onClick={() => handleEditSubmit(setting.docId)}
                 />
-              </>
+              </div>
             ) : (
               //編集中のindexとmapのindexが異なれば編集不可能な画面
-              <>
+              <div className="showItem">
                 {setting.name}
                 <Button text={'編集'} onClick={() => handleEditClick(index)} />
                 <Button
                   text={'削除'}
                   onClick={() => handleDeleteClick(setting.docId)}
                 />
-              </>
+              </div>
             )}
           </li>
         )
       })}
-      <input
-        type="text"
-        value={addInput}
-        onChange={(e) => handleChangeInput(e)}
-      />
-      <Button text={'追加'} onClick={handleAddClick} />
+      <div className="addSettingItem">
+        <input
+          type="text"
+          value={addInput}
+          onChange={(e) => handleChangeInput(e)}
+        />
+        <Button text={'追加'} onClick={handleAddClick} />
+      </div>
     </div>
   )
 }

@@ -56,7 +56,7 @@ export function EmployeeInfoRegister({
   } = registerInfo
 
   return (
-    <div>
+    <div className="registerEmployeeInfo">
       <RegisterNameInput
         label="名前"
         idLast="KanjiSei"
@@ -157,36 +157,37 @@ export function EmployeeInfoRegister({
       <DepartmentOptions onChange={setRegisterInfo} value={department} />
       <RankOptions onChange={setRegisterInfo} value={rank} />
       <PositionOptions onChange={setRegisterInfo} value={position} />
-
-      <Button
-        text={buttonText}
-        onClick={() => {
-          handleButtonClick(registerInfo)
-          if (isClearInput) {
-            //inputを空にする
-            setRegisterInfo({
-              lastName: '',
-              firstName: '',
-              lastFurigana: '',
-              firstFurigana: '',
-              birthday: '',
-              phoneNumber: '',
-              education: '',
-              hireDate: '',
-              contractType: '',
-              department: '',
-              rank: '',
-              position: '',
-            })
-          }
-        }}
-      />
-      {!isClearInput && ( //社員一覧にのみ表示のボタン
-        <>
-          <Button text={'閉じる'} onClick={handleCloseButton} />
-          <Button text={'データを削除'} onClick={handleDeletButton} />
-        </>
-      )}
+      <div className="employeeListButtons">
+        <Button
+          text={buttonText}
+          onClick={() => {
+            handleButtonClick(registerInfo)
+            if (isClearInput) {
+              //inputを空にする
+              setRegisterInfo({
+                lastName: '',
+                firstName: '',
+                lastFurigana: '',
+                firstFurigana: '',
+                birthday: '',
+                phoneNumber: '',
+                education: '',
+                hireDate: '',
+                contractType: '',
+                department: '',
+                rank: '',
+                position: '',
+              })
+            }
+          }}
+        />
+        {!isClearInput && ( //社員一覧にのみ表示のボタン
+          <>
+            <Button text={'閉じる'} onClick={handleCloseButton} />
+            <Button text={'データを削除'} onClick={handleDeletButton} />
+          </>
+        )}
+      </div>
     </div>
   )
 }

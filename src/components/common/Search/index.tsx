@@ -19,15 +19,17 @@ function Search() {
 
   return (
     <>
-      <input
-        value={searchInput}
-        type="search"
-        onChange={(e) => {
-          handleSearchInput(e)
-        }}
-        placeholder="社員名を入力してください"
-      />
-      <Button type="button" text={'検索'} onClick={handleOnclick} />
+      <div className="searchInputAndButton">
+        <input
+          value={searchInput}
+          type="search"
+          onChange={(e) => {
+            handleSearchInput(e)
+          }}
+          placeholder="社員名を入力してください"
+        />
+        <Button type="button" text={'検索'} onClick={handleOnclick} />
+      </div>
       <SearchResult />
     </>
   )

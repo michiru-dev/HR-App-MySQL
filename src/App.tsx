@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import './App.scss'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Setting from './components/pages/setting/Index'
 import Register from './components/pages/register'
