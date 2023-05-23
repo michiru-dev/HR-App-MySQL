@@ -27,6 +27,7 @@ function Search() {
             handleSearchInput(e)
           }}
           placeholder="社員名を入力してください"
+          className="searchInput"
         />
         <Button type="button" text={'検索'} onClick={handleOnclick} />
       </div>

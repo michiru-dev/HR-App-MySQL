@@ -8,7 +8,7 @@ import { Button } from '../UI/Button'
 import RegisterInput from './RegisterInput'
 import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
-type employeeInfoBase = {
+export type employeeInfoBase = {
   buttonText: string
   handleButtonClick: (registerInfo: EmployeeWithoutDocId) => void
   employee?: EmployeeBase
