@@ -1,10 +1,10 @@
 import React from 'react'
 import {
   EmployeeInfoRegister,
-  employeeInfoBase,
+  EmployeeInfoBase,
 } from '../../common/EmployeeInforRegister'
 
-export function EmployeeInfoEditModal(props: employeeInfoBase) {
+export function EmployeeInfoEditModal(props: EmployeeInfoBase) {
   return (
     <div>
       <EmployeeInfoRegister {...props} />

@@ -8,7 +8,7 @@ import { Button } from '../UI/Button'
 import RegisterInput from './RegisterInput'
 import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
-export type employeeInfoBase = {
+export type EmployeeInfoBase = {
   buttonText: string
   handleButtonClick: (registerInfo: EmployeeWithoutDocId) => void
   employee?: EmployeeBase
@@ -24,7 +24,7 @@ export function EmployeeInfoRegister({
   isClearInput,
   handleCloseButton,
   handleDeletButton,
-}: employeeInfoBase) {
+}: EmployeeInfoBase) {
   const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutDocId>({
     firstName: employee?.firstName ?? '', //employeeがあれば.firstNameなければ空
     lastName: employee?.lastName ?? '',
