@@ -2,6 +2,7 @@ import React from 'react'
 import { EmployeeInfoEditModal } from '../../pages/employementsList/EmployeeInfoEditModal'
 import { Button } from '../UI/Button'
 import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
+import { useNavigate } from 'react-router-dom'
 
 type EmployeeInfoListBase = {
   employeeData: EmployeeBase[]
@@ -11,7 +12,7 @@ type EmployeeInfoListBase = {
     docId: string
   ) => void
   handleCloseButton: React.MouseEventHandler<HTMLButtonElement>
-  handleDeletButton: (docId: string) => void
+  handleDeleteButton: (docId: string) => void
   editEmployeeIndex: number | null
 }
 
@@ -20,7 +21,7 @@ function EmployeeInfoList({
   handleEditClick,
   handleSaveButtonClick,
   handleCloseButton,
-  handleDeletButton,
+  handleDeleteButton,
   editEmployeeIndex,
 }: EmployeeInfoListBase) {
   return (
@@ -43,6 +44,7 @@ function EmployeeInfoList({
           </tr>
         </thead>
         <tbody>
+          {/* {console.log(employeeData)} */}
           {employeeData.map((employee, index) => {
             return (
               <tr key={employee.docId}>
@@ -71,8 +73,8 @@ function EmployeeInfoList({
                       // handleButtonClick(registerInfo, employee.docId)
                       //handleButtonClickを実行する時にregisterInfoの引数が必要docIdはここで渡してるから不要
                       handleCloseButton={handleCloseButton}
-                      handleDeletButton={() =>
-                        handleDeletButton(employee.docId)
+                      handleDeleteButton={() =>
+                        handleDeleteButton(employee.docId)
                       }
                       employee={employee}
                     />

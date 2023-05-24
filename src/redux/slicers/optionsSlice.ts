@@ -17,6 +17,7 @@ import {
 import { collectionNameBase } from '../../hooks/useSettingInputs'
 import { RootState } from '../store'
 import { OptionBase } from './type'
+import 'firebase/compat/firestore'
 
 //💡firebaseから値を取得
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う・下の方のextrareducersとセット
@@ -72,7 +73,7 @@ const addHrOptionData = createAsyncThunk<
     if (collectionName === 'rankType') {
       updatedList = await fetchRankType()
     }
-    return { optionData: updatedList, collectionName }
+    return { optionData: updatedList, collectionName: collectionName }
   }
 )
 
@@ -129,7 +130,7 @@ const editOption = createAsyncThunk(
     if (collectionName === 'rankType') {
       updatedList = await fetchRankType()
     }
-    return { optionData: updatedList, collectionName }
+    return { optionData: updatedList, collectionName: collectionName }
   }
 )
 
@@ -159,9 +160,11 @@ export const optionsSlice = createSlice({
     builder
       //項目の追加
       .addCase(addHrOptionData.pending, (state) => {
+        console.log('pending')
         state.isLoading = true
       })
       .addCase(addHrOptionData.fulfilled, (state, action) => {
+        console.log('success')
         state.isLoading = false
         if (action.payload.collectionName === 'contractType') {
           state.contractType = action.payload.optionData
@@ -177,7 +180,9 @@ export const optionsSlice = createSlice({
           state.rankType = action.payload.optionData
         }
       })
-      .addCase(addHrOptionData.rejected, (state) => {
+      .addCase(addHrOptionData.rejected, (state, action) => {
+        console.log('rejected')
+        console.log(action)
         state.isLoading = false
       })
       //項目の取得

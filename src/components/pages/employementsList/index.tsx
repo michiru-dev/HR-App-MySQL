@@ -31,7 +31,7 @@ function EmployeeList() {
     docId: string | undefined
   ) => {
     if (typeof docId === 'undefined') return
-    await dispatch(editEmployeeData({ newData: { ...employee, docId } }))
+    await dispatch(editEmployeeData({ employee, docId }))
     await dispatch(fetchEmployeeData()) //編集して上書きしてきたデータを取得
     setEditEmployeeIndex(null)
   }
@@ -55,7 +55,7 @@ function EmployeeList() {
       handleEditClick={handleEditClick}
       handleSaveButtonClick={handleSaveButtonClick}
       handleCloseButton={handleCloseButton}
-      handleDeletButton={handleDeletButton}
+      handleDeleteButton={handleDeletButton}
       editEmployeeIndex={editEmployeeIndex}
     />
   )

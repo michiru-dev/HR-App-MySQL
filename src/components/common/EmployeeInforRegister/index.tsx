@@ -14,7 +14,7 @@ export type EmployeeInfoBase = {
   employee?: EmployeeBase
   isClearInput?: boolean
   handleCloseButton?: React.MouseEventHandler<HTMLButtonElement>
-  handleDeletButton?: React.MouseEventHandler<HTMLButtonElement>
+  handleDeleteButton?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export function EmployeeInfoRegister({
@@ -23,7 +23,7 @@ export function EmployeeInfoRegister({
   handleButtonClick,
   isClearInput,
   handleCloseButton,
-  handleDeletButton,
+  handleDeleteButton,
 }: EmployeeInfoBase) {
   const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutDocId>({
     firstName: employee?.firstName ?? '', //employeeがあれば.firstNameなければ空
@@ -184,7 +184,7 @@ export function EmployeeInfoRegister({
         {!isClearInput && ( //社員一覧にのみ表示のボタン
           <>
             <Button text={'閉じる'} onClick={handleCloseButton} />
-            <Button text={'データを削除'} onClick={handleDeletButton} />
+            <Button text={'データを削除'} onClick={handleDeleteButton} />
           </>
         )}
       </div>

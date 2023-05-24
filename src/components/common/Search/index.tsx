@@ -10,6 +10,7 @@ import { Button } from '../UI/Button'
 import EmployeeInfoList from '../EmployeeInfoList.tsx'
 import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 import EmployeeNotFound from './EmployeeNotFound'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 function Search() {
   const [searchInput, setSearchInput] = useState('')
@@ -25,11 +26,24 @@ function Search() {
     setSearchInput(e.target.value)
   }
 
+  //クエリパラメーター作成
+  const navigate = useNavigate()
+  const goToSearchResult = () =>
+    navigate({
+      pathname: '/',
+      search: `?searchedName=${searchInput}`,
+    })
+
+  //クエリパラメータ取得
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchedName = searchParams.get('searchedName') //ここの方は自動解決。stringを設定してもnullは消えない
+
   //検索ボタンが押された時
   const handleSearchButtonClick = () => {
     dispatch(fetchSearchedEmployee(searchInput))
     setSearchInput('')
     setIsSearchResultShow(true)
+    goToSearchResult()
   }
 
   const foundEmployee = useAppSelector(
@@ -45,9 +59,9 @@ function Search() {
     employee: EmployeeWithoutDocId,
     docId: string | undefined
   ) => {
-    if (typeof docId === 'undefined') return
-    await dispatch(editEmployeeData({ newData: { ...employee, docId } }))
-    await dispatch(fetchEmployeeData()) //編集して上書きしてきたデータを取得
+    if (typeof docId === 'undefined' || searchedName === null) return
+    await dispatch(editEmployeeData({ employee, docId }))
+    await dispatch(fetchSearchedEmployee(searchedName)) //編集して上書きしてきたデータを取得
     setEditEmployeeIndex(null)
   }
 
@@ -57,10 +71,10 @@ function Search() {
   }
 
   //削除ボタンが押された時
-  const handleDeletButton = async (docId: string | undefined) => {
-    if (typeof docId === 'undefined') return
+  const handleDeleteButton = async (docId: string | undefined) => {
+    if (typeof docId === 'undefined' || searchedName === null) return
     await dispatch(deleteEmployeeData(docId))
-    await dispatch(fetchEmployeeData()) //古いデータを見た目からもなくす
+    await dispatch(fetchSearchedEmployee(searchedName)) //古いデータを見た目からもなくす
     setEditEmployeeIndex(null)
   }
 
@@ -80,14 +94,16 @@ function Search() {
       </div>
       {isSearchResultShow && foundEmployee.length === 0 && <EmployeeNotFound />}
       {isSearchResultShow && foundEmployee.length > 0 && (
-        <EmployeeInfoList
-          employeeData={foundEmployee}
-          handleEditClick={handleEditClick}
-          handleSaveButtonClick={handleSaveButtonClick}
-          handleCloseButton={handleCloseButton}
-          handleDeletButton={handleDeletButton}
-          editEmployeeIndex={editEmployeeIndex}
-        />
+        <div className="employeeInfoListWrapper">
+          <EmployeeInfoList
+            employeeData={foundEmployee}
+            handleEditClick={handleEditClick}
+            handleSaveButtonClick={handleSaveButtonClick}
+            handleCloseButton={handleCloseButton}
+            handleDeleteButton={handleDeleteButton}
+            editEmployeeIndex={editEmployeeIndex}
+          />
+        </div>
       )}
     </>
   )

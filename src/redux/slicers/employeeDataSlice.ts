@@ -11,23 +11,16 @@ import {
   deleteDoc,
 } from 'firebase/firestore'
 import db from '../../fireStore/fireStoreConfig'
-import { RootState } from '../store'
 import { EmployeeBase, EmployeeWithoutDocId } from './type'
 
 //💡firebaseに保存
-const addEmployeeData = createAsyncThunk<
-  void,
-  EmployeeWithoutDocId,
-  {
-    state: RootState //これはgetStateの型の書き方
+const addEmployeeData = createAsyncThunk(
+  'employee/addEmployeeData',
+  async (registerInfo: EmployeeWithoutDocId) => {
+    await addDoc(collection(db, 'employeeData'), registerInfo)
+    //'employeeData'というコレクションに引数newEmployeeを格納
   }
->('employee/addEmployeeData', async (registerInfo, { getState }) => {
-  const state = getState()
-  const id = (state.employee.employeeData.length + 1).toString()
-  const newEmployee = { ...registerInfo, id }
-  await addDoc(collection(db, 'employeeData'), newEmployee)
-  //'employeeData'というコレクションに引数newEmployeeを格納
-})
+)
 
 //💡firebaseからデータを取得
 const fetchEmployeeData = createAsyncThunk(
@@ -57,9 +50,10 @@ const fetchSearchedEmployee = createAsyncThunk(
       )
     )
     const querySnapshot = await getDocs(q)
-    const searchedEmployeeArr = querySnapshot.docs.map((doc) => {
-      return doc.data() as EmployeeBase
-    })
+    const searchedEmployeeArr = querySnapshot.docs.map((doc) => ({
+      ...(doc.data() as EmployeeBase),
+      docId: doc.id,
+    }))
     return { searchedEmployeeArr: searchedEmployeeArr }
   }
 )
@@ -93,14 +87,14 @@ const deleteEmployeeData = createAsyncThunk(
 //createAsyncThunkの型定義は二つの引数形式
 //一つ目の引数は返り値の型、二つ目はasyncの後にくる引数の型
 //今回はその型の定義の仕方はしていない
-const editEmployeeData = createAsyncThunk(
-  'employee/editEmployeeData',
-  async ({ newData }: { newData: EmployeeBase }) => {
-    if (typeof newData.docId === 'undefined') return
-    const ref = doc(db, 'employeeData', newData.docId)
-    await updateDoc(ref, newData)
-  }
-)
+const editEmployeeData = createAsyncThunk<
+  void,
+  { employee: EmployeeWithoutDocId; docId: string }
+>('employee/editEmployeeData', async ({ employee, docId }) => {
+  if (typeof docId === 'undefined') return
+  const ref = doc(db, 'employeeData', docId)
+  await updateDoc(ref, employee) //docIdを省いてupdate
+})
 
 type InitialBase = {
   employeeData: Array<EmployeeBase>
@@ -124,8 +118,9 @@ export const employeeDataSlice = createSlice({
       .addCase(addEmployeeData.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(addEmployeeData.fulfilled, (state) => {
+      .addCase(addEmployeeData.fulfilled, (state, action) => {
         state.isLoading = false
+        // state.employeeData.push(action.payload.newEmployee)
       })
       .addCase(addEmployeeData.rejected, (state) => {
         state.isLoading = false
