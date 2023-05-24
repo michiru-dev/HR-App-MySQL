@@ -8,13 +8,13 @@ import { Button } from '../UI/Button'
 import RegisterInput from './RegisterInput'
 import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
 
-type employeeInfoBase = {
+export type EmployeeInfoBase = {
   buttonText: string
   handleButtonClick: (registerInfo: EmployeeWithoutDocId) => void
   employee?: EmployeeBase
   isClearInput?: boolean
   handleCloseButton?: React.MouseEventHandler<HTMLButtonElement>
-  handleDeletButton?: React.MouseEventHandler<HTMLButtonElement>
+  handleDeleteButton?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 export function EmployeeInfoRegister({
@@ -23,8 +23,8 @@ export function EmployeeInfoRegister({
   handleButtonClick,
   isClearInput,
   handleCloseButton,
-  handleDeletButton,
-}: employeeInfoBase) {
+  handleDeleteButton,
+}: EmployeeInfoBase) {
   const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutDocId>({
     firstName: employee?.firstName ?? '', //employeeがあれば.firstNameなければ空
     lastName: employee?.lastName ?? '',
@@ -56,7 +56,7 @@ export function EmployeeInfoRegister({
   } = registerInfo
 
   return (
-    <div>
+    <div className="registerEmployeeInfo">
       <RegisterNameInput
         label="名前"
         idLast="KanjiSei"
@@ -157,36 +157,37 @@ export function EmployeeInfoRegister({
       <DepartmentOptions onChange={setRegisterInfo} value={department} />
       <RankOptions onChange={setRegisterInfo} value={rank} />
       <PositionOptions onChange={setRegisterInfo} value={position} />
-
-      <Button
-        text={buttonText}
-        onClick={() => {
-          handleButtonClick(registerInfo)
-          if (isClearInput) {
-            //inputを空にする
-            setRegisterInfo({
-              lastName: '',
-              firstName: '',
-              lastFurigana: '',
-              firstFurigana: '',
-              birthday: '',
-              phoneNumber: '',
-              education: '',
-              hireDate: '',
-              contractType: '',
-              department: '',
-              rank: '',
-              position: '',
-            })
-          }
-        }}
-      />
-      {!isClearInput && ( //社員一覧にのみ表示のボタン
-        <>
-          <Button text={'閉じる'} onClick={handleCloseButton} />
-          <Button text={'データを削除'} onClick={handleDeletButton} />
-        </>
-      )}
+      <div className="employeeListButtons">
+        <Button
+          text={buttonText}
+          onClick={() => {
+            handleButtonClick(registerInfo)
+            if (isClearInput) {
+              //inputを空にする
+              setRegisterInfo({
+                lastName: '',
+                firstName: '',
+                lastFurigana: '',
+                firstFurigana: '',
+                birthday: '',
+                phoneNumber: '',
+                education: '',
+                hireDate: '',
+                contractType: '',
+                department: '',
+                rank: '',
+                position: '',
+              })
+            }
+          }}
+        />
+        {!isClearInput && ( //社員一覧にのみ表示のボタン
+          <>
+            <Button text={'閉じる'} onClick={handleCloseButton} />
+            <Button text={'データを削除'} onClick={handleDeleteButton} />
+          </>
+        )}
+      </div>
     </div>
   )
 }

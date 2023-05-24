@@ -14,10 +14,10 @@ function RegisterInput({
   onChange: ChangeEventHandler<HTMLInputElement>
 }) {
   return (
-    <>
+    <div>
       <label htmlFor={id}>{label}</label>
       <input id={id} name={id} type={type} value={value} onChange={onChange} />
-    </>
+    </div>
   )
 }
 

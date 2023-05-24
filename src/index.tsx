@@ -1,6 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.scss'
+import '../src/components/common/UI/Button/button.scss'
+import '../src/components/common/UI/LinkButton/linkButton.scss'
+import '../src/components/pages/landing/landing.scss'
+import '../src/components/pages/register/register.scss'
+import '../src/components/pages/setting/setting.scss'
+import '../src/components/pages/employementsList/employementsList.scss'
+
 import App from './App'
 import { Provider } from 'react-redux'
 import store from '../src/redux/store'

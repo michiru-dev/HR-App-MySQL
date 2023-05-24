@@ -24,7 +24,7 @@ function RegisterNameInput({
   placeholderFirst: string
 }) {
   return (
-    <>
+    <div>
       <label htmlFor={idLast}>{label}</label>
       <input
         id={idLast}
@@ -42,7 +42,7 @@ function RegisterNameInput({
         onChange={onChangeFirst}
         placeholder={placeholderFirst}
       />
-    </>
+    </div>
   )
 }
 

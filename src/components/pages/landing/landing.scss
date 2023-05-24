@@ -1,0 +1,14 @@
+.menu {
+  display: flex;
+  justify-content: center;
+}
+
+.searchInputAndButton {
+  display: flex;
+  max-width: 312px;
+  margin: 0 auto;
+
+  .searchInput {
+    width: 85%;
+  }
+}
