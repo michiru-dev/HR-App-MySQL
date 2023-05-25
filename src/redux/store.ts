@@ -9,7 +9,6 @@ import employeeDataSlicer from './slicers/employeeDataSlice'
 const store = configureStore({
   reducer: {
     //ここは名前決まってる
-    // counter: counterSlicer, //counterは自分でつけた
     option: optionsSlicer,
     employee: employeeDataSlicer,
   },

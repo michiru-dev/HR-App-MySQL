@@ -7,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 import EmployeeInfoList from '../../common/EmployeeInfoList.tsx'
+import Layout from '../../common/UI/Layout'
 
 function EmployeeList() {
   const dispatch = useAppDispatch()
@@ -50,14 +51,18 @@ function EmployeeList() {
   }
 
   return (
-    <EmployeeInfoList
-      employeeData={employeeData}
-      handleEditClick={handleEditClick}
-      handleSaveButtonClick={handleSaveButtonClick}
-      handleCloseButton={handleCloseButton}
-      handleDeleteButton={handleDeletButton}
-      editEmployeeIndex={editEmployeeIndex}
-    />
+    <Layout>
+      <div className="employeeListBox">
+        <EmployeeInfoList
+          employeeData={employeeData}
+          handleEditClick={handleEditClick}
+          handleSaveButtonClick={handleSaveButtonClick}
+          handleCloseButton={handleCloseButton}
+          handleDeleteButton={handleDeletButton}
+          editEmployeeIndex={editEmployeeIndex}
+        />
+      </div>
+    </Layout>
   )
 }
 
