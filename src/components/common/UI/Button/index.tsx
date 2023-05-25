@@ -6,10 +6,8 @@ type ButtonProps = ComponentProps<'button'> & { text: string }
 export function Button({ text, ...rest }: ButtonProps) {
   //buttonprops何が入っても大丈夫
   return (
-    <div>
-      <button {...rest} className="basicButton">
-        {text}
-      </button>
-    </div>
+    <button {...rest} className="basicButton">
+      {text}
+    </button>
   )
 }
