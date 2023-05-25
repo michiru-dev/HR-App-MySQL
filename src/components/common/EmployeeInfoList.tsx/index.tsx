@@ -2,7 +2,6 @@ import React from 'react'
 import { EmployeeInfoEditModal } from '../../pages/employementsList/EmployeeInfoEditModal'
 import { Button } from '../UI/Button'
 import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
-import { useNavigate } from 'react-router-dom'
 
 type EmployeeInfoListBase = {
   employeeData: EmployeeBase[]
@@ -44,7 +43,6 @@ function EmployeeInfoList({
           </tr>
         </thead>
         <tbody>
-          {/* {console.log(employeeData)} */}
           {employeeData.map((employee, index) => {
             return (
               <tr key={employee.docId}>
@@ -60,31 +58,39 @@ function EmployeeInfoList({
                 <td>{employee.birthday}</td>
                 <td>{employee.education}</td>
                 <td>{employee.phoneNumber}</td>
-                <Button text={'編集'} onClick={() => handleEditClick(index)} />
-                {/* 編集ボタンを押したら */}
-                {editEmployeeIndex === index && (
-                  <td id="modal" className="modal">
-                    <EmployeeInfoEditModal
-                      buttonText="保存"
-                      handleButtonClick={(registerInfo) =>
-                        handleSaveButtonClick(registerInfo, employee.docId)
-                      }
-                      // const handleButtonClick2 = (registerInfo: EmployeeBase) =>
-                      // handleButtonClick(registerInfo, employee.docId)
-                      //handleButtonClickを実行する時にregisterInfoの引数が必要docIdはここで渡してるから不要
-                      handleCloseButton={handleCloseButton}
-                      handleDeleteButton={() =>
-                        handleDeleteButton(employee.docId)
-                      }
-                      employee={employee}
-                    />
-                  </td>
-                )}
+                <td>
+                  <Button
+                    text={'編集'}
+                    onClick={() => handleEditClick(index)}
+                  />
+                </td>
               </tr>
             )
           })}
         </tbody>
       </table>
+      {editEmployeeIndex !== null && (
+        <div id="modal" className="modal">
+          <EmployeeInfoEditModal
+            buttonText="保存"
+            handleButtonClick={(registerInfo) =>
+              handleSaveButtonClick(
+                registerInfo,
+                employeeData[editEmployeeIndex].docId
+                //propsで渡ってきたemployeeDataの配列にindexでアクセスする
+              )
+            }
+            // const handleButtonClick2 = (registerInfo: EmployeeBase) =>
+            // handleButtonClick(registerInfo, employee.docId)
+            //handleButtonClickを実行する時にregisterInfoの引数が必要docIdはここで渡してるから不要
+            handleCloseButton={handleCloseButton}
+            handleDeleteButton={() =>
+              handleDeleteButton(employeeData[editEmployeeIndex].docId)
+            }
+            employee={employeeData[editEmployeeIndex]}
+          />
+        </div>
+      )}
     </div>
   )
 }

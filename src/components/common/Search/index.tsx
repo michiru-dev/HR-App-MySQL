@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import {
   deleteEmployeeData,
   editEmployeeData,
-  fetchEmployeeData,
   fetchSearchedEmployee,
 } from '../../../redux/slicers/employeeDataSlice'
 import { Button } from '../UI/Button'

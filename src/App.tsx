@@ -23,18 +23,6 @@ function App() {
   // //        ⇩
   // // setName('test') => setName(state, action)
 
-  // const [posts, setPosts] = useState<any>([])
-  // useEffect(() => {
-  //   //データ取得
-  //   const postData = collection(db, 'posts') //collectionでpostの中のデータを見る
-  //   getDocs(postData).then((snapShot) => {
-  //     //getDocsでデータを取得
-  //     // console.log(snapShot.docs.map((doc) => ({ ...doc.data() })))
-  //     //doc.data()はjson.stringfy的な感じ。データを読めるようにする
-  //     setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })))
-  //   })
-  // }, [])
-
   const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(fetchHrOptionType())
@@ -42,16 +30,6 @@ function App() {
 
   return (
     <div>
-      {/* <div>
-        <h1>Counter:{counter}</h1>
-        <h2>{counterObj.name}</h2>
-        <button onClick={() => dispatch(increment())}>+</button>
-        <button onClick={() => dispatch(decrement())}>-</button>
-        <button onClick={() => dispatch(setName('test'))}>NAME</button>
-      </div> */}
-      {/* {posts.map((post: any) => (
-        <h1 key={1}>{post.title}</h1>
-      ))} */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
