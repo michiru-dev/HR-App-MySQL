@@ -18,3 +18,16 @@
   flex-direction: column;
   align-items: center;
 }
+
+.headerHomeButton {
+  text-decoration: none;
+}
+
+.headerHomeButton:visited {
+  color: inherit;
+}
+
+.icon {
+  height: 30px;
+  width: 30px;
+}

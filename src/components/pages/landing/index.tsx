@@ -1,5 +1,5 @@
 import React from 'react'
-import { Search } from '../../common/Search'
+import { Search } from '../Search'
 import { LinkButton } from '../../common/UI/LinkButton'
 import Layout from '../../common/UI/Layout'
 import { useAppSelector } from '../../../redux/hooks'

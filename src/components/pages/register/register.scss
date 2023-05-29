@@ -7,3 +7,18 @@
   display: flex;
   justify-content: center;
 }
+
+//契約形態等はいnputではなくoptionタグのためpadding使えない。別指定
+.registerSelectOptionInput {
+  width: 157px;
+  height: 31px;
+  margin: 3px 1px;
+}
+
+.registerInput,
+.registerNameInput {
+  width: 147px;
+  height: 25px;
+  padding: 1px 3px;
+  margin: 3px 1px;
+}

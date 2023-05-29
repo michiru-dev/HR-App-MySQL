@@ -13,7 +13,7 @@ export function RankOptions({
   const rank = useAppSelector((state) => state.option.rankType)
   return (
     <ShowOptions
-      labelName={'等級'}
+      labelName={'等　　級'}
       id={'rank'}
       optionItem={rank}
       onChange={onChange}

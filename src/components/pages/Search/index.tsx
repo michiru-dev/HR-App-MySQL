@@ -5,8 +5,8 @@ import {
   editEmployeeData,
   fetchSearchedEmployee,
 } from '../../../redux/slicers/employeeDataSlice'
-import { Button } from '../UI/Button'
-import EmployeeInfoList from '../EmployeeInfoList.tsx'
+import { Button } from '../../common/UI/Button'
+import EmployeeInfoList from '../../common/EmployeeInfoList.tsx'
 import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 import EmployeeNotFound from './EmployeeNotFound'
 import { useNavigate, useSearchParams } from 'react-router-dom'

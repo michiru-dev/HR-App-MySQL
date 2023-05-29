@@ -33,6 +33,7 @@ function RegisterNameInput({
         value={valueLast}
         onChange={onChangeLast}
         placeholder={placeholderLast}
+        className="registerNameInput"
       />
       <input
         id={idFirst}
@@ -41,6 +42,7 @@ function RegisterNameInput({
         value={valueFirst}
         onChange={onChangeFirst}
         placeholder={placeholderFirst}
+        className="registerNameInput"
       />
     </div>
   )
