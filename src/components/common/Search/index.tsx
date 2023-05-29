@@ -17,6 +17,7 @@ function Search() {
     null
   )
   const [isSearchResultShow, setIsSearchResultShow] = useState(false)
+  const isLoading = useAppSelector((state) => state.employee.isLoading)
 
   const dispatch = useAppDispatch()
 
@@ -91,7 +92,10 @@ function Search() {
         />
         <Button type="button" text={'検索'} onClick={handleSearchButtonClick} />
       </div>
-      {isSearchResultShow && foundEmployee.length === 0 && <EmployeeNotFound />}
+      {isSearchResultShow &&
+        foundEmployee.length === 0 &&
+        isLoading === false && <EmployeeNotFound />}
+      {/* isLoadingも条件に入れないとfoundemployeeがセットされるまでの時間にlengthが0になりnotfoundが表示されてしまう*/}
       {isSearchResultShow && foundEmployee.length > 0 && (
         <div className="employeeInfoListWrapper">
           <EmployeeInfoList

@@ -40,6 +40,7 @@ const fetchSearchedEmployee = createAsyncThunk(
   'employee/fetchSearchedEmployee',
   async (searchKeyword: string) => {
     //これはおそらく型を自動解決
+    //searchKeywordに当てはまるやつだけ抽出
     const q = query(
       collection(db, 'employeeData'),
       or(
@@ -49,7 +50,9 @@ const fetchSearchedEmployee = createAsyncThunk(
         where('lastFurigana', '==', searchKeyword)
       )
     )
+    //getDocsで取得
     const querySnapshot = await getDocs(q)
+    //.docsで読めるように
     const searchedEmployeeArr = querySnapshot.docs.map((doc) => ({
       ...(doc.data() as EmployeeBase),
       docId: doc.id,
@@ -118,9 +121,8 @@ export const employeeDataSlice = createSlice({
       .addCase(addEmployeeData.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(addEmployeeData.fulfilled, (state, action) => {
+      .addCase(addEmployeeData.fulfilled, (state) => {
         state.isLoading = false
-        // state.employeeData.push(action.payload.newEmployee)
       })
       .addCase(addEmployeeData.rejected, (state) => {
         state.isLoading = false
@@ -131,6 +133,7 @@ export const employeeDataSlice = createSlice({
       })
       .addCase(fetchEmployeeData.fulfilled, (state, action) => {
         state.employeeData = action.payload.employeeArr
+        state.isLoading = false
       })
       .addCase(fetchEmployeeData.rejected, (state) => {
         state.isLoading = false
@@ -144,6 +147,16 @@ export const employeeDataSlice = createSlice({
         state.searchedEmployeeData = action.payload.searchedEmployeeArr
       })
       .addCase(fetchSearchedEmployee.rejected, (state) => {
+        state.isLoading = false
+      })
+      //💡編集
+      .addCase(editEmployeeData.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(editEmployeeData.fulfilled, (state) => {
+        state.isLoading = false
+      })
+      .addCase(editEmployeeData.rejected, (state) => {
         state.isLoading = false
       })
       //💡firebaseから削除
