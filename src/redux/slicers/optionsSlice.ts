@@ -160,11 +160,9 @@ export const optionsSlice = createSlice({
     builder
       //項目の追加
       .addCase(addHrOptionData.pending, (state) => {
-        console.log('pending')
         state.isLoading = true
       })
       .addCase(addHrOptionData.fulfilled, (state, action) => {
-        console.log('success')
         state.isLoading = false
         if (action.payload.collectionName === 'contractType') {
           state.contractType = action.payload.optionData
@@ -204,6 +202,7 @@ export const optionsSlice = createSlice({
         state.isLoading = true
       })
       .addCase(deleteOptionData.fulfilled, (state, action) => {
+        state.isLoading = false
         if (action.payload.collectionName === 'contractType') {
           state.contractType = action.payload.newArr
           //配列を新しいのに置き換え

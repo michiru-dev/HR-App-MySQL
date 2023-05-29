@@ -6,34 +6,40 @@ import { DepartmentSetting } from './DepartmentSetting'
 import { PositionsSetting } from './PositionSetting'
 import { RankSetting } from './RankSetting'
 import Layout from '../../common/UI/Layout'
+import { useAppSelector } from '../../../redux/hooks'
+import LoadingSpinner from '../../common/UI/LoadingSpinner'
 
 function Setting() {
+  const isLoading = useAppSelector((state) => state.option.isLoading)
   return (
-    <Layout>
-      <div className="settingBox">
-        <Tabs>
-          <TabList>
-            <Tab>契約形態</Tab>
-            <Tab>部署</Tab>
-            <Tab>等級</Tab>
-            <Tab>役職</Tab>
-          </TabList>
+    <>
+      {isLoading && <LoadingSpinner />}
+      <Layout>
+        <div className="settingBox">
+          <Tabs>
+            <TabList>
+              <Tab>契約形態</Tab>
+              <Tab>部署</Tab>
+              <Tab>等級</Tab>
+              <Tab>役職</Tab>
+            </TabList>
 
-          <TabPanel>
-            <ContractSetting />
-          </TabPanel>
-          <TabPanel>
-            <DepartmentSetting />
-          </TabPanel>
-          <TabPanel>
-            <RankSetting />
-          </TabPanel>
-          <TabPanel>
-            <PositionsSetting />
-          </TabPanel>
-        </Tabs>
-      </div>
-    </Layout>
+            <TabPanel>
+              <ContractSetting />
+            </TabPanel>
+            <TabPanel>
+              <DepartmentSetting />
+            </TabPanel>
+            <TabPanel>
+              <RankSetting />
+            </TabPanel>
+            <TabPanel>
+              <PositionsSetting />
+            </TabPanel>
+          </Tabs>
+        </div>
+      </Layout>
+    </>
   )
 }
 

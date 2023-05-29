@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 import EmployeeInfoList from '../../common/EmployeeInfoList.tsx'
 import Layout from '../../common/UI/Layout'
+import LoadingSpinner from '../../common/UI/LoadingSpinner'
 
 function EmployeeList() {
   const dispatch = useAppDispatch()
@@ -16,6 +17,7 @@ function EmployeeList() {
   )
 
   const employeeData = useAppSelector((state) => state.employee.employeeData)
+  const isLoading = useAppSelector((state) => state.employee.isLoading)
 
   useEffect(() => {
     dispatch(fetchEmployeeData())
@@ -50,19 +52,24 @@ function EmployeeList() {
     setEditEmployeeIndex(null)
   }
 
+  console.log(isLoading)
+
   return (
-    <Layout>
-      <div className="employeeListBox">
-        <EmployeeInfoList
-          employeeData={employeeData}
-          handleEditClick={handleEditClick}
-          handleSaveButtonClick={handleSaveButtonClick}
-          handleCloseButton={handleCloseButton}
-          handleDeleteButton={handleDeletButton}
-          editEmployeeIndex={editEmployeeIndex}
-        />
-      </div>
-    </Layout>
+    <>
+      {isLoading && <LoadingSpinner />}
+      <Layout>
+        <div className="employeeListBox">
+          <EmployeeInfoList
+            employeeData={employeeData}
+            handleEditClick={handleEditClick}
+            handleSaveButtonClick={handleSaveButtonClick}
+            handleCloseButton={handleCloseButton}
+            handleDeleteButton={handleDeletButton}
+            editEmployeeIndex={editEmployeeIndex}
+          />
+        </div>
+      </Layout>
+    </>
   )
 }
 
