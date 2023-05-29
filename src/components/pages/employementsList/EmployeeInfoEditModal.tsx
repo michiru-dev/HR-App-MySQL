@@ -6,7 +6,7 @@ import {
 
 export function EmployeeInfoEditModal(props: EmployeeInfoBase) {
   return (
-    <div>
+    <div className="employeeModalBox">
       <EmployeeInfoRegister {...props} />
     </div>
   )

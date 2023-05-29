@@ -158,6 +158,7 @@ export function EmployeeInfoRegister({
       <RankOptions onChange={setRegisterInfo} value={rank} />
       <PositionOptions onChange={setRegisterInfo} value={position} />
       <div className="employeeListButtons">
+        {/* 保存・登録ボタン */}
         <Button
           text={buttonText}
           onClick={() => {
@@ -183,8 +184,16 @@ export function EmployeeInfoRegister({
         />
         {!isClearInput && ( //社員一覧にのみ表示のボタン
           <>
-            <Button text={'閉じる'} onClick={handleCloseButton} />
-            <Button text={'データを削除'} onClick={handleDeleteButton} />
+            <Button
+              text={'閉じる'}
+              onClick={handleCloseButton}
+              className="closeAndDeleteButton"
+            />
+            <Button
+              text={'データを削除'}
+              onClick={handleDeleteButton}
+              className="closeAndDeleteButton"
+            />
           </>
         )}
       </div>
