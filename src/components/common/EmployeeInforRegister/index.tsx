@@ -58,7 +58,7 @@ export function EmployeeInfoRegister({
   return (
     <div className="registerEmployeeInfo">
       <RegisterNameInput
-        label="名前"
+        label="名&emsp;&emsp;前"
         idLast="KanjiSei"
         idFirst="KanjiMei"
         type="string"
@@ -142,7 +142,7 @@ export function EmployeeInfoRegister({
       />
 
       <RegisterInput
-        label="入社日"
+        label="入&nbsp;社&nbsp;日&nbsp;&nbsp;"
         id="enterDate"
         type="date"
         value={hireDate}

@@ -16,7 +16,14 @@ function RegisterInput({
   return (
     <div>
       <label htmlFor={id}>{label}</label>
-      <input id={id} name={id} type={type} value={value} onChange={onChange} />
+      <input
+        id={id}
+        name={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="registerInput"
+      />
     </div>
   )
 }

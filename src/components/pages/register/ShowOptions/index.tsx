@@ -33,6 +33,7 @@ export function ShowOptions({
         name={id}
         id={id}
         value={value}
+        className="registerSelectOptionInput"
       >
         <option value=""></option>
         {optionItem.map((option: OptionBase) => {

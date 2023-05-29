@@ -52,8 +52,6 @@ function EmployeeList() {
     setEditEmployeeIndex(null)
   }
 
-  console.log(isLoading)
-
   return (
     <>
       {isLoading && <LoadingSpinner />}

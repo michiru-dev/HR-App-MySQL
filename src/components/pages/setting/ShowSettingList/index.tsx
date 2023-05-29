@@ -3,9 +3,11 @@ import { useSettingInputs } from '../../../../hooks/useSettingInputs'
 import { SettingActions } from '../../../../hooks/useSettingInputs'
 import { Button } from '../../../common/UI/Button'
 import { OptionBase } from '../../../../redux/slicers/type'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons'
 
 //各種設定の画面
-
 export function ShowSettingList({ settingType, ...rest }: SettingActions) {
   const {
     addInput,
@@ -41,11 +43,18 @@ export function ShowSettingList({ settingType, ...rest }: SettingActions) {
               //編集中のindexとmapのindexが異なれば編集不可能な画面
               <div className="showItem">
                 {setting.name}
-                <Button text={'編集'} onClick={() => handleEditClick(index)} />
-                <Button
-                  text={'削除'}
-                  onClick={() => handleDeleteClick(setting.docId)}
-                />
+                <div className="editAndTrashButtonBox">
+                  <Button
+                    text={<FontAwesomeIcon icon={faPenToSquare} />}
+                    onClick={() => handleEditClick(index)}
+                    className={'settingEditButton'}
+                  />
+                  <Button
+                    text={<FontAwesomeIcon icon={faTrashCan} />}
+                    onClick={() => handleDeleteClick(setting.docId)}
+                    className={'settingDeleteButton'}
+                  />
+                </div>
               </div>
             )}
           </li>
@@ -56,6 +65,7 @@ export function ShowSettingList({ settingType, ...rest }: SettingActions) {
           type="text"
           value={addInput}
           onChange={(e) => handleChangeInput(e)}
+          className="optionAddInput"
         />
         <Button text={'追加'} onClick={handleAddClick} />
       </div>

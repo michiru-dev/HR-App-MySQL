@@ -13,7 +13,7 @@ export function DepartmentOptions({
   const department = useAppSelector((state) => state.option.departmentType)
   return (
     <ShowOptions
-      labelName={'部署'}
+      labelName={'部　　署'}
       id={'department'}
       optionItem={department}
       onChange={onChange}

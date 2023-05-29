@@ -178,9 +178,7 @@ export const optionsSlice = createSlice({
           state.rankType = action.payload.optionData
         }
       })
-      .addCase(addHrOptionData.rejected, (state, action) => {
-        console.log('rejected')
-        console.log(action)
+      .addCase(addHrOptionData.rejected, (state) => {
         state.isLoading = false
       })
       //項目の取得

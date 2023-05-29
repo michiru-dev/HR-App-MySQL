@@ -13,7 +13,7 @@ export function PositionOptions({
   const position = useAppSelector((state) => state.option.positionType)
   return (
     <ShowOptions
-      labelName={'役職'}
+      labelName={'役　　職'}
       id={'position'}
       optionItem={position}
       onChange={onChange}
