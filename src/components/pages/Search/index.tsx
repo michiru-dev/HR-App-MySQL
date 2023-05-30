@@ -11,6 +11,40 @@ import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 import EmployeeNotFound from './EmployeeNotFound'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+// 2 = 8px
+
+// flex
+// absolute
+// top-full
+// left-1/2
+// invisible
+// z-10
+// items-center
+// py-[2px] ///
+// px-2  ///
+// mx-auto
+// mt-2
+// text-xs
+// text-white
+// whitespace-nowrap
+// bg-black
+// rounded
+// transition-all
+// duration-150
+// transform
+// -translate-x-1/2 //
+// before:absolute
+// before:block
+// before:-top-1
+// before:left-1/2
+// before:z-0
+// before:w-2 //
+// before:h-2 //
+// before:bg-black
+//  before:transform
+//  before:rotate-45
+//   before:-translate-x-1/2
+
 function Search() {
   const [searchInput, setSearchInput] = useState('')
   const [editEmployeeIndex, setEditEmployeeIndex] = useState<number | null>(
@@ -90,6 +124,10 @@ function Search() {
           placeholder="社員名を入力してください"
           className="searchInput"
         />
+        <div className="tooltip">
+          漢字またはカタカナで姓または名を検索してください
+          ex.山田/太郎/ヤマダ/タロウ
+        </div>
         <Button type="button" text={'検索'} onClick={handleSearchButtonClick} />
       </div>
       {isSearchResultShow &&
