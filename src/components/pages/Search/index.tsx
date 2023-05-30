@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import {
   deleteEmployeeData,
@@ -11,48 +11,15 @@ import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
 import EmployeeNotFound from './EmployeeNotFound'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-// 2 = 8px
-
-// flex
-// absolute
-// top-full
-// left-1/2
-// invisible
-// z-10
-// items-center
-// py-[2px] ///
-// px-2  ///
-// mx-auto
-// mt-2
-// text-xs
-// text-white
-// whitespace-nowrap
-// bg-black
-// rounded
-// transition-all
-// duration-150
-// transform
-// -translate-x-1/2 //
-// before:absolute
-// before:block
-// before:-top-1
-// before:left-1/2
-// before:z-0
-// before:w-2 //
-// before:h-2 //
-// before:bg-black
-//  before:transform
-//  before:rotate-45
-//   before:-translate-x-1/2
-
 function Search() {
   const [searchInput, setSearchInput] = useState('')
   const [editEmployeeIndex, setEditEmployeeIndex] = useState<number | null>(
     null
   )
-  const [isSearchResultShow, setIsSearchResultShow] = useState(false)
+  const foundEmployee = useAppSelector(
+    (state) => state.employee.searchedEmployeeData
+  )
   const isLoading = useAppSelector((state) => state.employee.isLoading)
-
   const dispatch = useAppDispatch()
 
   //検索インプットの値
@@ -69,20 +36,22 @@ function Search() {
     })
 
   //クエリパラメータ取得
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const searchedName = searchParams.get('searchedName') //ここの方は自動解決。stringを設定してもnullは消えない
 
   //検索ボタンが押された時
   const handleSearchButtonClick = () => {
     dispatch(fetchSearchedEmployee(searchInput))
     setSearchInput('')
-    setIsSearchResultShow(true)
     goToSearchResult()
   }
 
-  const foundEmployee = useAppSelector(
-    (state) => state.employee.searchedEmployeeData
-  )
+  //更新がかかった時
+  useEffect(() => {
+    if (searchedName === null) return
+    dispatch(fetchSearchedEmployee(searchedName))
+  }, [])
+
   //編集ボタンが押された時
   const handleEditClick = (index: number) => {
     setEditEmployeeIndex(index)
@@ -96,6 +65,7 @@ function Search() {
     if (typeof docId === 'undefined' || searchedName === null) return
     await dispatch(editEmployeeData({ employee, docId }))
     await dispatch(fetchSearchedEmployee(searchedName)) //編集して上書きしてきたデータを取得
+    //ここの引数がなぜsetStateのsearchInputではないかというと、searchInputはすでに変更している可能性があるため
     setEditEmployeeIndex(null)
   }
 
@@ -130,22 +100,22 @@ function Search() {
         </div>
         <Button type="button" text={'検索'} onClick={handleSearchButtonClick} />
       </div>
-      {isSearchResultShow &&
-        foundEmployee.length === 0 &&
-        isLoading === false && <EmployeeNotFound />}
-      {/* isLoadingも条件に入れないとfoundemployeeがセットされるまでの時間にlengthが0になりnotfoundが表示されてしまう*/}
-      {isSearchResultShow && foundEmployee.length > 0 && (
-        <div className="employeeInfoListWrapper">
-          <EmployeeInfoList
-            employeeData={foundEmployee}
-            handleEditClick={handleEditClick}
-            handleSaveButtonClick={handleSaveButtonClick}
-            handleCloseButton={handleCloseButton}
-            handleDeleteButton={handleDeleteButton}
-            editEmployeeIndex={editEmployeeIndex}
-          />
-        </div>
-      )}
+      {searchedName !== null &&
+        (isLoading === false && foundEmployee.length === 0 ? (
+          // isLoadingも条件に入れないとfoundemployeeがセットされるまでの時間にlengthが0になりnotfoundが表示されてしまう
+          <EmployeeNotFound />
+        ) : (
+          <div className="employeeInfoListWrapper">
+            <EmployeeInfoList
+              employeeData={foundEmployee}
+              handleEditClick={handleEditClick}
+              handleSaveButtonClick={handleSaveButtonClick}
+              handleCloseButton={handleCloseButton}
+              handleDeleteButton={handleDeleteButton}
+              editEmployeeIndex={editEmployeeIndex}
+            />
+          </div>
+        ))}
     </>
   )
 }
