@@ -185,14 +185,14 @@ export function EmployeeInfoRegister({
         {!isClearInput && ( //社員一覧にのみ表示のボタン
           <>
             <Button
-              text={'閉じる'}
+              text={'✖️'}
               onClick={handleCloseButton}
-              className="closeAndDeleteButton"
+              className="closeButton"
             />
             <Button
               text={'データを削除'}
               onClick={handleDeleteButton}
-              className="closeAndDeleteButton"
+              className="deleteButton"
             />
           </>
         )}
