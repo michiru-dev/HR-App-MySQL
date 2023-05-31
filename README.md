@@ -2,11 +2,15 @@
 🌐https://hr-app-nu.vercel.app/
 
 ### フロントエンド
--React.js v18
--React-router-dom v6
--Redux-toolkit
--Typescript
--Scss(Sass)
+-　React.js v18
+
+-　React-router-dom v6
+
+-　Redux-toolkit
+
+-　Typescript
+
+-　Scss(Sass)
 
 ### バックエンド
 Cloud Firestore
