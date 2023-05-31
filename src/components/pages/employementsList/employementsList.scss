@@ -42,3 +42,32 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+@media screen and (max-width: 800px) {
+  .modal {
+    width: 100%;
+  }
+
+  .employeeListBox {
+    overflow-x: auto;
+  }
+
+  .employeeList {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .employeeList th,
+  .employeeList td {
+    overflow: hidden;
+    padding: 0;
+  }
+  .employeeListEditButton {
+    padding: 0;
+  }
+
+  .employeeInfoNum {
+    writing-mode: vertical-rl;
+    white-space: pre;
+  }
+}
