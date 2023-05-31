@@ -1,8 +1,19 @@
 # HR App　人事管理アプリ✍️
 
-PLAY☝️
-https://hr-app-nu.vercel.app/
+🌐　https://hr-app-nu.vercel.app/
 
+## フロントエンド
+・React.js v18
+・React-router-dom v6
+・Redux-toolkit
+・Typescript
+・Scss(Sass)
+
+## バックエンド
+Cloud Firestore
+
+## デプロイ
+Vercel
 
 
 ![スクリーンショット 2023-05-31 午後3 05 56](https://github.com/michiru-dev/HR-app/assets/105535906/0842fb90-f396-4883-872c-28f47f0b52b6)
