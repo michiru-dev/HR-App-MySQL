@@ -22,3 +22,13 @@
   padding: 1px 3px;
   margin: 3px 1px;
 }
+
+@media screen and (max-width: 800px) {
+  .registerEmployeeInfo {
+    margin-top: 3vh;
+  }
+
+  .registerNameInput {
+    width: 120px;
+  }
+}

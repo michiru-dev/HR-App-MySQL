@@ -42,3 +42,47 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.closeButton {
+  position: absolute;
+  background-color: #fff9f9;
+  top: 3px;
+  right: 5px;
+}
+
+.deleteButton {
+  color: rgb(177, 176, 176);
+  background-color: #fbfafa;
+}
+.deleteButton:hover {
+  color: #555;
+}
+
+@media screen and (max-width: 800px) {
+  .modal {
+    width: 100%;
+  }
+
+  .employeeListBox {
+    overflow-x: auto;
+  }
+
+  .employeeList {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .employeeList th,
+  .employeeList td {
+    overflow: hidden;
+    padding: 0;
+  }
+  .employeeListEditButton {
+    padding: 0;
+  }
+
+  .employeeInfoNum {
+    writing-mode: vertical-rl;
+    white-space: pre;
+  }
+}

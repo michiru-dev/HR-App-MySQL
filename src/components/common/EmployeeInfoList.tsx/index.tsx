@@ -54,14 +54,23 @@ function EmployeeInfoList({
                 <td>{employee.department}</td>
                 <td>{employee.rank}</td>
                 <td>{employee.contractType}</td>
-                <td>{employee.hireDate}</td>
-                <td>{employee.birthday}</td>
+                <td>
+                  <span className="employeeInfoNum">{employee.hireDate}</span>
+                </td>
+                <td>
+                  <span className="employeeInfoNum">{employee.birthday}</span>
+                </td>
                 <td>{employee.education}</td>
-                <td>{employee.phoneNumber}</td>
+                <td>
+                  <span className="employeeInfoNum">
+                    {employee.phoneNumber}
+                  </span>
+                </td>
                 <td>
                   <Button
                     text={'編集'}
                     onClick={() => handleEditClick(index)}
+                    className="employeeListEditButton"
                   />
                 </td>
               </tr>
