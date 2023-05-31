@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.REACT_HR_NEWS_APIKEY,
+  apiKey: process.env.REACT_HR_APP_APIKEY,
   authDomain: 'hr-app-withreact.firebaseapp.com',
   projectId: 'hr-app-withreact',
   storageBucket: 'hr-app-withreact.appspot.com',
