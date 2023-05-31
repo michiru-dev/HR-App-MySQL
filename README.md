@@ -7,17 +7,18 @@
 
 
 #### フロントエンド
-- React.js v18
-- React-router-dom v6
-- Redux-toolkit
-- Typescript
-- Scss(Sass)
+- React.js 18.2
+- React-router-dom 6.10
+- Redux-toolkit 1.9.5
+- Typescript 4.9.5
+- Scss(Sass) 1.62.1
 
 #### バックエンド
-Cloud Firestore
+- Firebase 9.21
+  - Cloud Firestore
 
 #### デプロイ
-Vercel
+- Vercel
 
 #### その他
 個人情報テストデータジェネレーター([https://testdata.userlocal.jp/](https://testdata.userlocal.jp/))
