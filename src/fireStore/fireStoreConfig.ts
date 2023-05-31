@@ -1,12 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyCZK64h9Mqzg9-ur2JtqT8LxbV1f2IOHRg',
+  apiKey: process.env.REACT_HR_NEWS_APIKEY,
   authDomain: 'hr-app-withreact.firebaseapp.com',
   projectId: 'hr-app-withreact',
   storageBucket: 'hr-app-withreact.appspot.com',
