@@ -3,13 +3,14 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: process.env.REACT_HR_APP_APIKEY,
-  authDomain: 'hr-app-withreact.firebaseapp.com',
-  projectId: 'hr-app-withreact',
-  storageBucket: 'hr-app-withreact.appspot.com',
-  messagingSenderId: '914267382442',
-  appId: '1:914267382442:web:6c441625f11d275292e6d3',
+  apiKey: process.env.REACT_APP_APIKEY,
+  authDomain: process.env.REACT_APP_AUTHDOMAIN,
+  projectId: process.env.REACT_APP_PROJECTID,
+  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
+  messagingSenderId: process.env.MESSAGINGSENDERID,
+  appId: process.env.REACT_APP_APPID,
 }
 
 // Initialize Firebase

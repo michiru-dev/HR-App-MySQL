@@ -26,11 +26,19 @@ const addEmployeeData = createAsyncThunk(
 const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
   async () => {
-    const querySnapshot = await getDocs(collection(db, 'employeeData'))
-    const employeeArr = querySnapshot.docs.map((doc) => ({
-      ...(doc.data() as EmployeeBase),
-      docId: doc.id,
-    }))
+    const querySnapshot = await getDocs(collection(db, 'employeeData')).catch(
+      (err) => {
+        console.log(err)
+        throw new Error(err)
+      }
+    )
+
+    const employeeArr = querySnapshot.docs.map((doc) => {
+      return {
+        ...(doc.data() as EmployeeBase),
+        docId: doc.id,
+      }
+    })
     return { employeeArr: employeeArr }
   }
 )
