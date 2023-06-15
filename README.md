@@ -24,8 +24,9 @@
 個人情報テストデータジェネレーター([https://testdata.userlocal.jp/](https://testdata.userlocal.jp/))
 
 ※既存の個人データはダミーです。上記URLにて生成しています。
+![hrapp社員検索](https://github.com/michiru-dev/HR-app/assets/105535906/ccdc8cde-7a0b-4ff8-86d7-c2b5b6703dc7)
+![hrapp社員一覧](https://github.com/michiru-dev/HR-app/assets/105535906/179850cf-097b-455c-b386-1c37f3dbce78)
+![hrapp各種設定](https://github.com/michiru-dev/HR-app/assets/105535906/bb858fea-554a-4a09-9a36-b01e7d8bb834)
 
 
-![スクリーンショット 2023-05-31 午後3 05 56](https://github.com/michiru-dev/HR-app/assets/105535906/0842fb90-f396-4883-872c-28f47f0b52b6)
-![スクリーンショット 2023-05-31 午後3 06 28](https://github.com/michiru-dev/HR-app/assets/105535906/5bed24fd-565c-4940-a49c-3fc7a3b86512)
-![スクリーンショット 2023-05-31 午後3 06 42](https://github.com/michiru-dev/HR-app/assets/105535906/89873fa7-8d88-46e0-af37-b8eee639dde1)
+
