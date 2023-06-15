@@ -22,10 +22,15 @@
 
 #### その他
 個人情報テストデータジェネレーター([https://testdata.userlocal.jp/](https://testdata.userlocal.jp/))
-
 ※既存の個人データはダミーです。上記URLにて生成しています。
+
+##### 🌱社員検索
 ![hrapp社員検索](https://github.com/michiru-dev/HR-app/assets/105535906/ccdc8cde-7a0b-4ff8-86d7-c2b5b6703dc7)
+
+##### 🌱社員一覧
 ![hrapp社員一覧](https://github.com/michiru-dev/HR-app/assets/105535906/179850cf-097b-455c-b386-1c37f3dbce78)
+
+##### 🌱各種設定
 ![hrapp各種設定](https://github.com/michiru-dev/HR-app/assets/105535906/bb858fea-554a-4a09-9a36-b01e7d8bb834)
 
 
