@@ -1,14 +1,14 @@
 import firebase from 'firebase/compat/app'
 
 export type EmployeeBase = {
-  firstName: string
-  lastName: string
-  firstFurigana: string
-  lastFurigana: string
+  first_name: string
+  last_name: string
+  first_furigana: string
+  last_furigana: string
   birthday: string
-  phoneNumber: string
+  phone_number: string
   education: string
-  hireDate: string
+  hire_date: string
   contractType: string
   department: string
   rank: string

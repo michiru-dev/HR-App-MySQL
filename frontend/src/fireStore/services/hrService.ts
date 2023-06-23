@@ -1,6 +1,7 @@
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import db from '../../fireStore/fireStoreConfig'
 import { OptionBase } from '../../redux/slicers/type'
+import { axiosInstance } from '../../axios'
 
 //contractTypeのデータを取得
 export const fetchContractType = async () => {
@@ -10,20 +11,19 @@ export const fetchContractType = async () => {
     orderBy('createdAt')
   )
 
+  const fetchContract = async () => {
+    await axiosInstance
+      .get('/contract')
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  fetchContract()
+
   //データを取得
   const snapShot = await getDocs(getContractType)
-
-  //doc.data()はjson.stringfy的な感じ。データを読めるようにする
-  //↓こんな感じのが返ってくる
-  // const obj = {
-  //   id: 'sadds',
-  //   name: 'sdffd',
-  // }
-
-  // const convertFbData = (doc: QueryDocumentSnapshot<DocumentData>) => ({
-  //   ...(doc.data() as OptionBase),
-  //   docId: doc.id,
-  // })
 
   //docIdの追加とcreatedIdの値の変換を行う
   const contractArr = snapShot.docs.map((doc) => ({

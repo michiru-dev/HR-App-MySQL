@@ -46,16 +46,16 @@ function EmployeeInfoList({
           {employeeData.map((employee, index) => {
             return (
               <tr key={employee.docId}>
-                <td>{employee.lastName}</td>
-                <td>{employee.firstName}</td>
-                <td>{employee.lastFurigana}</td>
-                <td>{employee.firstFurigana}</td>
+                <td>{employee.last_name}</td>
+                <td>{employee.first_name}</td>
+                <td>{employee.last_furigana}</td>
+                <td>{employee.first_furigana}</td>
                 <td>{employee.position}</td>
                 <td>{employee.department}</td>
                 <td>{employee.rank}</td>
                 <td>{employee.contractType}</td>
                 <td>
-                  <span className="employeeInfoNum">{employee.hireDate}</span>
+                  <span className="employeeInfoNum">{employee.hire_date}</span>
                 </td>
                 <td>
                   <span className="employeeInfoNum">{employee.birthday}</span>
@@ -63,7 +63,7 @@ function EmployeeInfoList({
                 <td>{employee.education}</td>
                 <td>
                   <span className="employeeInfoNum">
-                    {employee.phoneNumber}
+                    {employee.phone_number}
                   </span>
                 </td>
                 <td>

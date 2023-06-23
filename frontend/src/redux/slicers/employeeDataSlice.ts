@@ -52,10 +52,10 @@ const fetchSearchedEmployee = createAsyncThunk(
     const q = query(
       collection(db, 'employeeData'),
       or(
-        where('firstName', '==', searchKeyword),
-        where('lastName', '==', searchKeyword),
-        where('firstFurigana', '==', searchKeyword),
-        where('lastFurigana', '==', searchKeyword)
+        where('first_name', '==', searchKeyword),
+        where('last_name', '==', searchKeyword),
+        where('first_furigana', '==', searchKeyword),
+        where('last_furigana', '==', searchKeyword)
       )
     )
     //getDocsで取得

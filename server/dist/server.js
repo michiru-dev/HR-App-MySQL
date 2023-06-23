@@ -27,12 +27,15 @@ app.use(function (req, res, next) {
 //渡ってくるデータが文字列、配列のときはurlencoded、json objectのときはjson
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+//最初のページ
 app.get('/', (req, res) => {
     res.status(200).send('hello');
 });
+//ポートに繋ぐ
 app.listen(port, () => {
     console.log('server running!');
 });
+//employeesデータ取得
 app.get('/employees', (req, res) => {
     db_1.connection.query('SELECT * FROM employees', (error, results) => {
         if (error) {
@@ -45,12 +48,64 @@ app.get('/employees', (req, res) => {
         //引数として与えられたjsオブジェクトを自動的にJSON形式の文字列に変換
     });
 });
-// app.post('/employees', (req, res) => {
-//     const newEmployee = req.body;
-//     connection.query('INSERT INTO employees (name, email) VALUES (?, ?)', [name, email], (error, results) => {
-//       if (error) {
-//         return res.status(500).send(error);
-//       }
-//       res.status(201).send('Employee added successfully!');
-//     });
-//   });
+//employeesデータ送信
+app.post('/employees', (req, res) => {
+    const newEmployee = req.body;
+    //Object.keysはオブジェクトのすべてのキー（プロパティ名）を配列として返す、
+    // newEmployeeが { name: 'John', email: 'asdfad' } の場合['name', 'email'] を返す
+    //そしてjoinでこれらのキーをカンマで区切った文字列に変換→'name, email'
+    const columns = Object.keys(newEmployee).join(', ');
+    //これもほぼ同じ。キーを配列にしてそれを一つずつ?に変換してそれを文字列に
+    const placeholders = Object.keys(newEmployee)
+        .map(() => '?')
+        .join(', ');
+    //Object.valuesはオブジェクトの全てのプロパティ値を配列として返す、
+    // newEmployeeが { name: 'John', email: 'asdfad' } の場合['John', 'asdfad'] を返す
+    const values = Object.values(newEmployee);
+    const query = `INSERT INTO employees (${columns}) VALUES (${placeholders})`;
+    //connection.query；第一引数はSQLクエリ（必須）、第二引数はプレースホルダー？を使ってれば値、第三引数はコールバック（任意）
+    //コールバックはSQLクエリが実行された後に呼び出される
+    db_1.connection.query(query, values, (error, results) => {
+        if (error) {
+            return res.status(500).send(error);
+        }
+        res.status(201).send('Employee added successfully!');
+    });
+});
+//contract取得
+app.get('/contract', (req, res) => {
+    db_1.connection.query('SELECT * FROM contract ORDER BY created_at DESC', (error, results) => {
+        if (error) {
+            return res.status(500).send(error);
+        }
+        res.status(200).json(results);
+        console.log(results);
+    });
+});
+//departments取得
+app.get('/departments', (req, res) => {
+    db_1.connection.query('SELECT * FROM departments ORDER BY created_at DESC', (error, results) => {
+        if (error) {
+            return res.status(500).send(error);
+        }
+        res.status(200).json(results);
+    });
+});
+//rank取得
+app.get('/rank', (req, res) => {
+    db_1.connection.query('SELECT * FROM rank ORDER BY created_at DESC', (error, results) => {
+        if (error) {
+            return res.status(500).send(error);
+        }
+        res.status(200).json(results);
+    });
+});
+//positions取得
+app.get('/positions', (req, res) => {
+    db_1.connection.query('SELECT * FROM positions ORDER BY created_at DESC', (error, results) => {
+        if (error) {
+            return res.status(500).send(error);
+        }
+        res.status(200).json(results);
+    });
+});

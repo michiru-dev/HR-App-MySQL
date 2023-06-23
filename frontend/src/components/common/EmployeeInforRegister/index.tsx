@@ -26,14 +26,14 @@ export function EmployeeInfoRegister({
   handleDeleteButton,
 }: EmployeeInfoBase) {
   const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutDocId>({
-    firstName: employee?.firstName ?? '', //employeeがあれば.firstNameなければ空
-    lastName: employee?.lastName ?? '',
-    firstFurigana: employee?.firstFurigana ?? '',
-    lastFurigana: employee?.lastFurigana ?? '',
+    first_name: employee?.first_name ?? '', //employeeがあれば.firstNameなければ空
+    last_name: employee?.last_name ?? '',
+    first_furigana: employee?.first_furigana ?? '',
+    last_furigana: employee?.last_furigana ?? '',
     birthday: employee?.birthday ?? '',
-    phoneNumber: employee?.phoneNumber ?? '',
+    phone_number: employee?.phone_number ?? '',
     education: employee?.education ?? '',
-    hireDate: employee?.hireDate ?? '',
+    hire_date: employee?.hire_date ?? '',
     contractType: employee?.contractType ?? '',
     department: employee?.department ?? '',
     rank: employee?.rank ?? '',
@@ -41,14 +41,14 @@ export function EmployeeInfoRegister({
   })
 
   const {
-    firstName,
-    lastName,
-    firstFurigana,
-    lastFurigana,
+    first_name,
+    last_name,
+    first_furigana,
+    last_furigana,
     birthday,
-    phoneNumber,
+    phone_number,
     education,
-    hireDate,
+    hire_date,
     contractType,
     department,
     rank,
@@ -62,20 +62,20 @@ export function EmployeeInfoRegister({
         idLast="KanjiSei"
         idFirst="KanjiMei"
         type="string"
-        valueLast={lastName}
-        valueFirst={firstName}
+        valueLast={last_name}
+        valueFirst={first_name}
         placeholderLast="姓"
         placeholderFirst="名"
         onChangeLast={(e) =>
           setRegisterInfo((prev) => ({
             ...prev, //今の値を展開してlastName以外に更新をかけないようにする
-            lastName: e.target.value,
+            last_name: e.target.value,
           }))
         }
         onChangeFirst={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
-            firstName: e.target.value,
+            first_name: e.target.value,
           }))
         }
       />
@@ -85,20 +85,20 @@ export function EmployeeInfoRegister({
         idLast="KatakanaMei"
         idFirst="KatakanaSei"
         type="string"
-        valueLast={lastFurigana}
-        valueFirst={firstFurigana}
+        valueLast={last_furigana}
+        valueFirst={first_furigana}
         placeholderLast="セイ"
         placeholderFirst="メイ"
         onChangeLast={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
-            lastFurigana: e.target.value,
+            last_furigana: e.target.value,
           }))
         }
         onChangeFirst={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
-            firstFurigana: e.target.value,
+            first_furigana: e.target.value,
           }))
         }
       />
@@ -118,13 +118,13 @@ export function EmployeeInfoRegister({
 
       <RegisterInput
         label="電話番号"
-        id="phoneNumber"
+        id="phone_number"
         type="number"
-        value={phoneNumber}
+        value={phone_number}
         onChange={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
-            phoneNumber: e.target.value,
+            phone_number: e.target.value,
           }))
         }
       />
@@ -145,11 +145,11 @@ export function EmployeeInfoRegister({
         label="入&nbsp;社&nbsp;日&nbsp;&nbsp;"
         id="enterDate"
         type="date"
-        value={hireDate}
+        value={hire_date}
         onChange={(e) =>
           setRegisterInfo((prev) => ({
             ...prev,
-            hireDate: e.target.value,
+            hire_date: e.target.value,
           }))
         }
       />
@@ -166,14 +166,14 @@ export function EmployeeInfoRegister({
             if (isClearInput) {
               //inputを空にする
               setRegisterInfo({
-                lastName: '',
-                firstName: '',
-                lastFurigana: '',
-                firstFurigana: '',
+                last_name: '',
+                first_name: '',
+                last_furigana: '',
+                first_furigana: '',
                 birthday: '',
-                phoneNumber: '',
+                phone_number: '',
                 education: '',
-                hireDate: '',
+                hire_date: '',
                 contractType: '',
                 department: '',
                 rank: '',
