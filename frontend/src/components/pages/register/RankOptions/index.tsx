@@ -10,7 +10,7 @@ export function RankOptions({
   onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutDocId>>
   value: string
 }) {
-  const rank = useAppSelector((state) => state.option.rankType)
+  const rank = useAppSelector((state) => state.option.level)
   return (
     <ShowOptions
       labelName={'等　　級'}

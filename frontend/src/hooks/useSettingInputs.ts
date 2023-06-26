@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useAppDispatch } from '../redux/hooks'
-import { v4 as uuidv4 } from 'uuid'
 import {
   addHrOptionData,
   deleteOptionData,
@@ -9,10 +8,10 @@ import {
 import { OptionBase } from '../redux/slicers/type'
 
 export type collectionNameBase =
-  | 'contractType'
-  | 'departmentType'
-  | 'positionType'
-  | 'rankType'
+  | 'contract'
+  | 'departments'
+  | 'positions'
+  | 'level'
 
 export type SettingActions = {
   settingType: OptionBase[]
@@ -38,10 +37,7 @@ export const useSettingInputs = ({
   const handleAddClick = () => {
     dispatch(
       addHrOptionData({
-        optionData: {
-          id: uuidv4(),
-          name: addInput,
-        },
+        newItem: addInput,
         collectionName: collectionName,
       })
     )
@@ -49,9 +45,9 @@ export const useSettingInputs = ({
   }
 
   //削除を押した時
-  const handleDeleteClick = (docId: string | undefined) => {
-    if (typeof docId !== 'undefined')
-      dispatch(deleteOptionData({ docId, collectionName }))
+  const handleDeleteClick = (id: string | undefined) => {
+    if (typeof id !== 'undefined')
+      dispatch(deleteOptionData({ id, collectionName }))
   }
 
   //編集クリックされた時
@@ -67,11 +63,11 @@ export const useSettingInputs = ({
   }
 
   //保存を押した時
-  const handleEditSubmit = (docId: string | undefined) => {
-    if (typeof docId !== 'undefined')
+  const handleEditSubmit = (id: string | undefined) => {
+    if (typeof id !== 'undefined')
       dispatch(
         editOption({
-          docId,
+          id,
           collectionName,
           newName: editedName,
         })

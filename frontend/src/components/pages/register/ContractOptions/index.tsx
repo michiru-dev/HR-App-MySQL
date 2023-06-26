@@ -10,7 +10,7 @@ export function ContractOptions({
   onChange: React.Dispatch<React.SetStateAction<EmployeeWithoutDocId>>
   value: string
 }) {
-  const contract = useAppSelector((state) => state.option.contractType)
+  const contract = useAppSelector((state) => state.option.contract)
   return (
     <ShowOptions
       labelName={'契約形態'}

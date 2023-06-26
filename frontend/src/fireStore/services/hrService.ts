@@ -1,82 +1,41 @@
-import { collection, getDocs, query, orderBy } from 'firebase/firestore'
-import db from '../../fireStore/fireStoreConfig'
-import { OptionBase } from '../../redux/slicers/type'
 import { axiosInstance } from '../../axios'
 
-//contractTypeのデータを取得
-export const fetchContractType = async () => {
-  //Typeのデータを見てqueryとorderByで並び替え
-  const getContractType = query(
-    collection(db, 'contractType'),
-    orderBy('createdAt')
-  )
-
-  const fetchContract = async () => {
-    await axiosInstance
-      .get('/contract')
-      .then((res) => console.log(res))
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  fetchContract()
-
-  //データを取得
-  const snapShot = await getDocs(getContractType)
-
-  //docIdの追加とcreatedIdの値の変換を行う
-  const contractArr = snapShot.docs.map((doc) => ({
-    //docsはもともとあるやつ
-    ...(doc.data() as OptionBase),
-    docId: doc.id, //objectにdocIdを追加。これはfirebase上のID
-    createdAt: doc.data().createdAt.seconds, //reduxがsecondsじゃないと理解してくれないため
-    //createdAtの値を上書き
-    //スプレッドは以下をしてるのと同じ。.idと.nameが勝手にプロパティ名になる
-    //  id: doc.data().id,
-    // name: doc.data().name,
-  }))
-  return contractArr
+//contract取得
+export const fetchContract = async () => {
+  return await axiosInstance
+    .get('/contract')
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
-//Department Typeのデータを取得
-export const fetchDepartmentType = async () => {
-  const getDepartmentType = query(
-    collection(db, 'departmentType'),
-    orderBy('createdAt')
-  )
-  const snapShot = await getDocs(getDepartmentType)
-  const departmentArr = snapShot.docs.map((doc) => ({
-    ...(doc.data() as OptionBase),
-    docId: doc.id,
-    createdAt: doc.data().createdAt.seconds,
-  }))
-  return departmentArr
+//departments取得
+export const fetchDepartments = async () => {
+  return await axiosInstance
+    .get('/departments')
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
-//positionTypeのデータを取得
-export const fetchPositionType = async () => {
-  const getPositionType = query(
-    collection(db, 'positionType'),
-    orderBy('createdAt')
-  )
-  const snapShot = await getDocs(getPositionType)
-  const positionArr = snapShot.docs.map((doc) => ({
-    ...(doc.data() as OptionBase),
-    docId: doc.id,
-    createdAt: doc.data().createdAt.seconds,
-  }))
-  return positionArr
+//level取得
+export const fetchLevel = async () => {
+  return await axiosInstance
+    .get('/level')
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
-//rankTypeのデータを取得
-export const fetchRankType = async () => {
-  const getRankType = query(collection(db, 'rankType'), orderBy('createdAt'))
-  const snapShot = await getDocs(getRankType)
-  const rankArr = snapShot.docs.map((doc) => ({
-    ...(doc.data() as OptionBase),
-    docId: doc.id,
-    createdAt: doc.data().createdAt.seconds,
-  }))
-  return rankArr
+//positions取得
+export const fetchPositions = async () => {
+  return await axiosInstance
+    .get('/positions')
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err)
+    })
 }

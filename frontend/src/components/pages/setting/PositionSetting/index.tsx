@@ -3,9 +3,7 @@ import { ShowSettingList } from '../ShowSettingList'
 import { useAppSelector } from '../../../../redux/hooks'
 
 export function PositionsSetting() {
-  const position = useAppSelector((state) => state.option.positionType)
+  const position = useAppSelector((state) => state.option.positions)
 
-  return (
-    <ShowSettingList settingType={position} collectionName={'positionType'} />
-  )
+  return <ShowSettingList settingType={position} collectionName={'positions'} />
 }

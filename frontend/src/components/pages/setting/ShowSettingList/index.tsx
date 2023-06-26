@@ -36,7 +36,7 @@ export function ShowSettingList({ settingType, ...rest }: SettingActions) {
                 />
                 <Button
                   text={'保存'}
-                  onClick={() => handleEditSubmit(setting.docId)}
+                  onClick={() => handleEditSubmit(setting.id)}
                 />
               </div>
             ) : (
@@ -51,7 +51,7 @@ export function ShowSettingList({ settingType, ...rest }: SettingActions) {
                   />
                   <Button
                     text={<FontAwesomeIcon icon={faTrashCan} />}
-                    onClick={() => handleDeleteClick(setting.docId)}
+                    onClick={() => handleDeleteClick(setting.id)}
                     className={'settingDeleteButton'}
                   />
                 </div>

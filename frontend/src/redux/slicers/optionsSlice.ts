@@ -1,153 +1,141 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import {
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from 'firebase/firestore'
-import db from '../../fireStore/fireStoreConfig'
-import firebase from 'firebase/compat/app'
-import {
-  fetchContractType,
-  fetchDepartmentType,
-  fetchPositionType,
-  fetchRankType,
+  fetchContract,
+  fetchDepartments,
+  fetchPositions,
+  fetchLevel,
 } from '../../fireStore/services/hrService'
 import { collectionNameBase } from '../../hooks/useSettingInputs'
 import { RootState } from '../store'
 import { OptionBase } from './type'
 import 'firebase/compat/firestore'
+import { axiosInstance } from '../../axios'
 
-//💡firebaseから値を取得
+//💡値を取得(get)
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う・下の方のextrareducersとセット
 const fetchHrOptionType = createAsyncThunk<{
   //returnの型
   contractTypes: Array<OptionBase>
   departmentTypes: Array<OptionBase>
   positionTypes: Array<OptionBase>
-  rankTypes: Array<OptionBase>
+  levelTypes: Array<OptionBase>
 }>('hrOptions/fetchHrOptionType', async () => {
-  const contractArr = await fetchContractType()
-  const departmentArr = await fetchDepartmentType()
-  const positionArr = await fetchPositionType()
-  const rankArr = await fetchRankType()
+  const contractArr = await fetchContract()
+  const departmentArr = await fetchDepartments()
+  const positionArr = await fetchPositions()
+  const levelArr = await fetchLevel()
+  //promiseall使う！！
 
   //必ずobjectでreturn、リターンするものに名前をつける
   return {
     contractTypes: contractArr,
     departmentTypes: departmentArr,
     positionTypes: positionArr,
-    rankTypes: rankArr,
+    levelTypes: levelArr,
   }
 })
 
-//💡firebaseに保存（追加）
+//💡追加(post)
 const addHrOptionData = createAsyncThunk<
   { optionData: Array<OptionBase>; collectionName: collectionNameBase },
   {
-    optionData: OptionBase
+    newItem: string
     collectionName: collectionNameBase
   }
 >(
   'hrOptions/addHrOptionData',
   //createasyncは引数を一つしか渡せないためobjectにしている
-  async ({ optionData, collectionName }) => {
-    // state.option.contractType.push(optionData)
-    //pushしたいけどgetStateの時はできないぽい
-    await addDoc(collection(db, collectionName), {
-      ...optionData,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(), //firebaseの時間を追加
-    })
+  async ({ newItem, collectionName }) => {
+    //サーバー通信
+    await axiosInstance.post(`/${collectionName}/post`, { newItem })
+
     //新しく追加したところだけにfetchをかける
     let updatedList: Array<OptionBase> = []
-    if (collectionName === 'contractType') {
-      updatedList = await fetchContractType()
+    if (collectionName === 'contract') {
+      updatedList = await fetchContract()
     }
-    if (collectionName === 'departmentType') {
-      updatedList = await fetchDepartmentType()
+    if (collectionName === 'departments') {
+      updatedList = await fetchDepartments()
     }
-    if (collectionName === 'positionType') {
-      updatedList = await fetchPositionType()
+    if (collectionName === 'positions') {
+      updatedList = await fetchPositions()
     }
-    if (collectionName === 'rankType') {
-      updatedList = await fetchRankType()
+    if (collectionName === 'level') {
+      updatedList = await fetchLevel()
     }
     return { optionData: updatedList, collectionName: collectionName }
   }
 )
 
-//💡firebaseから削除
+//💡削除(delete)
 const deleteOptionData = createAsyncThunk<
   { newArr: Array<OptionBase>; collectionName: collectionNameBase },
-  { docId: string; collectionName: collectionNameBase },
+  { id: string; collectionName: collectionNameBase },
   { state: RootState }
->(
-  'options/deleteOptionData',
-  async ({ docId, collectionName }, { getState }) => {
-    //firebaseから削除
-    await deleteDoc(doc(db, collectionName, docId))
+>('options/deleteOptionData', async ({ id, collectionName }, { getState }) => {
+  //サーバー通信
+  await axiosInstance.delete(`/${collectionName}/delete`, {
+    data: { id },
+  })
 
-    //reduxに削除したやつ以外の最新の配列をいれる
-    const state = getState()
-    const newArr = state.option[collectionName].filter(
-      (collection: OptionBase) => {
-        return collection.docId !== docId
-      }
-    )
-    return { newArr: newArr, collectionName: collectionName }
-  }
-)
+  //reduxに削除したやつ以外の最新の配列をいれる
+  const state = getState()
+  const newArr = state.option[collectionName].filter(
+    (collection: OptionBase) => {
+      return collection.id !== id
+    }
+  )
+  return { newArr: newArr, collectionName: collectionName }
+})
 
-//💡firebaseの値を編集
+//💡値を編集
 const editOption = createAsyncThunk(
   'option/editOption',
   async ({
-    docId,
+    id,
     collectionName,
     newName,
   }: {
-    docId: string
+    id: string
     collectionName: collectionNameBase
     newName: string
   }) => {
-    //firebaseの値を編集
-    const ref = doc(db, collectionName, docId)
-    await updateDoc(ref, { name: newName }) //これの第二引数はオブジェクト！
+    //サーバー通信
+    await axiosInstance.put(`/${collectionName}/put`, { id, newName })
 
     //reduxの値を編集
     //編集したところだけにfetchをかける
     let updatedList: Array<OptionBase> = []
-    if (collectionName === 'contractType') {
-      updatedList = await fetchContractType()
+    if (collectionName === 'contract') {
+      updatedList = await fetchContract()
     }
-    if (collectionName === 'departmentType') {
-      updatedList = await fetchDepartmentType()
+    if (collectionName === 'departments') {
+      updatedList = await fetchDepartments()
     }
-    if (collectionName === 'positionType') {
-      updatedList = await fetchPositionType()
+    if (collectionName === 'positions') {
+      updatedList = await fetchPositions()
     }
-    if (collectionName === 'rankType') {
-      updatedList = await fetchRankType()
+    if (collectionName === 'level') {
+      updatedList = await fetchLevel()
     }
     return { optionData: updatedList, collectionName: collectionName }
   }
 )
 
 type OptionsState = {
-  contractType: Array<OptionBase>
-  departmentType: Array<OptionBase>
-  rankType: Array<OptionBase>
-  positionType: Array<OptionBase>
+  contract: Array<OptionBase>
+  departments: Array<OptionBase>
+  level: Array<OptionBase>
+  positions: Array<OptionBase>
   isLoading: boolean
 }
 
 //そのデータの初期値を定義（スライスを作る準備）
 const initialState: OptionsState = {
-  contractType: [],
-  departmentType: [],
-  rankType: [],
-  positionType: [],
+  contract: [],
+  departments: [],
+  level: [],
+  positions: [],
   isLoading: false,
 }
 
@@ -164,18 +152,18 @@ export const optionsSlice = createSlice({
       })
       .addCase(addHrOptionData.fulfilled, (state, action) => {
         state.isLoading = false
-        if (action.payload.collectionName === 'contractType') {
-          state.contractType = action.payload.optionData
+        if (action.payload.collectionName === 'contract') {
+          state.contract = action.payload.optionData
           //配列を新しいのに置き換え
         }
-        if (action.payload.collectionName === 'departmentType') {
-          state.departmentType = action.payload.optionData
+        if (action.payload.collectionName === 'departments') {
+          state.departments = action.payload.optionData
         }
-        if (action.payload.collectionName === 'positionType') {
-          state.positionType = action.payload.optionData
+        if (action.payload.collectionName === 'positions') {
+          state.positions = action.payload.optionData
         }
-        if (action.payload.collectionName === 'rankType') {
-          state.rankType = action.payload.optionData
+        if (action.payload.collectionName === 'level') {
+          state.level = action.payload.optionData
         }
       })
       .addCase(addHrOptionData.rejected, (state) => {
@@ -187,10 +175,10 @@ export const optionsSlice = createSlice({
       })
       .addCase(fetchHrOptionType.fulfilled, (state, action) => {
         state.isLoading = false
-        state.contractType = action.payload.contractTypes
-        state.departmentType = action.payload.departmentTypes
-        state.positionType = action.payload.positionTypes
-        state.rankType = action.payload.rankTypes
+        state.contract = action.payload.contractTypes
+        state.departments = action.payload.departmentTypes
+        state.positions = action.payload.positionTypes
+        state.level = action.payload.levelTypes
       })
       .addCase(fetchHrOptionType.rejected, (state) => {
         state.isLoading = false
@@ -201,18 +189,18 @@ export const optionsSlice = createSlice({
       })
       .addCase(deleteOptionData.fulfilled, (state, action) => {
         state.isLoading = false
-        if (action.payload.collectionName === 'contractType') {
-          state.contractType = action.payload.newArr
+        if (action.payload.collectionName === 'contract') {
+          state.contract = action.payload.newArr
           //配列を新しいのに置き換え
         }
-        if (action.payload.collectionName === 'departmentType') {
-          state.departmentType = action.payload.newArr
+        if (action.payload.collectionName === 'departments') {
+          state.departments = action.payload.newArr
         }
-        if (action.payload.collectionName === 'positionType') {
-          state.positionType = action.payload.newArr
+        if (action.payload.collectionName === 'positions') {
+          state.positions = action.payload.newArr
         }
-        if (action.payload.collectionName === 'rankType') {
-          state.rankType = action.payload.newArr
+        if (action.payload.collectionName === 'level') {
+          state.level = action.payload.newArr
         }
       })
       .addCase(deleteOptionData.rejected, (state) => {
@@ -224,18 +212,18 @@ export const optionsSlice = createSlice({
       })
       .addCase(editOption.fulfilled, (state, action) => {
         state.isLoading = false
-        if (action.payload.collectionName === 'contractType') {
-          state.contractType = action.payload.optionData
+        if (action.payload.collectionName === 'contract') {
+          state.contract = action.payload.optionData
           //配列を新しいのに置き換え
         }
-        if (action.payload.collectionName === 'departmentType') {
-          state.departmentType = action.payload.optionData
+        if (action.payload.collectionName === 'departments') {
+          state.departments = action.payload.optionData
         }
-        if (action.payload.collectionName === 'positionType') {
-          state.positionType = action.payload.optionData
+        if (action.payload.collectionName === 'positions') {
+          state.positions = action.payload.optionData
         }
-        if (action.payload.collectionName === 'rankType') {
-          state.rankType = action.payload.optionData
+        if (action.payload.collectionName === 'level') {
+          state.level = action.payload.optionData
         }
       })
       .addCase(editOption.rejected, (state) => {
