@@ -47,7 +47,7 @@ function EmployeeInfoList({
         <tbody>
           {employeeData.map((employee, index) => {
             return (
-              <tr key={employee.id}>
+              <tr key={employee.employee_id}>
                 <td>{employee.last_name}</td>
                 <td>{employee.first_name}</td>
                 <td>{employee.last_furigana}</td>
@@ -87,7 +87,7 @@ function EmployeeInfoList({
             handleButtonClick={(registerInfo) => {
               handleSaveButtonClick(
                 registerInfo,
-                employeeData[editEmployeeIndex].id
+                employeeData[editEmployeeIndex].employee_id
                 //propsで渡ってきたemployeeDataの配列にindexでアクセスする
               )
             }}
@@ -96,7 +96,7 @@ function EmployeeInfoList({
             //handleButtonClickを実行する時にregisterInfoの引数が必要docIdはここで渡してるから不要
             handleCloseButton={handleCloseButton}
             handleDeleteButton={() =>
-              handleDeleteButton(employeeData[editEmployeeIndex].id)
+              handleDeleteButton(employeeData[editEmployeeIndex].employee_id)
             }
             employee={employeeData[editEmployeeIndex]}
           />

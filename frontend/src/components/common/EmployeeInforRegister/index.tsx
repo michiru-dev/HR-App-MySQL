@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RegisterNameInput from './RegisterNameInput'
 import { ContractOptions } from '../../pages/register/ContractOptions'
 import { DepartmentOptions } from '../../pages/register/DepartmentOptions'
@@ -10,7 +10,7 @@ import { EmployeeBase, EmployeeWithoutId } from '../../../redux/slicers/type'
 
 export type EmployeeInfoBase = {
   buttonText: string
-  handleButtonClick: (registerInfo: EmployeeWithoutId) => void
+  handleButtonClick: (registerInfo: EmployeeBase) => void
   employee?: EmployeeBase
   isClearInput?: boolean
   handleCloseButton?: React.MouseEventHandler<HTMLButtonElement>
@@ -54,6 +54,26 @@ export function EmployeeInfoRegister({
     degree_id,
     position_id,
   } = registerInfo
+
+  // reset //要チェック
+  const resetRegisterInfo = () => {
+    const newInfo = {
+      first_name: employee?.first_name ?? null,
+      last_name: employee?.last_name ?? null,
+      first_furigana: employee?.first_furigana ?? null,
+      last_furigana: employee?.last_furigana ?? null,
+      birthday: employee?.birthday ?? null,
+      phone_number: employee?.phone_number ?? null,
+      education: employee?.education ?? null,
+      hire_date: employee?.hire_date ?? null,
+      contract_id: employee?.contract_id ?? null,
+      department_id: employee?.department_id ?? null,
+      degree_id: employee?.degree_id ?? null,
+      position_id: employee?.position_id ?? null,
+    }
+
+    setRegisterInfo(newInfo)
+  }
 
   return (
     <div className="registerEmployeeInfo">
@@ -168,20 +188,7 @@ export function EmployeeInfoRegister({
             handleButtonClick(registerInfo)
             if (isClearInput) {
               //inputを空にする
-              setRegisterInfo({
-                last_name: '',
-                first_name: '',
-                last_furigana: '',
-                first_furigana: '',
-                birthday: '',
-                phone_number: '',
-                education: '',
-                hire_date: '',
-                contract_id: '',
-                department_id: '',
-                degree_id: '',
-                position_id: '',
-              })
+              resetRegisterInfo()
             }
           }}
         />

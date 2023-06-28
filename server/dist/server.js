@@ -43,10 +43,11 @@ app.listen(port, () => {
 });
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
-//employeesデータ取得
+//🍎employeesデータ取得(get)
 app.get('/employees', (req, res) => {
     //FROMのあとはemployeesに合体させたテーブル
     //その大きいテーブルからSELECT以降を選択
+    //LEFT JOINは関連する値がなくてもleft(employees)の値を返すもの
     const query = `SELECT
     employees.*,
     positions.name AS position_name,
@@ -55,10 +56,10 @@ app.get('/employees', (req, res) => {
     contract.name AS contract_name
   FROM
     employees
-    JOIN positions ON employees.position_id = positions.id
-    JOIN departments ON employees.department_id = departments.id
-    JOIN degree ON employees.degree_id = degree.id
-    JOIN contract ON employees.contract_id = contract.id`;
+    LEFT JOIN positions ON employees.position_id = positions.id
+    LEFT JOIN departments ON employees.department_id = departments.id
+    LEFT JOIN degree ON employees.degree_id = degree.id
+    LEFT JOIN contract ON employees.contract_id = contract.id`;
     db_1.connection.query(query, (error, results) => {
         if (error) {
             return res.status(500).send(error);
@@ -70,7 +71,7 @@ app.get('/employees', (req, res) => {
         //引数として与えられたjsオブジェクトを自動的にJSON形式の文字列に変換
     });
 });
-//employeesデータ送信
+//🍎employeesx追加(post)
 app.post('/employees/post', (req, res) => {
     const newEmployee = req.body;
     console.log(req.body);
@@ -78,16 +79,13 @@ app.post('/employees/post', (req, res) => {
     // newEmployeeが { name: 'John', email: 'asdfad' } の場合['name', 'email'] を返す
     //そしてjoinでこれらのキーをカンマで区切った文字列に変換→'name, email'
     const columns = Object.keys(newEmployee).join(', ');
-    console.log(columns);
     //これもほぼ同じ。キーを配列にしてそれを一つずつ?に変換してそれを文字列に
     const placeholders = Object.keys(newEmployee)
         .map(() => '?')
         .join(', ');
-    console.log(placeholders);
     //Object.valuesはオブジェクトの全てのプロパティ値を配列として返す、
     // newEmployeeが { name: 'John', email: 'asdfad' } の場合['John', 'asdfad'] を返す
     const values = Object.values(newEmployee);
-    console.log(values);
     const query = `INSERT INTO employees (${columns}) VALUES (${placeholders})`;
     //connection.query；第一引数はSQLクエリ（必須）、第二引数はプレースホルダー？を使ってれば値、第三引数はコールバック（任意）
     //コールバックはSQLクエリが実行された後に呼び出される
@@ -97,6 +95,35 @@ app.post('/employees/post', (req, res) => {
             return res.status(500).send(error);
         }
         res.status(201).send('Employee added successfully!');
+    });
+});
+//🍎employees 編集(put)
+app.put('/employees/put', (req, res) => {
+    const { updatedEmployeeData, id } = req.body;
+    const query = ` UPDATE employees SET first_name = ?, last_name = ?, 
+  first_furigana = ?, last_furigana = ?, birthday = ?, phone_number = ?,
+  education = ?, hire_date = ?,  contract_id = ?, department_id = ?,
+  degree_id = ?, position_id = ? WHERE employee_id = ? `;
+    const data = [
+        updatedEmployeeData.first_name,
+        updatedEmployeeData.last_name,
+        updatedEmployeeData.first_furigana,
+        updatedEmployeeData.last_furigana,
+        updatedEmployeeData.birthday,
+        updatedEmployeeData.phone_number,
+        updatedEmployeeData.education,
+        updatedEmployeeData.hire_date,
+        updatedEmployeeData.contract_id,
+        updatedEmployeeData.department_id,
+        updatedEmployeeData.degree_id,
+        updatedEmployeeData.position_id,
+        id,
+    ];
+    db_1.connection.query(query, data, (error, result) => {
+        if (error) {
+            return res.status(404).send(error);
+        }
+        res.status(204).send('item updated successfully!');
     });
 });
 //🍎各種設定 取得（get）関数
@@ -164,7 +191,6 @@ app.delete('/positions/delete', generateDeleteHandler('positions'));
 const generatePutHandler = (tableName) => {
     return (req, res) => {
         const { id, newName } = req.body;
-        console.log(id, newName);
         const query = `UPDATE ${tableName} SET name=? WHERE id=?`;
         db_1.connection.query(query, [newName, id], (error, result) => {
             if (error) {

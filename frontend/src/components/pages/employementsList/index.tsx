@@ -31,11 +31,11 @@ function EmployeeList() {
 
   //保存ボタンが押された時
   const handleSaveButtonClick: HandleSaveButtonClick = async (
-    employee,
-    docId
+    updatedEmployeeData,
+    id
   ) => {
-    if (typeof docId === 'undefined') return
-    await dispatch(editEmployeeData({ employee, docId }))
+    if (typeof id === 'undefined') return
+    await dispatch(editEmployeeData({ updatedEmployeeData, id }))
     await dispatch(fetchEmployeeData()) //編集して上書きしてきたデータを取得
     setEditEmployeeIndex(null)
   }

@@ -15,7 +15,7 @@ export type EmployeeBase = {
   degree_name?: string | null
   position_id: string | null
   position_name?: string | null
-  id?: string
+  employee_id?: string
 }
 
 //omitでid以外のtypeを作成

@@ -61,11 +61,11 @@ function Search() {
 
   //保存ボタンが押された時
   const handleSaveButtonClick: HandleSaveButtonClick = async (
-    employee,
-    docId
+    updatedEmployeeData,
+    id
   ) => {
-    if (typeof docId === 'undefined' || searchedName === null) return
-    await dispatch(editEmployeeData({ employee, docId }))
+    if (typeof id === 'undefined' || searchedName === null) return
+    await dispatch(editEmployeeData({ updatedEmployeeData, id }))
     await dispatch(fetchSearchedEmployee(searchedName)) //編集して上書きしてきたデータを取得
     //ここの引数がなぜsetStateのsearchInputではないかというと、searchInputはすでに変更している可能性があるため
     setEditEmployeeIndex(null)

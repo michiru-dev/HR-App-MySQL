@@ -5,7 +5,6 @@ import {
   where,
   getDocs,
   or,
-  updateDoc,
   doc,
   deleteDoc,
 } from 'firebase/firestore'
@@ -28,11 +27,22 @@ const fetchEmployeeData = createAsyncThunk(
   async () => {
     const employeeArr = await axiosInstance
       .get('/employees')
-      .then((res) => res.data) //ここで日付を変換
+      .then((res) => {
+        return res.data.map((employee: any) => {
+          //日付が"YYYY-MM-DDTHH:mm:ss.sssZ"この形で返ってくるので
+          //Tで区切ってその配列の一つ目[0]を返す
+          if (employee.hire_date) {
+            employee.hire_date = employee.hire_date.split('T')[0]
+          }
+          if (employee.birthday) {
+            employee.birthday = employee.birthday.split('T')[0]
+          }
+          return employee
+        })
+      })
       .catch((err) => {
         console.log(err)
       })
-    console.log(employeeArr)
     return { employeeArr: employeeArr }
   }
 )
@@ -72,30 +82,27 @@ const deleteEmployeeData = createAsyncThunk(
 )
 
 // 💡firebaseの値を上書き（編集）
-// createAsyncThunkの型定義は二つの引数形式
-// 一つ目の引数は返り値の型、二つ目はasyncの後にくる引数の型
-// 今回はその型の定義の仕方はしていない
-const editEmployeeData = createAsyncThunk<
-  void,
-  { employee: EmployeeWithoutId; docId: string }
->('employee/editEmployeeData', async ({ employee, docId }) => {
-  if (typeof docId === 'undefined') return
-  const ref = doc(db, 'employeeData', docId)
-  await updateDoc(ref, employee) //docIdを省いてupdate
-})
 
-// //💡上書き（編集）
 // const editEmployeeData = createAsyncThunk<
 //   void,
 //   { employee: EmployeeWithoutId; docId: string }
 // >('employee/editEmployeeData', async ({ employee, docId }) => {
 //   if (typeof docId === 'undefined') return
-
-//   await axiosInstance.put(`/${collectionName}/put`, { newItem })
-
-//   // const ref = doc(db, 'employeeData', docId)
-//   // await updateDoc(ref, employee) //docIdを省いてupdate
+//   const ref = doc(db, 'employeeData', docId)
+//   await updateDoc(ref, employee) //docIdを省いてupdate
 // })
+
+//💡上書き（編集）
+const editEmployeeData = createAsyncThunk<
+  void,
+  { updatedEmployeeData: EmployeeBase; id: string }
+>('employee/editEmployeeData', async ({ updatedEmployeeData, id }) => {
+  if (typeof id === 'undefined') return
+  await axiosInstance.put(`/employees/put`, { updatedEmployeeData, id })
+
+  // const ref = doc(db, 'employeeData', docId)
+  // await updateDoc(ref, employee) //docIdを省いてupdate
+})
 
 type InitialBase = {
   employeeData: Array<EmployeeBase>
@@ -130,7 +137,6 @@ export const employeeDataSlice = createSlice({
         state.isLoading = true
       })
       .addCase(fetchEmployeeData.fulfilled, (state, action) => {
-        console.log(action.payload.employeeArr)
         state.employeeData = action.payload.employeeArr
         state.isLoading = false
       })
@@ -180,39 +186,3 @@ export {
 }
 
 export default employeeDataSlice.reducer
-
-// Connected to the database as id 134
-// {
-//   last_name: 'asdfawe',
-//   first_name: '',
-//   last_furigana: '',
-//   first_furigana: '',
-//   birthday: '',
-//   phone_number: '',
-//   education: '',
-//   hire_date: '',
-//   contract: '',
-//   department: '',
-//   degree: '',
-//   position: ''
-// }
-// last_name, first_name, last_furigana, first_furigana, birthday, phone_number, education, hire_date, contract, department, degree, position
-// ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-// [ 'asdfawe', '', '', '', '', '', '', '', '', '', '', '' ]
-// Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'degree, position) VALUES ('asdfawe', '', '', '', '', '', '', '', '', '', '', '')' at line 1
-//     at Packet.asError (/Users/MICHIRU/Desktop/code_folder/typescript/HR-app-with-mySQL/server/node_modules/mysql2/lib/packets/packet.js:728:17)
-//     at Query.execute (/Users/MICHIRU/Desktop/code_folder/typescript/HR-app-with-mySQL/server/node_modules/mysql2/lib/commands/command.js:29:26)
-//     at Connection.handlePacket (/Users/MICHIRU/Desktop/code_folder/typescript/HR-app-with-mySQL/server/node_modules/mysql2/lib/connection.js:492:32)
-//     at PacketParser.onPacket (/Users/MICHIRU/Desktop/code_folder/typescript/HR-app-with-mySQL/server/node_modules/mysql2/lib/connection.js:97:12)
-//     at PacketParser.executeStart (/Users/MICHIRU/Desktop/code_folder/typescript/HR-app-with-mySQL/server/node_modules/mysql2/lib/packet_parser.js:75:16)
-//     at Socket.<anonymous> (/Users/MICHIRU/Desktop/code_folder/typescript/HR-app-with-mySQL/server/node_modules/mysql2/lib/connection.js:104:25)
-//     at Socket.emit (node:events:378:20)
-//     at Socket.EventEmitter.emit (node:domain:470:12)
-//     at addChunk (node:internal/streams/readable:313:12)
-//     at readableAddChunk (node:internal/streams/readable:288:9) {
-//   code: 'ER_PARSE_ERROR',
-//   errno: 1064,
-//   sqlState: '42000',
-//   sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'degree, position) VALUES ('asdfawe', '', '', '', '', '', '', '', '', '', '', '')' at line 1",
-//   sql: "INSERT INTO employees (last_name, first_name, last_furigana, first_furigana, birthday, phone_number, education, hire_date, contract, department, degree, position) VALUES ('asdfawe', '', '', '', '', '', '', '', '', '', '', '')"
-// }
