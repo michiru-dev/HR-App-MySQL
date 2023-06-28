@@ -20,10 +20,10 @@ export const fetchDepartments = async () => {
     })
 }
 
-//level取得
-export const fetchLevel = async () => {
+//degree取得
+export const fetchdegree = async () => {
   return await axiosInstance
-    .get('/level')
+    .get('/degree')
     .then((res) => res.data)
     .catch((err) => {
       console.log(err)

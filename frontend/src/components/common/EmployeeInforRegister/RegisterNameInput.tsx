@@ -4,7 +4,7 @@ function RegisterNameInput({
   label,
   idLast,
   idFirst,
-  type = 'text',
+  type = 'text', //指定されなかった時はtext
   valueFirst,
   valueLast,
   onChangeFirst,
@@ -16,8 +16,8 @@ function RegisterNameInput({
   idLast: string
   idFirst: string
   type: HTMLInputTypeAttribute
-  valueFirst: string | number | readonly string[] | undefined
-  valueLast: string | number | readonly string[] | undefined
+  valueFirst: string | number | readonly string[] | null
+  valueLast: string | number | readonly string[] | null
   onChangeFirst: ChangeEventHandler<HTMLInputElement>
   onChangeLast: ChangeEventHandler<HTMLInputElement>
   placeholderLast: string
@@ -30,7 +30,7 @@ function RegisterNameInput({
         id={idLast}
         name={idLast}
         type={type}
-        value={valueLast}
+        value={valueLast || ''} //inputのvalueはnullを受け付けないため
         onChange={onChangeLast}
         placeholder={placeholderLast}
         className="registerNameInput"
@@ -39,7 +39,7 @@ function RegisterNameInput({
         id={idFirst}
         name={idFirst}
         type={type}
-        value={valueFirst}
+        value={valueFirst || ''}
         onChange={onChangeFirst}
         placeholder={placeholderFirst}
         className="registerNameInput"

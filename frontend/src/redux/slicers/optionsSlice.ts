@@ -3,7 +3,7 @@ import {
   fetchContract,
   fetchDepartments,
   fetchPositions,
-  fetchLevel,
+  fetchdegree,
 } from '../../fireStore/services/hrService'
 import { collectionNameBase } from '../../hooks/useSettingInputs'
 import { RootState } from '../store'
@@ -18,12 +18,12 @@ const fetchHrOptionType = createAsyncThunk<{
   contractTypes: Array<OptionBase>
   departmentTypes: Array<OptionBase>
   positionTypes: Array<OptionBase>
-  levelTypes: Array<OptionBase>
+  degreeTypes: Array<OptionBase>
 }>('hrOptions/fetchHrOptionType', async () => {
   const contractArr = await fetchContract()
   const departmentArr = await fetchDepartments()
   const positionArr = await fetchPositions()
-  const levelArr = await fetchLevel()
+  const degreeArr = await fetchdegree()
   //promiseall使う！！
 
   //必ずobjectでreturn、リターンするものに名前をつける
@@ -31,7 +31,7 @@ const fetchHrOptionType = createAsyncThunk<{
     contractTypes: contractArr,
     departmentTypes: departmentArr,
     positionTypes: positionArr,
-    levelTypes: levelArr,
+    degreeTypes: degreeArr,
   }
 })
 
@@ -47,7 +47,11 @@ const addHrOptionData = createAsyncThunk<
   //createasyncは引数を一つしか渡せないためobjectにしている
   async ({ newItem, collectionName }) => {
     //サーバー通信
-    await axiosInstance.post(`/${collectionName}/post`, { newItem })
+    await axiosInstance
+      .post(`/${collectionName}/post`, { newItem })
+      .catch((err) => {
+        console.log(err)
+      })
 
     //新しく追加したところだけにfetchをかける
     let updatedList: Array<OptionBase> = []
@@ -60,8 +64,8 @@ const addHrOptionData = createAsyncThunk<
     if (collectionName === 'positions') {
       updatedList = await fetchPositions()
     }
-    if (collectionName === 'level') {
-      updatedList = await fetchLevel()
+    if (collectionName === 'degree') {
+      updatedList = await fetchdegree()
     }
     return { optionData: updatedList, collectionName: collectionName }
   }
@@ -115,8 +119,8 @@ const editOption = createAsyncThunk(
     if (collectionName === 'positions') {
       updatedList = await fetchPositions()
     }
-    if (collectionName === 'level') {
-      updatedList = await fetchLevel()
+    if (collectionName === 'degree') {
+      updatedList = await fetchdegree()
     }
     return { optionData: updatedList, collectionName: collectionName }
   }
@@ -125,7 +129,7 @@ const editOption = createAsyncThunk(
 type OptionsState = {
   contract: Array<OptionBase>
   departments: Array<OptionBase>
-  level: Array<OptionBase>
+  degree: Array<OptionBase>
   positions: Array<OptionBase>
   isLoading: boolean
 }
@@ -134,7 +138,7 @@ type OptionsState = {
 const initialState: OptionsState = {
   contract: [],
   departments: [],
-  level: [],
+  degree: [],
   positions: [],
   isLoading: false,
 }
@@ -162,8 +166,8 @@ export const optionsSlice = createSlice({
         if (action.payload.collectionName === 'positions') {
           state.positions = action.payload.optionData
         }
-        if (action.payload.collectionName === 'level') {
-          state.level = action.payload.optionData
+        if (action.payload.collectionName === 'degree') {
+          state.degree = action.payload.optionData
         }
       })
       .addCase(addHrOptionData.rejected, (state) => {
@@ -178,7 +182,7 @@ export const optionsSlice = createSlice({
         state.contract = action.payload.contractTypes
         state.departments = action.payload.departmentTypes
         state.positions = action.payload.positionTypes
-        state.level = action.payload.levelTypes
+        state.degree = action.payload.degreeTypes
       })
       .addCase(fetchHrOptionType.rejected, (state) => {
         state.isLoading = false
@@ -199,8 +203,8 @@ export const optionsSlice = createSlice({
         if (action.payload.collectionName === 'positions') {
           state.positions = action.payload.newArr
         }
-        if (action.payload.collectionName === 'level') {
-          state.level = action.payload.newArr
+        if (action.payload.collectionName === 'degree') {
+          state.degree = action.payload.newArr
         }
       })
       .addCase(deleteOptionData.rejected, (state) => {
@@ -222,8 +226,8 @@ export const optionsSlice = createSlice({
         if (action.payload.collectionName === 'positions') {
           state.positions = action.payload.optionData
         }
-        if (action.payload.collectionName === 'level') {
-          state.level = action.payload.optionData
+        if (action.payload.collectionName === 'degree') {
+          state.degree = action.payload.optionData
         }
       })
       .addCase(editOption.rejected, (state) => {

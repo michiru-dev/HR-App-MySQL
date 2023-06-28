@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RegisterNameInput from './RegisterNameInput'
 import { ContractOptions } from '../../pages/register/ContractOptions'
 import { DepartmentOptions } from '../../pages/register/DepartmentOptions'
@@ -6,11 +6,11 @@ import { PositionOptions } from '../../pages/register/PositionOptions'
 import { RankOptions } from '../../pages/register/RankOptions'
 import { Button } from '../UI/Button'
 import RegisterInput from './RegisterInput'
-import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
+import { EmployeeBase, EmployeeWithoutId } from '../../../redux/slicers/type'
 
 export type EmployeeInfoBase = {
   buttonText: string
-  handleButtonClick: (registerInfo: EmployeeWithoutDocId) => void
+  handleButtonClick: (registerInfo: EmployeeBase) => void
   employee?: EmployeeBase
   isClearInput?: boolean
   handleCloseButton?: React.MouseEventHandler<HTMLButtonElement>
@@ -25,19 +25,19 @@ export function EmployeeInfoRegister({
   handleCloseButton,
   handleDeleteButton,
 }: EmployeeInfoBase) {
-  const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutDocId>({
-    first_name: employee?.first_name ?? '', //employeeがあれば.firstNameなければ空
-    last_name: employee?.last_name ?? '',
-    first_furigana: employee?.first_furigana ?? '',
-    last_furigana: employee?.last_furigana ?? '',
-    birthday: employee?.birthday ?? '',
-    phone_number: employee?.phone_number ?? '',
-    education: employee?.education ?? '',
-    hire_date: employee?.hire_date ?? '',
-    contractType: employee?.contractType ?? '',
-    department: employee?.department ?? '',
-    rank: employee?.rank ?? '',
-    position: employee?.position ?? '',
+  const [registerInfo, setRegisterInfo] = useState<EmployeeWithoutId>({
+    first_name: employee?.first_name ?? null, //employeeがあれば.firstNameなければ空
+    last_name: employee?.last_name ?? null,
+    first_furigana: employee?.first_furigana ?? null,
+    last_furigana: employee?.last_furigana ?? null,
+    birthday: employee?.birthday ?? null,
+    phone_number: employee?.phone_number ?? null,
+    education: employee?.education ?? null,
+    hire_date: employee?.hire_date ?? null,
+    contract_id: employee?.contract_id ?? null,
+    department_id: employee?.department_id ?? null,
+    degree_id: employee?.degree_id ?? null,
+    position_id: employee?.position_id ?? null,
   })
 
   const {
@@ -49,11 +49,31 @@ export function EmployeeInfoRegister({
     phone_number,
     education,
     hire_date,
-    contractType,
-    department,
-    rank,
-    position,
+    contract_id,
+    department_id,
+    degree_id,
+    position_id,
   } = registerInfo
+
+  // reset //要チェック
+  const resetRegisterInfo = () => {
+    const newInfo = {
+      first_name: employee?.first_name ?? null,
+      last_name: employee?.last_name ?? null,
+      first_furigana: employee?.first_furigana ?? null,
+      last_furigana: employee?.last_furigana ?? null,
+      birthday: employee?.birthday ?? null,
+      phone_number: employee?.phone_number ?? null,
+      education: employee?.education ?? null,
+      hire_date: employee?.hire_date ?? null,
+      contract_id: employee?.contract_id ?? null,
+      department_id: employee?.department_id ?? null,
+      degree_id: employee?.degree_id ?? null,
+      position_id: employee?.position_id ?? null,
+    }
+
+    setRegisterInfo(newInfo)
+  }
 
   return (
     <div className="registerEmployeeInfo">
@@ -153,10 +173,13 @@ export function EmployeeInfoRegister({
           }))
         }
       />
-      <ContractOptions onChange={setRegisterInfo} value={contractType} />
-      <DepartmentOptions onChange={setRegisterInfo} value={department} />
-      <RankOptions onChange={setRegisterInfo} value={rank} />
-      <PositionOptions onChange={setRegisterInfo} value={position} />
+      <ContractOptions onChange={setRegisterInfo} value={contract_id || ''} />
+      <DepartmentOptions
+        onChange={setRegisterInfo}
+        value={department_id || ''}
+      />
+      <RankOptions onChange={setRegisterInfo} value={degree_id || ''} />
+      <PositionOptions onChange={setRegisterInfo} value={position_id || ''} />
       <div className="employeeListButtons">
         {/* 保存・登録ボタン */}
         <Button
@@ -165,20 +188,7 @@ export function EmployeeInfoRegister({
             handleButtonClick(registerInfo)
             if (isClearInput) {
               //inputを空にする
-              setRegisterInfo({
-                last_name: '',
-                first_name: '',
-                last_furigana: '',
-                first_furigana: '',
-                birthday: '',
-                phone_number: '',
-                education: '',
-                hire_date: '',
-                contractType: '',
-                department: '',
-                rank: '',
-                position: '',
-              })
+              resetRegisterInfo()
             }
           }}
         />

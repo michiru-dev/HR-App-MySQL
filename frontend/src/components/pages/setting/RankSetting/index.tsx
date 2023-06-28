@@ -3,7 +3,7 @@ import { ShowSettingList } from '../ShowSettingList'
 import { useAppSelector } from '../../../../redux/hooks'
 
 export function RankSetting() {
-  const rank = useAppSelector((state) => state.option.level)
+  const degree = useAppSelector((state) => state.option.degree)
 
-  return <ShowSettingList settingType={rank} collectionName={'level'} />
+  return <ShowSettingList settingType={degree} collectionName={'degree'} />
 }

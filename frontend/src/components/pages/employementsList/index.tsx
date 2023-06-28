@@ -5,8 +5,9 @@ import {
   fetchEmployeeData,
 } from '../../../redux/slicers/employeeDataSlice'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
-import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
-import EmployeeInfoList from '../../common/EmployeeInfoList.tsx'
+import EmployeeInfoList, {
+  HandleSaveButtonClick,
+} from '../../common/EmployeeInfoList.tsx'
 import Layout from '../../common/UI/Layout'
 import LoadingSpinner from '../../common/UI/LoadingSpinner'
 
@@ -29,12 +30,12 @@ function EmployeeList() {
   }
 
   //保存ボタンが押された時
-  const handleSaveButtonClick = async (
-    employee: EmployeeWithoutDocId,
-    docId: string | undefined
+  const handleSaveButtonClick: HandleSaveButtonClick = async (
+    updatedEmployeeData,
+    id
   ) => {
-    if (typeof docId === 'undefined') return
-    await dispatch(editEmployeeData({ employee, docId }))
+    if (typeof id === 'undefined') return
+    await dispatch(editEmployeeData({ updatedEmployeeData, id }))
     await dispatch(fetchEmployeeData()) //編集して上書きしてきたデータを取得
     setEditEmployeeIndex(null)
   }

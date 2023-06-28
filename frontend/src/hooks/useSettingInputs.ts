@@ -11,7 +11,7 @@ export type collectionNameBase =
   | 'contract'
   | 'departments'
   | 'positions'
-  | 'level'
+  | 'degree'
 
 export type SettingActions = {
   settingType: OptionBase[]

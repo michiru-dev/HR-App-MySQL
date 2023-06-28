@@ -43,9 +43,24 @@ app.listen(port, () => {
 });
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
-//employeesデータ取得
+//🍎employees取得(get)
 app.get('/employees', (req, res) => {
-    db_1.connection.query('SELECT * FROM employees', (error, results) => {
+    //FROMのあとはemployeesに合体させたテーブル
+    //その大きいテーブルからSELECT以降を選択
+    //LEFT JOINは関連する値がなくてもleft(employees)の値を返すもの
+    const query = `SELECT
+    employees.*,
+    positions.name AS position_name,
+    departments.name AS department_name,
+    degree.name AS degree_name,
+    contract.name AS contract_name
+  FROM
+    employees
+    LEFT JOIN positions ON employees.position_id = positions.id
+    LEFT JOIN departments ON employees.department_id = departments.id
+    LEFT JOIN degree ON employees.degree_id = degree.id
+    LEFT JOIN contract ON employees.contract_id = contract.id`;
+    db_1.connection.query(query, (error, results) => {
         if (error) {
             return res.status(500).send(error);
         }
@@ -56,9 +71,10 @@ app.get('/employees', (req, res) => {
         //引数として与えられたjsオブジェクトを自動的にJSON形式の文字列に変換
     });
 });
-//employeesデータ送信
-app.post('/employees', (req, res) => {
+//🍎employees追加(post)
+app.post('/employees/post', (req, res) => {
     const newEmployee = req.body;
+    console.log(req.body);
     //Object.keysはオブジェクトのすべてのキー（プロパティ名）を配列として返す、
     // newEmployeeが { name: 'John', email: 'asdfad' } の場合['name', 'email'] を返す
     //そしてjoinでこれらのキーをカンマで区切った文字列に変換→'name, email'
@@ -75,9 +91,50 @@ app.post('/employees', (req, res) => {
     //コールバックはSQLクエリが実行された後に呼び出される
     db_1.connection.query(query, values, (error, results) => {
         if (error) {
+            console.log(error);
             return res.status(500).send(error);
         }
         res.status(201).send('Employee added successfully!');
+    });
+});
+//🍎employees 編集(put)
+app.put('/employees/put', (req, res) => {
+    const { updatedEmployeeData, id } = req.body;
+    const query = ` UPDATE employees SET first_name = ?, last_name = ?, 
+  first_furigana = ?, last_furigana = ?, birthday = ?, phone_number = ?,
+  education = ?, hire_date = ?,  contract_id = ?, department_id = ?,
+  degree_id = ?, position_id = ? WHERE employee_id = ? `;
+    const data = [
+        updatedEmployeeData.first_name,
+        updatedEmployeeData.last_name,
+        updatedEmployeeData.first_furigana,
+        updatedEmployeeData.last_furigana,
+        updatedEmployeeData.birthday,
+        updatedEmployeeData.phone_number,
+        updatedEmployeeData.education,
+        updatedEmployeeData.hire_date,
+        updatedEmployeeData.contract_id,
+        updatedEmployeeData.department_id,
+        updatedEmployeeData.degree_id,
+        updatedEmployeeData.position_id,
+        id,
+    ];
+    db_1.connection.query(query, data, (error, result) => {
+        if (error) {
+            return res.status(404).send(error);
+        }
+        res.status(204).send('item updated successfully!');
+    });
+});
+//🍎employees 削除(delete)
+app.delete('/employees/delete', (req, res) => {
+    const { id } = req.body;
+    const query = `DELETE FROM employees WHERE employee_id = ?`;
+    db_1.connection.query(query, id, (error, result) => {
+        if (error) {
+            return res.status(404).send(error);
+        }
+        res.status(204).send('employee data deleted successfully');
     });
 });
 //🍎各種設定 取得（get）関数
@@ -94,10 +151,10 @@ const generateGetHandler = (tableName) => {
         });
     };
 };
-//各種設定取得実行
+//各種設定 取得 実行
 app.get('/contract', generateGetHandler('contract'));
 app.get('/departments', generateGetHandler('departments'));
-app.get('/level', generateGetHandler('level'));
+app.get('/degree', generateGetHandler('degree'));
 app.get('/positions', generateGetHandler('positions'));
 // //上の二つを合わせたのがこれ
 // app.get('/contract', (req, res) => {
@@ -121,7 +178,7 @@ const generatePostHandler = (tableName) => {
 //各種設定　追加　実行
 app.post('/contract/post', generatePostHandler('contract'));
 app.post('/departments/post', generatePostHandler('departments'));
-app.post('/level/post', generatePostHandler('level'));
+app.post('/degree/post', generatePostHandler('degree'));
 app.post('/positions/post', generatePostHandler('positions'));
 //🍎各種設定　削除（delete）関数
 const generateDeleteHandler = (tableName) => {
@@ -139,13 +196,12 @@ const generateDeleteHandler = (tableName) => {
 //各種設定　削除　実行
 app.delete('/contract/delete', generateDeleteHandler('contract'));
 app.delete('/departments/delete', generateDeleteHandler('departments'));
-app.delete('/level/delete', generateDeleteHandler('level'));
+app.delete('/degree/delete', generateDeleteHandler('degree'));
 app.delete('/positions/delete', generateDeleteHandler('positions'));
 //🍎各種設定　編集（put）関数
 const generatePutHandler = (tableName) => {
     return (req, res) => {
         const { id, newName } = req.body;
-        console.log(id, newName);
         const query = `UPDATE ${tableName} SET name=? WHERE id=?`;
         db_1.connection.query(query, [newName, id], (error, result) => {
             if (error) {
@@ -158,5 +214,5 @@ const generatePutHandler = (tableName) => {
 //各種設定　編集　実行
 app.put('/contract/put', generatePutHandler('contract'));
 app.put('/departments/put', generatePutHandler('departments'));
-app.put('/level/put', generatePutHandler('level'));
+app.put('/degree/put', generatePutHandler('degree'));
 app.put('/positions/put', generatePutHandler('positions'));
