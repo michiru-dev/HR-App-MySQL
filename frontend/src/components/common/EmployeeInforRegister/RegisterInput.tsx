@@ -10,7 +10,7 @@ function RegisterInput({
   label: string
   id: string
   type: HTMLInputTypeAttribute
-  value: string | number | readonly string[] | undefined
+  value: string | number | readonly string[] | null
   onChange: ChangeEventHandler<HTMLInputElement>
 }) {
   return (
@@ -20,7 +20,7 @@ function RegisterInput({
         id={id}
         name={id}
         type={type}
-        value={value}
+        value={value || ''}
         onChange={onChange}
         className="registerInput"
       />

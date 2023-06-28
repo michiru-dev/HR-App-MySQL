@@ -1,27 +1,28 @@
-import firebase from 'firebase/compat/app'
-
 export type EmployeeBase = {
-  first_name: string
-  last_name: string
-  first_furigana: string
-  last_furigana: string
-  birthday: string
-  phone_number: string
-  education: string
-  hire_date: string
-  contractType: string
-  department: string
-  rank: string
-  position: string
-  docId: string
+  first_name: string | null
+  last_name: string | null
+  first_furigana: string | null
+  last_furigana: string | null
+  birthday: string | null
+  phone_number: string | null
+  education: string | null
+  hire_date: string | null
+  contract_id: string | null
+  contract_name?: string | null
+  department_id: string | null
+  department_name?: string | null
+  degree_id: string | null
+  degree_name?: string | null
+  position_id: string | null
+  position_name?: string | null
+  id?: string
 }
 
 //omitでid以外のtypeを作成
-export type EmployeeWithoutDocId = Omit<EmployeeBase, 'docId'>
+export type EmployeeWithoutId = Omit<EmployeeBase, 'id'>
 
 export type OptionBase = {
-  id: string
+  id?: string
   name: string
-  docId?: string
-  createdAt?: firebase.firestore.FieldValue
+  createdAt?: any
 }

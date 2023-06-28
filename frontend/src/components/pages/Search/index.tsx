@@ -6,8 +6,10 @@ import {
   fetchSearchedEmployee,
 } from '../../../redux/slicers/employeeDataSlice'
 import { Button } from '../../common/UI/Button'
-import EmployeeInfoList from '../../common/EmployeeInfoList.tsx'
-import { EmployeeWithoutDocId } from '../../../redux/slicers/type'
+import EmployeeInfoList, {
+  HandleSaveButtonClick,
+} from '../../common/EmployeeInfoList.tsx'
+import { EmployeeWithoutId } from '../../../redux/slicers/type'
 import EmployeeNotFound from './EmployeeNotFound'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -58,9 +60,9 @@ function Search() {
   }
 
   //保存ボタンが押された時
-  const handleSaveButtonClick = async (
-    employee: EmployeeWithoutDocId,
-    docId: string | undefined
+  const handleSaveButtonClick: HandleSaveButtonClick = async (
+    employee,
+    docId
   ) => {
     if (typeof docId === 'undefined' || searchedName === null) return
     await dispatch(editEmployeeData({ employee, docId }))

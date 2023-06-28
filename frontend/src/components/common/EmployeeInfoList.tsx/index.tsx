@@ -1,17 +1,19 @@
 import React from 'react'
 import { EmployeeInfoEditModal } from '../../pages/employementsList/EmployeeInfoEditModal'
 import { Button } from '../UI/Button'
-import { EmployeeBase, EmployeeWithoutDocId } from '../../../redux/slicers/type'
+import { EmployeeBase, EmployeeWithoutId } from '../../../redux/slicers/type'
+
+export type HandleSaveButtonClick = (
+  registerInfo: EmployeeWithoutId,
+  id: string | undefined
+) => void
 
 type EmployeeInfoListBase = {
   employeeData: EmployeeBase[]
   handleEditClick: (index: number) => void
-  handleSaveButtonClick: (
-    registerInfo: EmployeeWithoutDocId,
-    docId: string
-  ) => void
+  handleSaveButtonClick: HandleSaveButtonClick
   handleCloseButton: React.MouseEventHandler<HTMLButtonElement>
-  handleDeleteButton: (docId: string) => void
+  handleDeleteButton: (id: string | undefined) => void
   editEmployeeIndex: number | null
 }
 
@@ -45,15 +47,15 @@ function EmployeeInfoList({
         <tbody>
           {employeeData.map((employee, index) => {
             return (
-              <tr key={employee.docId}>
+              <tr key={employee.id}>
                 <td>{employee.last_name}</td>
                 <td>{employee.first_name}</td>
                 <td>{employee.last_furigana}</td>
                 <td>{employee.first_furigana}</td>
-                <td>{employee.position}</td>
-                <td>{employee.department}</td>
-                <td>{employee.rank}</td>
-                <td>{employee.contractType}</td>
+                <td>{employee.position_name}</td>
+                <td>{employee.department_name}</td>
+                <td>{employee.degree_name}</td>
+                <td>{employee.contract_name}</td>
                 <td>
                   <span className="employeeInfoNum">{employee.hire_date}</span>
                 </td>
@@ -82,19 +84,19 @@ function EmployeeInfoList({
         <div id="modal" className="modal">
           <EmployeeInfoEditModal
             buttonText="保存"
-            handleButtonClick={(registerInfo) =>
+            handleButtonClick={(registerInfo) => {
               handleSaveButtonClick(
                 registerInfo,
-                employeeData[editEmployeeIndex].docId
+                employeeData[editEmployeeIndex].id
                 //propsで渡ってきたemployeeDataの配列にindexでアクセスする
               )
-            }
+            }}
             // const handleButtonClick2 = (registerInfo: EmployeeBase) =>
             // handleButtonClick(registerInfo, employee.docId)
             //handleButtonClickを実行する時にregisterInfoの引数が必要docIdはここで渡してるから不要
             handleCloseButton={handleCloseButton}
             handleDeleteButton={() =>
-              handleDeleteButton(employeeData[editEmployeeIndex].docId)
+              handleDeleteButton(employeeData[editEmployeeIndex].id)
             }
             employee={employeeData[editEmployeeIndex]}
           />
