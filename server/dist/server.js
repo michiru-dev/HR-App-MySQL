@@ -43,7 +43,7 @@ app.listen(port, () => {
 });
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
-//🍎employeesデータ取得(get)
+//🍎employees取得(get)
 app.get('/employees', (req, res) => {
     //FROMのあとはemployeesに合体させたテーブル
     //その大きいテーブルからSELECT以降を選択
@@ -71,7 +71,7 @@ app.get('/employees', (req, res) => {
         //引数として与えられたjsオブジェクトを自動的にJSON形式の文字列に変換
     });
 });
-//🍎employeesx追加(post)
+//🍎employees追加(post)
 app.post('/employees/post', (req, res) => {
     const newEmployee = req.body;
     console.log(req.body);
@@ -124,6 +124,17 @@ app.put('/employees/put', (req, res) => {
             return res.status(404).send(error);
         }
         res.status(204).send('item updated successfully!');
+    });
+});
+//🍎employees 削除(delete)
+app.delete('/employees/delete', (req, res) => {
+    const { id } = req.body;
+    const query = `DELETE FROM employees WHERE employee_id = ?`;
+    db_1.connection.query(query, id, (error, result) => {
+        if (error) {
+            return res.status(404).send(error);
+        }
+        res.status(204).send('employee data deleted successfully');
     });
 });
 //🍎各種設定 取得（get）関数

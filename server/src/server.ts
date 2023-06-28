@@ -49,7 +49,7 @@ app.listen(port, () => {
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
 
-//🍎employeesデータ取得(get)
+//🍎employees取得(get)
 app.get('/employees', (req, res) => {
   //FROMのあとはemployeesに合体させたテーブル
   //その大きいテーブルからSELECT以降を選択
@@ -79,7 +79,7 @@ app.get('/employees', (req, res) => {
   })
 })
 
-//🍎employeesx追加(post)
+//🍎employees追加(post)
 app.post('/employees/post', (req, res) => {
   const newEmployee = req.body
   console.log(req.body)
@@ -140,6 +140,18 @@ app.put('/employees/put', (req: any, res: any) => {
       return res.status(404).send(error)
     }
     res.status(204).send('item updated successfully!')
+  })
+})
+
+//🍎employees 削除(delete)
+app.delete('/employees/delete', (req: any, res: any) => {
+  const { id } = req.body
+  const query = `DELETE FROM employees WHERE employee_id = ?`
+  connection.query(query, id, (error, result) => {
+    if (error) {
+      return res.status(404).send(error)
+    }
+    res.status(204).send('employee data deleted successfully')
   })
 })
 

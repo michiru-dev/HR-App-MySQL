@@ -1,13 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  or,
-  doc,
-  deleteDoc,
-} from 'firebase/firestore'
+import { collection, query, where, getDocs, or } from 'firebase/firestore'
 import db from '../../fireStore/fireStoreConfig'
 import { EmployeeBase, EmployeeWithoutId } from './type'
 import { axiosInstance } from '../../axios'
@@ -73,35 +65,21 @@ const fetchSearchedEmployee = createAsyncThunk(
   }
 )
 
-//💡firebaseから削除
+//💡削除（delete)
 const deleteEmployeeData = createAsyncThunk(
   'employee/deleteEmployeeData',
-  async (docId: string) => {
-    await deleteDoc(doc(db, 'employeeData', docId))
+  async (id: string) => {
+    await axiosInstance.delete('/employees/delete', { data: { id } })
   }
 )
 
-// 💡firebaseの値を上書き（編集）
-
-// const editEmployeeData = createAsyncThunk<
-//   void,
-//   { employee: EmployeeWithoutId; docId: string }
-// >('employee/editEmployeeData', async ({ employee, docId }) => {
-//   if (typeof docId === 'undefined') return
-//   const ref = doc(db, 'employeeData', docId)
-//   await updateDoc(ref, employee) //docIdを省いてupdate
-// })
-
-//💡上書き（編集）
+//💡編集(put)
 const editEmployeeData = createAsyncThunk<
   void,
   { updatedEmployeeData: EmployeeBase; id: string }
 >('employee/editEmployeeData', async ({ updatedEmployeeData, id }) => {
   if (typeof id === 'undefined') return
   await axiosInstance.put(`/employees/put`, { updatedEmployeeData, id })
-
-  // const ref = doc(db, 'employeeData', docId)
-  // await updateDoc(ref, employee) //docIdを省いてupdate
 })
 
 type InitialBase = {
