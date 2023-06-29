@@ -4,7 +4,7 @@ import {
   fetchDepartments,
   fetchPositions,
   fetchdegree,
-} from '../../fireStore/services/hrService'
+} from '../../axios/hrService'
 import { collectionNameBase } from '../../hooks/useSettingInputs'
 import { RootState } from '../store'
 import { OptionBase } from './type'
@@ -20,11 +20,18 @@ const fetchHrOptionType = createAsyncThunk<{
   positionTypes: Array<OptionBase>
   degreeTypes: Array<OptionBase>
 }>('hrOptions/fetchHrOptionType', async () => {
-  const contractArr = await fetchContract()
-  const departmentArr = await fetchDepartments()
-  const positionArr = await fetchPositions()
-  const degreeArr = await fetchdegree()
-  //promiseall使う！！
+  const [contractArr, departmentArr, positionArr, degreeArr] =
+    //Promise.allは並列で実行されるためfetchContractを待ってfetchDepartmentsをしたい場合はNG
+    //引数には配列
+    await Promise.all([
+      fetchContract(),
+      fetchDepartments(),
+      fetchPositions(),
+      fetchdegree(),
+    ]).catch((err) => {
+      console.log(err)
+      throw new Error(err) //throwはreturnと同じでそこで処理をストップするため代入も起こらない
+    })
 
   //必ずobjectでreturn、リターンするものに名前をつける
   return {
@@ -38,15 +45,10 @@ const fetchHrOptionType = createAsyncThunk<{
 //💡追加(post)
 const addHrOptionData = createAsyncThunk<
   { optionData: Array<OptionBase>; collectionName: collectionNameBase },
-  {
-    newItem: string
-    collectionName: collectionNameBase
-  }
+  { newItem: string; collectionName: collectionNameBase }
 >(
-  'hrOptions/addHrOptionData',
-  //createasyncは引数を一つしか渡せないためobjectにしている
+  'hrOptions/addHrOptionData', //createasyncは引数を一つしか渡せないためobjectにしている
   async ({ newItem, collectionName }) => {
-    //サーバー通信
     await axiosInstance
       .post(`/${collectionName}/post`, { newItem })
       .catch((err) => {
@@ -78,9 +80,11 @@ const deleteOptionData = createAsyncThunk<
   { state: RootState }
 >('options/deleteOptionData', async ({ id, collectionName }, { getState }) => {
   //サーバー通信
-  await axiosInstance.delete(`/${collectionName}/delete`, {
-    data: { id },
-  })
+  await axiosInstance
+    .delete(`/${collectionName}/delete`, {
+      data: { id },
+    })
+    .catch((err) => console.log(err))
 
   //reduxに削除したやつ以外の最新の配列をいれる
   const state = getState()
@@ -105,7 +109,9 @@ const editOption = createAsyncThunk(
     newName: string
   }) => {
     //サーバー通信
-    await axiosInstance.put(`/${collectionName}/put`, { id, newName })
+    await axiosInstance
+      .put(`/${collectionName}/put`, { id, newName })
+      .catch((err) => console.log(err))
 
     //reduxの値を編集
     //編集したところだけにfetchをかける

@@ -1,20 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { EmployeeBase, EmployeeWithoutId } from './type'
 import { axiosInstance } from '../../axios'
+import { AxiosResponse } from 'axios'
 
 //💡追加(post)
 const addEmployeeData = createAsyncThunk(
   'employee/addEmployeeData',
   async (registerInfo: EmployeeWithoutId) => {
-    //サーバー通信
-    await axiosInstance.post(`/employees/post`, registerInfo)
+    //awaitがあるからthenがなくても勝手にresolveした値を返してくれる
+    await axiosInstance
+      .post(`/employees/post`, registerInfo)
+      .catch((err) => console.log(err))
   }
 )
 
 //日付が"YYYY-MM-DDTHH:mm:ss.sssZ"この形で返ってくるので
 //Tで区切ってその配列の一つ目[0]を返す
-const convertNumber = (res: any) => {
-  return res.data.map((employee: any) => {
+const convertNumber = (res: AxiosResponse<EmployeeBase[]>) => {
+  return res.data.map((employee: EmployeeBase) => {
     if (employee.hire_date) {
       employee.hire_date = employee.hire_date.split('T')[0]
     }
@@ -57,7 +60,11 @@ const fetchSearchedEmployee = createAsyncThunk(
 const deleteEmployeeData = createAsyncThunk(
   'employee/deleteEmployeeData',
   async (id: string) => {
-    await axiosInstance.delete('/employees/delete', { data: { id } })
+    await axiosInstance
+      .delete('/employees/delete', { data: { id } })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 )
 
@@ -66,8 +73,9 @@ const editEmployeeData = createAsyncThunk<
   void,
   { updatedEmployeeData: EmployeeBase; id: string }
 >('employee/editEmployeeData', async ({ updatedEmployeeData, id }) => {
-  if (typeof id === 'undefined') return
-  await axiosInstance.put(`/employees/put`, { updatedEmployeeData, id })
+  await axiosInstance
+    .put(`/employees/put`, { updatedEmployeeData, id })
+    .catch((err) => console.log(err))
 })
 
 type InitialBase = {
@@ -103,7 +111,10 @@ export const employeeDataSlice = createSlice({
         state.isLoading = true
       })
       .addCase(fetchEmployeeData.fulfilled, (state, action) => {
-        state.employeeData = action.payload.employeeArr
+        if (Array.isArray(action.payload.employeeArr)) {
+          // 返り値が配列であることをチェック
+          state.employeeData = action.payload.employeeArr
+        }
         state.isLoading = false
       })
       .addCase(fetchEmployeeData.rejected, (state) => {
@@ -114,8 +125,10 @@ export const employeeDataSlice = createSlice({
         state.isLoading = true
       })
       .addCase(fetchSearchedEmployee.fulfilled, (state, action) => {
+        if (Array.isArray(action.payload.searchedEmployeeArr)) {
+          state.searchedEmployeeData = action.payload.searchedEmployeeArr
+        }
         state.isLoading = false
-        state.searchedEmployeeData = action.payload.searchedEmployeeArr
       })
       .addCase(fetchSearchedEmployee.rejected, (state) => {
         state.isLoading = false
