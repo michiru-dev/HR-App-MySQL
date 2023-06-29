@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import RegisterNameInput from './RegisterNameInput'
 import { ContractOptions } from '../../pages/register/ContractOptions'
 import { DepartmentOptions } from '../../pages/register/DepartmentOptions'

@@ -7,28 +7,13 @@ const express_1 = __importDefault(require("express"));
 const db_1 = require("./db");
 const cors = require('cors');
 const app = (0, express_1.default)();
-const port = 8000;
-const corsOptions = {
-    origin: 'http://localhost:3000',
+//ミドルウェア（corsの設定をする）
+//corsパッケージを使うと簡単にかける
+app.use(cors({
+    origin: process.env.ALLOW_CORS,
     methods: '*',
     contentType: 'Content-Type',
-};
-app.use(cors({
-    origin: 'http://localhost:3000',
-    // methods: '*',
-    // contentType: 'Content-Type',
 }));
-//ミドルウェア
-//レスポンスヘッダーの中でクライアント側の要求を許可する
-// app.use(function (req, res, next) {
-//   //リクエスト元のオリジンを許可
-//   res.header('Access-Control-Allow-Origin', corsOptions.origin)
-//   //メソッドを許可。postとかdeleteとか
-//   res.header('Access-Control-Allow-Methods', corsOptions.methods)
-//   //リクエストヘッダーを許可。ここではcontent-type
-//   res.header('Access-Control-Allow-Headers', corsOptions.contentType)
-//   next()
-// })
 //フォームからデータを受け取って実行できる形式に変換
 //渡ってくるデータが文字列、配列のときはurlencoded、json objectのときはjson
 app.use(express_1.default.json());
@@ -38,8 +23,10 @@ app.get('/', (req, res) => {
     res.status(200).send('hello');
 });
 //ポートに繋ぐ
-app.listen(port, () => {
-    console.log(`server running on ${port}!`);
+//process.env.PORTこうしておくことでheroku上で自動でポート番号を割り当てて起動してくれる
+//heroku上での環境変数の設定の必要はない
+app.listen(process.env.PORT, () => {
+    console.log(`server running on ${process.env.PORT}!`);
 });
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
@@ -74,7 +61,6 @@ app.get('/employees', (req, res) => {
 //🍎employees追加(post)
 app.post('/employees/post', (req, res) => {
     const newEmployee = req.body;
-    console.log(req.body);
     //Object.keysはオブジェクトのすべてのキー（プロパティ名）を配列として返す、
     // newEmployeeが { name: 'John', email: 'asdfad' } の場合['name', 'email'] を返す
     //そしてjoinでこれらのキーをカンマで区切った文字列に変換→'name, email'

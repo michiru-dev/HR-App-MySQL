@@ -1,35 +1,19 @@
 import express from 'express'
 import { connection } from './db'
+import { Request, Response } from 'express'
 const cors = require('cors')
 
 const app = express()
-const port = 8000
 
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  methods: '*',
-  contentType: 'Content-Type',
-}
-
+//ミドルウェア（corsの設定をする）
+//corsパッケージを使うと簡単にかける
 app.use(
   cors({
-    origin: 'http://localhost:3000',
-    // methods: '*',
-    // contentType: 'Content-Type',
+    origin: process.env.ALLOW_CORS,
+    methods: '*',
+    contentType: 'Content-Type',
   })
 )
-
-//ミドルウェア
-//レスポンスヘッダーの中でクライアント側の要求を許可する
-// app.use(function (req, res, next) {
-//   //リクエスト元のオリジンを許可
-//   res.header('Access-Control-Allow-Origin', corsOptions.origin)
-//   //メソッドを許可。postとかdeleteとか
-//   res.header('Access-Control-Allow-Methods', corsOptions.methods)
-//   //リクエストヘッダーを許可。ここではcontent-type
-//   res.header('Access-Control-Allow-Headers', corsOptions.contentType)
-//   next()
-// })
 
 //フォームからデータを受け取って実行できる形式に変換
 //渡ってくるデータが文字列、配列のときはurlencoded、json objectのときはjson
@@ -42,8 +26,10 @@ app.get('/', (req, res) => {
 })
 
 //ポートに繋ぐ
-app.listen(port, () => {
-  console.log(`server running on ${port}!`)
+//process.env.PORTこうしておくことでheroku上で自動でポート番号を割り当てて起動してくれる
+//heroku上での環境変数の設定の必要はない
+app.listen(process.env.PORT, () => {
+  console.log(`server running on ${process.env.PORT}!`)
 })
 
 //app.getはページがロードされたときに全てのapp.getが実行される
@@ -82,7 +68,6 @@ app.get('/employees', (req, res) => {
 //🍎employees追加(post)
 app.post('/employees/post', (req, res) => {
   const newEmployee = req.body
-  console.log(req.body)
 
   //Object.keysはオブジェクトのすべてのキー（プロパティ名）を配列として返す、
   // newEmployeeが { name: 'John', email: 'asdfad' } の場合['name', 'email'] を返す
@@ -111,7 +96,7 @@ app.post('/employees/post', (req, res) => {
 })
 
 //🍎employees 編集(put)
-app.put('/employees/put', (req: any, res: any) => {
+app.put('/employees/put', (req, res) => {
   const { updatedEmployeeData, id } = req.body
 
   const query = ` UPDATE employees SET first_name = ?, last_name = ?, 
@@ -144,7 +129,7 @@ app.put('/employees/put', (req: any, res: any) => {
 })
 
 //🍎employees 削除(delete)
-app.delete('/employees/delete', (req: any, res: any) => {
+app.delete('/employees/delete', (req, res) => {
   const { id } = req.body
   const query = `DELETE FROM employees WHERE employee_id = ?`
   connection.query(query, id, (error, result) => {
@@ -204,7 +189,7 @@ app.get('/employees/search', (req, res) => {
 
 //🍎各種設定 取得（get）関数
 const generateGetHandler = (tableName: string) => {
-  return (req: any, res: any) => {
+  return (req: Request, res: Response) => {
     //無名関数
     connection.query(
       `SELECT * FROM ${tableName} ORDER BY created_at`,
@@ -234,7 +219,7 @@ app.get('/positions', generateGetHandler('positions'))
 
 //🍎各種設定　追加（post）関数
 const generatePostHandler = (tableName: string) => {
-  return (req: any, res: any) => {
+  return (req: Request, res: Response) => {
     const newItemObj = req.body
     const newItem = Object.values(newItemObj)
     const query = `INSERT INTO ${tableName}(name) VALUES (?)`
@@ -254,7 +239,7 @@ app.post('/positions/post', generatePostHandler('positions'))
 
 //🍎各種設定　削除（delete）関数
 const generateDeleteHandler = (tableName: string) => {
-  return (req: any, res: any) => {
+  return (req: Request, res: Response) => {
     const { id } = req.body
     const query = `DELETE FROM ${tableName} WHERE id = ?`
     connection.query(query, id, (error, result) => {
@@ -274,7 +259,7 @@ app.delete('/positions/delete', generateDeleteHandler('positions'))
 
 //🍎各種設定　編集（put）関数
 const generatePutHandler = (tableName: string) => {
-  return (req: any, res: any) => {
+  return (req: Request, res: Response) => {
     const { id, newName } = req.body
     const query = `UPDATE ${tableName} SET name=? WHERE id=?`
     connection.query(query, [newName, id], (error, result) => {

@@ -9,7 +9,6 @@ import { Button } from '../../common/UI/Button'
 import EmployeeInfoList, {
   HandleSaveButtonClick,
 } from '../../common/EmployeeInfoList.tsx'
-import { EmployeeWithoutId } from '../../../redux/slicers/type'
 import EmployeeNotFound from './EmployeeNotFound'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -97,8 +96,7 @@ function Search() {
           className="searchInput"
         />
         <div className="tooltip">
-          漢字またはカタカナで姓または名を検索してください
-          ex.山田/太郎/ヤマダ/タロウ
+          漢字またはカタカナで氏名を検索してください
         </div>
         <Button type="button" text={'検索'} onClick={handleSearchButtonClick} />
       </div>

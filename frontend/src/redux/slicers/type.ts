@@ -24,5 +24,5 @@ export type EmployeeWithoutId = Omit<EmployeeBase, 'id'>
 export type OptionBase = {
   id?: string
   name: string
-  createdAt?: any
+  createdAt?: Date
 }
