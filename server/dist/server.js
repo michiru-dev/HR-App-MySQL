@@ -137,6 +137,42 @@ app.delete('/employees/delete', (req, res) => {
         res.status(204).send('employee data deleted successfully');
     });
 });
+//🍎employees検索(get)
+app.get('/employees/search', (req, res) => {
+    // クエリパラメータから検索キーワードを取得
+    const searchKeyword = req.query.keyword;
+    // WHERE句を動的に生成するためのベース
+    let whereClause = '';
+    //connection.escapeは``とかがあった場合にえらーにならないようにするため
+    //LIKE：部分一致検索 `%%`:任意の文字列
+    //例　LIKE '%abc%'　はabcをどこかに含む。。。
+    if (searchKeyword) {
+        whereClause = `WHERE employees.first_name LIKE ${db_1.connection.escape(`%${searchKeyword}%`)}
+      OR employees.last_name LIKE ${db_1.connection.escape(`%${searchKeyword}%`)}
+      OR employees.first_furigana LIKE ${db_1.connection.escape(`%${searchKeyword}%`)}
+      OR employees.last_furigana LIKE ${db_1.connection.escape(`%${searchKeyword}%`)}`;
+    }
+    const query = `
+    SELECT
+      employees.*,
+      positions.name AS position_name,
+      departments.name AS department_name,
+      degree.name AS degree_name,
+      contract.name AS contract_name
+    FROM
+      employees
+      LEFT JOIN positions ON employees.position_id = positions.id
+      LEFT JOIN departments ON employees.department_id = departments.id
+      LEFT JOIN degree ON employees.degree_id = degree.id
+      LEFT JOIN contract ON employees.contract_id = contract.id
+    ${whereClause}`;
+    db_1.connection.query(query, (error, results) => {
+        if (error) {
+            return res.status(500).send(error);
+        }
+        res.status(200).json(results);
+    });
+});
 //🍎各種設定 取得（get）関数
 const generateGetHandler = (tableName) => {
     return (req, res) => {

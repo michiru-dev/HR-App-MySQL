@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { collection, query, where, getDocs, or } from 'firebase/firestore'
-import db from '../../fireStore/fireStoreConfig'
 import { EmployeeBase, EmployeeWithoutId } from './type'
 import { axiosInstance } from '../../axios'
 
@@ -13,55 +11,45 @@ const addEmployeeData = createAsyncThunk(
   }
 )
 
+//日付が"YYYY-MM-DDTHH:mm:ss.sssZ"この形で返ってくるので
+//Tで区切ってその配列の一つ目[0]を返す
+const convertNumber = (res: any) => {
+  return res.data.map((employee: any) => {
+    if (employee.hire_date) {
+      employee.hire_date = employee.hire_date.split('T')[0]
+    }
+    if (employee.birthday) {
+      employee.birthday = employee.birthday.split('T')[0]
+    }
+    return employee
+  })
+}
+
 //💡取得(get)
 const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
   async () => {
     const employeeArr = await axiosInstance
       .get('/employees')
-      .then((res) => {
-        return res.data.map((employee: any) => {
-          //日付が"YYYY-MM-DDTHH:mm:ss.sssZ"この形で返ってくるので
-          //Tで区切ってその配列の一つ目[0]を返す
-          if (employee.hire_date) {
-            employee.hire_date = employee.hire_date.split('T')[0]
-          }
-          if (employee.birthday) {
-            employee.birthday = employee.birthday.split('T')[0]
-          }
-          return employee
-        })
-      })
+      .then((res) => convertNumber(res))
       .catch((err) => {
         console.log(err)
       })
-    return { employeeArr: employeeArr }
+    return { employeeArr }
   }
 )
 
-//💡firebaseから検索値を探す
+//💡検索
 const fetchSearchedEmployee = createAsyncThunk(
   'employee/fetchSearchedEmployee',
   async (searchKeyword: string) => {
-    //これはおそらく型を自動解決
-    //searchKeywordに当てはまるやつだけ抽出
-    const q = query(
-      collection(db, 'employeeData'),
-      or(
-        where('first_name', '==', searchKeyword),
-        where('last_name', '==', searchKeyword),
-        where('first_furigana', '==', searchKeyword),
-        where('last_furigana', '==', searchKeyword)
-      )
-    )
-    //getDocsで取得
-    const querySnapshot = await getDocs(q)
-    //.docsで読めるように
-    const searchedEmployeeArr = querySnapshot.docs.map((doc) => ({
-      ...(doc.data() as EmployeeBase),
-      docId: doc.id,
-    }))
-    return { searchedEmployeeArr: searchedEmployeeArr }
+    const searchedEmployeeArr = await axiosInstance
+      .get(`/employees/search?keyword=${searchKeyword}`)
+      .then((res) => convertNumber(res))
+      .catch((err) => {
+        console.log(err)
+      })
+    return { searchedEmployeeArr }
   }
 )
 
