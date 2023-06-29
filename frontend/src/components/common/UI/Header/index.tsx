@@ -5,7 +5,7 @@ function Header() {
   return (
     <>
       <header>
-        <Link to={'/'} className="headerHomeButton">
+        <Link to={'/home'} className="headerHomeButton">
           <h3>
             <img src="../../../../../../meetingIcon.png" className="icon"></img>
             人事管理 HR app

@@ -6,6 +6,7 @@ import { useAppDispatch } from './redux/hooks'
 import { fetchHrOptionType } from './redux/slicers/optionsSlice'
 import EmployeeList from './components/pages/employementsList'
 import LandingPage from './components/pages/landing'
+import { Login } from './components/pages/login'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -17,10 +18,11 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/setting" element={<Setting />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/employeeList" element={<EmployeeList />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<LandingPage />} />
+          <Route path="/home/setting" element={<Setting />} />
+          <Route path="/home/register" element={<Register />} />
+          <Route path="/home/employeeList" element={<EmployeeList />} />
         </Routes>
       </BrowserRouter>
     </div>
