@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("./db");
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const app = (0, express_1.default)();
 //ミドルウェア（corsの設定をする）
 //corsパッケージを使うと簡単にかける
@@ -18,7 +19,7 @@ app.use(cors({
 //渡ってくるデータが文字列、配列のときはurlencoded、json objectのときはjson
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-//最初のページ
+//最初のページ これいる？？
 app.get('/', (req, res) => {
     res.status(200).send('hello');
 });
@@ -30,6 +31,42 @@ app.listen(process.env.PORT, () => {
 });
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
+//🍎ログイン認証(post)
+app.post('/login', (req, res) => {
+    const { user_id, password } = req.body;
+    const query = `SELECT * FROM users WHERE user_id= ?`;
+    db_1.connection.query(query, [user_id], (error, results) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        if (results.length === 0) {
+            // ユーザーレコードが存在しない場合は認証失敗
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+        const user = results[0];
+        if (password === user.password) {
+            // パスワードが一致した場合は認証成功
+            const token = generateAuthToken(user_id); // トークンの生成
+            res.json({ message: 'Login successful', token });
+        }
+        else {
+            // パスワードが一致しない場合は認証失敗
+            res.status(401).json({ message: 'Invalid credentials' });
+        }
+    });
+});
+// ユーザーIDを含んだ有効期限付きのJWTトークン　生成
+const generateAuthToken = (user_id) => {
+    //jwt.signメソッドでトークンを生成
+    //第一引数はトークンに含めるデータをオブジェクトで指定
+    //第二引数はトークンの署名に使用する秘密鍵
+    //第三匹数は有効期限
+    const token = jwt.sign({ user_id }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+    });
+    return token;
+};
 //🍎employees取得(get)
 app.get('/employees', (req, res) => {
     //FROMのあとはemployeesに合体させたテーブル

@@ -1,16 +1,34 @@
 import React, { useState } from 'react'
-import { LinkButton } from '../../common/UI/LinkButton'
+import { axiosInstance } from '../../../axios'
+import { Button } from '../../common/UI/Button'
+import { useNavigate } from 'react-router-dom'
 
 export function Login() {
-  const [idText, setIdText] = useState('')
-  const [passwordText, setPasswordText] = useState('')
+  const [user_id, setUser_id] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   const handleChangeId = (e: any) => {
-    setIdText(e.target.value)
+    setUser_id(e.target.value)
   }
 
   const handleChangePassword = (e: any) => {
-    setPasswordText(e.target.value)
+    setPassword(e.target.value)
+  }
+
+  const handleLoginButtonClick = async (user_id: string, password: string) => {
+    await axiosInstance
+      .post('/login', { user_id, password })
+      .then((res) => {
+        const token = res.data
+        localStorage.setItem('token', token)
+        navigate('/home')
+      })
+      .catch(async (err) => {
+        console.log(err)
+        setUser_id('')
+        setPassword('')
+      })
   }
 
   return (
@@ -18,20 +36,19 @@ export function Login() {
       <input
         type="text"
         placeholder="user ID"
-        value={idText}
+        value={user_id}
         onChange={(e) => handleChangeId(e)}
       />
       <input
         type="text"
         placeholder="password"
-        value={passwordText}
+        value={password}
         onChange={(e) => handleChangePassword(e)}
       />
-
-      <LinkButton
-        link={'home'}
+      {/* linkとonClickはどちらもクリック時の挙動を指してるので一緒にはおかない */}
+      <Button
         text={'ログイン'}
-        onClick={() => console.log(idText, passwordText)}
+        onClick={() => handleLoginButtonClick(user_id, password)}
       />
     </div>
   )
