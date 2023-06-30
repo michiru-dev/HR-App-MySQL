@@ -68,7 +68,7 @@ const generateAuthToken = (user_id: string) => {
   //第二引数はトークンの署名に使用する秘密鍵
   //第三匹数は有効期限
   const token = jwt.sign({ user_id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '1m',
   })
   return token
 }

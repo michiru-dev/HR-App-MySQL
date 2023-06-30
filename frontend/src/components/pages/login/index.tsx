@@ -20,7 +20,7 @@ export function Login() {
     await axiosInstance
       .post('/login', { user_id, password })
       .then((res) => {
-        const token = res.data
+        const token = res.data.token
         localStorage.setItem('token', token)
         navigate('/home')
       })
