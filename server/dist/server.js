@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const db_1 = require("./db");
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const app = (0, express_1.default)();
 //ミドルウェア（corsの設定をする）
 //corsパッケージを使うと簡単にかける
@@ -62,13 +62,39 @@ const generateAuthToken = (user_id) => {
     //第一引数はトークンに含めるデータをオブジェクトで指定
     //第二引数はトークンの署名に使用する秘密鍵
     //第三匹数は有効期限
-    const token = jwt.sign({ user_id }, process.env.JWT_SECRET, {
+    const token = jsonwebtoken_1.default.sign({ user_id }, process.env.JWT_SECRET, {
         expiresIn: '1m',
     });
     return token;
 };
+// 🍎トークン検証の関数（ミドルウェア）
+const authenticateToken = (req, res, next) => {
+    // リクエストヘッダーからトークンを取得
+    const token = req.headers['authorization'];
+    // トークンが存在しない場合はアクセス拒否
+    if (!token) {
+        return res.status(401).json({ message: 'トークンが存在しません' });
+    }
+    // トークンを検証し正当性を確認
+    const user = verifyToken(token);
+    if (!user) {
+        return res.status(401).json({ message: 'トークンが一致しません' });
+    }
+    req.user_id = user;
+    next();
+};
+const verifyToken = (token) => {
+    try {
+        const aaa = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        console.log(aaa);
+        return aaa;
+    }
+    catch (error) {
+        return undefined;
+    }
+};
 //🍎employees取得(get)
-app.get('/employees', (req, res) => {
+app.get('/employees', authenticateToken, (req, res) => {
     //FROMのあとはemployeesに合体させたテーブル
     //その大きいテーブルからSELECT以降を選択
     //LEFT JOINは関連する値がなくてもleft(employees)の値を返すもの

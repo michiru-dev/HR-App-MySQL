@@ -1,9 +1,11 @@
 import { axiosInstance } from '.'
+import { getTokenInfo } from '../utils'
 
 //contract取得
 export const fetchContract = async () => {
+  const { headers } = getTokenInfo()
   return await axiosInstance
-    .get('/contract')
+    .get('/contract', { headers })
     .then((res) => res.data)
     .catch((err) => {
       console.log(err)
@@ -12,8 +14,9 @@ export const fetchContract = async () => {
 
 //departments取得
 export const fetchDepartments = async () => {
+  const { headers } = getTokenInfo()
   return await axiosInstance
-    .get('/departments')
+    .get('/departments', { headers })
     .then((res) => res.data)
     .catch((err) => {
       console.log(err)
@@ -22,8 +25,9 @@ export const fetchDepartments = async () => {
 
 //degree取得
 export const fetchdegree = async () => {
+  const { headers } = getTokenInfo()
   return await axiosInstance
-    .get('/degree')
+    .get('/degree', { headers })
     .then((res) => res.data)
     .catch((err) => {
       console.log(err)
@@ -32,8 +36,9 @@ export const fetchdegree = async () => {
 
 //positions取得
 export const fetchPositions = async () => {
+  const { headers } = getTokenInfo()
   return await axiosInstance
-    .get('/positions')
+    .get('/positions', { headers })
     .then((res) => res.data)
     .catch((err) => {
       console.log(err)

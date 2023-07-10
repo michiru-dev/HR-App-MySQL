@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 import { ContractSetting } from './ContractSetting'
@@ -6,11 +6,18 @@ import { DepartmentSetting } from './DepartmentSetting'
 import { PositionsSetting } from './PositionSetting'
 import { RankSetting } from './RankSetting'
 import Layout from '../../common/UI/Layout'
-import { useAppSelector } from '../../../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import LoadingSpinner from '../../common/UI/LoadingSpinner'
+import { fetchHrOptionType } from '../../../redux/slicers/optionsSlice'
 
 function Setting() {
   const isLoading = useAppSelector((state) => state.option.isLoading)
+
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    dispatch(fetchHrOptionType())
+  }, [dispatch])
+
   return (
     <>
       {isLoading && <LoadingSpinner />}

@@ -10,6 +10,7 @@ import { RootState } from '../store'
 import { OptionBase } from './type'
 import 'firebase/compat/firestore'
 import { axiosInstance } from '../../axios'
+import { getTokenInfo } from '../../utils'
 
 //💡値を取得(get)
 //reduxの中でapiの呼び出しは禁止のためcreateAsyncThunkを使う・下の方のextrareducersとセット
@@ -49,8 +50,9 @@ const addHrOptionData = createAsyncThunk<
 >(
   'hrOptions/addHrOptionData', //createasyncは引数を一つしか渡せないためobjectにしている
   async ({ newItem, collectionName }) => {
+    const { headers } = getTokenInfo()
     await axiosInstance
-      .post(`/${collectionName}/post`, { newItem })
+      .post(`/${collectionName}/post`, { newItem }, { headers })
       .catch((err) => {
         console.log(err)
       })
@@ -80,9 +82,11 @@ const deleteOptionData = createAsyncThunk<
   { state: RootState }
 >('options/deleteOptionData', async ({ id, collectionName }, { getState }) => {
   //サーバー通信
+  const { headers } = getTokenInfo()
   await axiosInstance
     .delete(`/${collectionName}/delete`, {
       data: { id },
+      headers,
     })
     .catch((err) => console.log(err))
 
@@ -108,9 +112,10 @@ const editOption = createAsyncThunk(
     collectionName: collectionNameBase
     newName: string
   }) => {
+    const { headers } = getTokenInfo()
     //サーバー通信
     await axiosInstance
-      .put(`/${collectionName}/put`, { id, newName })
+      .put(`/${collectionName}/put`, { id, newName }, { headers })
       .catch((err) => console.log(err))
 
     //reduxの値を編集
@@ -224,7 +229,6 @@ export const optionsSlice = createSlice({
         state.isLoading = false
         if (action.payload.collectionName === 'contract') {
           state.contract = action.payload.optionData
-          //配列を新しいのに置き換え
         }
         if (action.payload.collectionName === 'departments') {
           state.departments = action.payload.optionData

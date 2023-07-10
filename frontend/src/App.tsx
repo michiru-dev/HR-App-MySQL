@@ -7,11 +7,6 @@ import { AuthChecker } from './components/common/UI/AuthChecker'
 import { routes } from './routes'
 
 function App() {
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    dispatch(fetchHrOptionType())
-  }, [])
-
   return (
     <div>
       <BrowserRouter>
