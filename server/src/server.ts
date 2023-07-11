@@ -1,7 +1,9 @@
 import express from 'express'
 import { connection } from './db'
-import { Request, Response } from 'express'
+//npm install -D @types/express
+import { Request, Response, NextFunction } from 'express'
 const cors = require('cors')
+import jwt from 'jsonwebtoken'
 
 const app = express()
 
@@ -35,8 +37,73 @@ app.listen(process.env.PORT, () => {
 //app.getはページがロードされたときに全てのapp.getが実行される
 //第二引数のコールバックは定義がされるだけで、第一引数のエンドポイントにアクセスがあったときに実行される
 
+//🍎ログイン認証(post)
+app.post('/login', (req, res) => {
+  const { user_id, password } = req.body
+  const query = `SELECT * FROM users WHERE user_id= ?`
+  connection.query(query, [user_id], (error, results: any) => {
+    if (error) {
+      console.log(error)
+      return res.status(500).json({ message: 'Internal server error' })
+    }
+    if (results.length === 0) {
+      // ユーザーレコードが存在しない場合は認証失敗
+      return res.status(400).json({ message: 'Invalid credentials' })
+    }
+    const user = results[0]
+    if (password === user.password) {
+      // パスワードが一致した場合は認証成功
+      const token = generateAuthToken(user_id) // トークンの生成
+      res.json({ message: 'Login successful', token })
+    } else {
+      // パスワードが一致しない場合は認証失敗
+      res.status(400).json({ message: 'Invalid credentials' })
+    }
+  })
+})
+
+// ユーザーIDを含んだ有効期限付きのJWTトークン　生成
+const generateAuthToken = (user_id: string) => {
+  //jwt.signメソッドでトークンを生成
+  //第一引数はトークンに含めるデータをオブジェクトで指定
+  //第二引数はトークンの署名に使用する秘密鍵
+  //第三匹数は有効期限
+  const token = jwt.sign({ user_id }, process.env.JWT_SECRET as jwt.Secret, {
+    expiresIn: '1m',
+  })
+  return token
+}
+
+// 🍎トークン検証の関数（ミドルウェア）
+const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+  // リクエストヘッダーからトークンを取得
+  const token = req.headers['authorization']?.split(' ')[1]
+  // トークンが存在しない場合
+  if (!token) {
+    return res.status(401).json({ message: 'トークンが存在しません' })
+  }
+  // トークンを検証し正当性を確認
+  const user = verifyToken(token)
+  if (!user) {
+    return res.status(401).json({ message: 'トークンが一致しません' })
+  }
+
+  //reqにuser_idプロパティを追加して{ user_id: 'test', iat: 1689030119, exp: 1689030179 }
+  //↑これを追加。なんのためかというと今後のミドルウェア等でこの情報を使うかもしれないため
+  req.user_id = user
+  next()
+}
+
+const verifyToken = (token: string) => {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET as jwt.Secret)
+  } catch (error) {
+    return undefined
+  }
+}
+
 //🍎employees取得(get)
-app.get('/employees', (req, res) => {
+app.get('/employees', authenticateToken, (req, res) => {
   //FROMのあとはemployeesに合体させたテーブル
   //その大きいテーブルからSELECT以降を選択
   //LEFT JOINは関連する値がなくてもleft(employees)の値を返すもの
@@ -66,7 +133,7 @@ app.get('/employees', (req, res) => {
 })
 
 //🍎employees追加(post)
-app.post('/employees/post', (req, res) => {
+app.post('/employees/post', authenticateToken, (req, res) => {
   const newEmployee = req.body
 
   //Object.keysはオブジェクトのすべてのキー（プロパティ名）を配列として返す、
@@ -96,7 +163,7 @@ app.post('/employees/post', (req, res) => {
 })
 
 //🍎employees 編集(put)
-app.put('/employees/put', (req, res) => {
+app.put('/employees/put', authenticateToken, (req, res) => {
   const { updatedEmployeeData, id } = req.body
 
   const query = ` UPDATE employees SET first_name = ?, last_name = ?, 
@@ -129,7 +196,7 @@ app.put('/employees/put', (req, res) => {
 })
 
 //🍎employees 削除(delete)
-app.delete('/employees/delete', (req, res) => {
+app.delete('/employees/delete', authenticateToken, (req, res) => {
   const { id } = req.body
   const query = `DELETE FROM employees WHERE employee_id = ?`
   connection.query(query, id, (error, result) => {
@@ -141,7 +208,7 @@ app.delete('/employees/delete', (req, res) => {
 })
 
 //🍎employees検索(get)
-app.get('/employees/search', (req, res) => {
+app.get('/employees/search', authenticateToken, (req, res) => {
   // クエリパラメータから検索キーワードを取得
   const searchKeyword = req.query.keyword
 
@@ -206,10 +273,10 @@ const generateGetHandler = (tableName: string) => {
 }
 
 //各種設定 取得 実行
-app.get('/contract', generateGetHandler('contract'))
-app.get('/departments', generateGetHandler('departments'))
-app.get('/degree', generateGetHandler('degree'))
-app.get('/positions', generateGetHandler('positions'))
+app.get('/contract', authenticateToken, generateGetHandler('contract'))
+app.get('/departments', authenticateToken, generateGetHandler('departments'))
+app.get('/degree', authenticateToken, generateGetHandler('degree'))
+app.get('/positions', authenticateToken, generateGetHandler('positions'))
 
 // //上の二つを合わせたのがこれ
 // app.get('/contract', (req, res) => {
@@ -232,10 +299,14 @@ const generatePostHandler = (tableName: string) => {
   }
 }
 //各種設定　追加　実行
-app.post('/contract/post', generatePostHandler('contract'))
-app.post('/departments/post', generatePostHandler('departments'))
-app.post('/degree/post', generatePostHandler('degree'))
-app.post('/positions/post', generatePostHandler('positions'))
+app.post('/contract/post', authenticateToken, generatePostHandler('contract'))
+app.post(
+  '/departments/post',
+  authenticateToken,
+  generatePostHandler('departments')
+)
+app.post('/degree/post', authenticateToken, generatePostHandler('degree'))
+app.post('/positions/post', authenticateToken, generatePostHandler('positions'))
 
 //🍎各種設定　削除（delete）関数
 const generateDeleteHandler = (tableName: string) => {
@@ -252,10 +323,22 @@ const generateDeleteHandler = (tableName: string) => {
 }
 
 //各種設定　削除　実行
-app.delete('/contract/delete', generateDeleteHandler('contract'))
-app.delete('/departments/delete', generateDeleteHandler('departments'))
-app.delete('/degree/delete', generateDeleteHandler('degree'))
-app.delete('/positions/delete', generateDeleteHandler('positions'))
+app.delete(
+  '/contract/delete',
+  authenticateToken,
+  generateDeleteHandler('contract')
+)
+app.delete(
+  '/departments/delete',
+  authenticateToken,
+  generateDeleteHandler('departments')
+)
+app.delete('/degree/delete', authenticateToken, generateDeleteHandler('degree'))
+app.delete(
+  '/positions/delete',
+  authenticateToken,
+  generateDeleteHandler('positions')
+)
 
 //🍎各種設定　編集（put）関数
 const generatePutHandler = (tableName: string) => {
@@ -272,7 +355,11 @@ const generatePutHandler = (tableName: string) => {
 }
 
 //各種設定　編集　実行
-app.put('/contract/put', generatePutHandler('contract'))
-app.put('/departments/put', generatePutHandler('departments'))
-app.put('/degree/put', generatePutHandler('degree'))
-app.put('/positions/put', generatePutHandler('positions'))
+app.put('/contract/put', authenticateToken, generatePutHandler('contract'))
+app.put(
+  '/departments/put',
+  authenticateToken,
+  generatePutHandler('departments')
+)
+app.put('/degree/put', authenticateToken, generatePutHandler('degree'))
+app.put('/positions/put', authenticateToken, generatePutHandler('positions'))

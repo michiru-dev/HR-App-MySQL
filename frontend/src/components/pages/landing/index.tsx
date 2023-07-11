@@ -7,7 +7,7 @@ import LoadingSpinner from '../../common/UI/LoadingSpinner'
 
 function LandingPage() {
   const isLoading = useAppSelector((state) => state.employee.isLoading)
-
+  console.log('loaded')
   return (
     <>
       {isLoading && <LoadingSpinner />}

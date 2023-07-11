@@ -32,7 +32,7 @@ function Search() {
   const navigate = useNavigate()
   const goToSearchResult = () =>
     navigate({
-      pathname: '/',
+      pathname: '/home',
       search: `?searchedName=${searchInput}`,
     })
 

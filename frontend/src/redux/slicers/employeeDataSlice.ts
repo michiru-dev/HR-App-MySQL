@@ -2,15 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { EmployeeBase, EmployeeWithoutId } from './type'
 import { axiosInstance } from '../../axios'
 import { AxiosResponse } from 'axios'
+import { getTokenInfo } from '../../utils'
 
 //💡追加(post)
 const addEmployeeData = createAsyncThunk(
   'employee/addEmployeeData',
   async (registerInfo: EmployeeWithoutId) => {
     //awaitがあるからthenがなくても勝手にresolveした値を返してくれる
+    const { headers } = getTokenInfo()
     await axiosInstance
-      .post(`/employees/post`, registerInfo)
-      .catch((err) => console.log(err))
+      .post(`/employees/post`, registerInfo, { headers })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 )
 
@@ -32,9 +36,12 @@ const convertNumber = (res: AxiosResponse<EmployeeBase[]>) => {
 const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
   async () => {
+    const { headers } = getTokenInfo()
     const employeeArr = await axiosInstance
-      .get('/employees')
-      .then((res) => convertNumber(res))
+      .get('/employees', { headers })
+      .then((res) => {
+        return convertNumber(res)
+      })
       .catch((err) => {
         console.log(err)
       })
@@ -45,9 +52,11 @@ const fetchEmployeeData = createAsyncThunk(
 //💡検索
 const fetchSearchedEmployee = createAsyncThunk(
   'employee/fetchSearchedEmployee',
+
   async (searchKeyword: string) => {
+    const { headers } = getTokenInfo()
     const searchedEmployeeArr = await axiosInstance
-      .get(`/employees/search?keyword=${searchKeyword}`)
+      .get(`/employees/search?keyword=${searchKeyword}`, { headers })
       .then((res) => convertNumber(res))
       .catch((err) => {
         console.log(err)
@@ -60,8 +69,9 @@ const fetchSearchedEmployee = createAsyncThunk(
 const deleteEmployeeData = createAsyncThunk(
   'employee/deleteEmployeeData',
   async (id: string) => {
+    const { headers } = getTokenInfo()
     await axiosInstance
-      .delete('/employees/delete', { data: { id } })
+      .delete('/employees/delete', { data: { id }, headers })
       .catch((err) => {
         console.log(err)
       })
@@ -73,9 +83,12 @@ const editEmployeeData = createAsyncThunk<
   void,
   { updatedEmployeeData: EmployeeBase; id: string }
 >('employee/editEmployeeData', async ({ updatedEmployeeData, id }) => {
+  const { headers } = getTokenInfo()
   await axiosInstance
-    .put(`/employees/put`, { updatedEmployeeData, id })
-    .catch((err) => console.log(err))
+    .put(`/employees/put`, { updatedEmployeeData, id }, { headers })
+    .catch((err) => {
+      console.log(err)
+    })
 })
 
 type InitialBase = {
