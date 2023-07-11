@@ -1,10 +1,16 @@
-# HR App 　人事管理アプリ ver.2 with mySQL✍️
+# HR App 　人事管理アプリ ／MySQL✍️
 
 🌐https://hr-app-nu.vercel.app/
 
-社員情報を登録、閲覧、検索、編集できるアプリです。
-
+社員情報を登録、閲覧、検索、編集できるアプリです。  
 ダミーデータを登録しているので、自由に追加や編集等行ってください。
+
+こちらのログイン情報をお使いください。
+
+```
+user ID : test
+password: test123
+```
 
 #### フロントエンド
 
@@ -16,7 +22,8 @@
 
 #### バックエンド
 
-- mySQL
+- MySQL2 3.4
+- Typescript 5.1.3
 
 #### デプロイ
 
@@ -24,7 +31,7 @@
 
 #### その他
 
-個人情報テストデータジェネレーター([https://testdata.userlocal.jp/](https://testdata.userlocal.jp/))
+個人情報テストデータジェネレーター([https://testdata.userlocal.jp/](https://testdata.userlocal.jp/))  
 ※既存の個人データはダミーです。上記 URL にて生成しています。
 
 ##### 🌱 社員検索

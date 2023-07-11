@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useAppDispatch } from './redux/hooks'
-import { fetchHrOptionType } from './redux/slicers/optionsSlice'
 import { Login } from './components/pages/login'
 import { AuthChecker } from './components/common/UI/AuthChecker'
 import { routes } from './routes'

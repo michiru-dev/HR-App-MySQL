@@ -22,7 +22,7 @@ app.use(
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//最初のページ これいる？？
+//最初のページ
 app.get('/', (req, res) => {
   res.status(200).send('hello')
 })
@@ -48,7 +48,7 @@ app.post('/login', (req, res) => {
     }
     if (results.length === 0) {
       // ユーザーレコードが存在しない場合は認証失敗
-      return res.status(401).json({ message: 'Invalid credentials' })
+      return res.status(400).json({ message: 'Invalid credentials' })
     }
     const user = results[0]
     if (password === user.password) {
@@ -57,7 +57,7 @@ app.post('/login', (req, res) => {
       res.json({ message: 'Login successful', token })
     } else {
       // パスワードが一致しない場合は認証失敗
-      res.status(401).json({ message: 'Invalid credentials' })
+      res.status(400).json({ message: 'Invalid credentials' })
     }
   })
 })
@@ -87,7 +87,10 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   if (!user) {
     return res.status(401).json({ message: 'トークンが一致しません' })
   }
-  req.user_id = user //これなに？
+
+  //reqにuser_idプロパティを追加して{ user_id: 'test', iat: 1689030119, exp: 1689030179 }
+  //↑これを追加。なんのためかというと今後のミドルウェア等でこの情報を使うかもしれないため
+  req.user_id = user
   next()
 }
 

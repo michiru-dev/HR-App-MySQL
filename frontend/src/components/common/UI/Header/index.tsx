@@ -1,11 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../Button'
+import { getTokenInfo } from '../../../../utils'
 
 function Header() {
   const handleLogoutButton = () => {
     localStorage.removeItem('token')
   }
+
+  //tokenがあればログイン後ということ
+  const isLogin = getTokenInfo().token
+
   return (
     <>
       <header>
@@ -18,11 +23,13 @@ function Header() {
             ></img>
             人事管理 HR app
           </h3>
-          <Button
-            text={'ログアウト'}
-            onClick={handleLogoutButton}
-            className="logoutButton"
-          />
+          {isLogin && (
+            <Button
+              text={'ログアウト'}
+              onClick={handleLogoutButton}
+              className="logoutButton"
+            />
+          )}
         </Link>
       </header>
     </>

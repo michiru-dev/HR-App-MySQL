@@ -10,6 +10,7 @@ import '../src/components/pages/landing/landing.scss'
 import '../src/components/pages/register/register.scss'
 import '../src/components/pages/setting/setting.scss'
 import '../src/components/pages/employementsList/employementsList.scss'
+import '../src/components/pages/login/login.scss'
 
 import App from './App'
 import { Provider } from 'react-redux'
