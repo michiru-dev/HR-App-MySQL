@@ -20,6 +20,11 @@
 個人情報テストデータジェネレーター([https://testdata.userlocal.jp/](https://testdata.userlocal.jp/))  
 ※既存の個人データはダミーです。上記 URL にて生成しています。
 
+#### ER図
+![user_id (1)](https://github.com/michiru-dev/HR-App-MySQL/assets/105535906/adf2074f-cd18-4bf5-842f-f292094745bd)
+
+
+
 ##### 🌱 社員検索
 
 ![hrapp社員検索](https://github.com/michiru-dev/HR-app/assets/105535906/ccdc8cde-7a0b-4ff8-86d7-c2b5b6703dc7)
